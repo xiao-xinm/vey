@@ -1,0 +1,28 @@
+owner_id = "your-wecom-userid"
+self_project = "vey"
+protected_projects = ["vey", "your-existing-postgres-project"]
+# If PostgreSQL was not created by Compose, register its FULL immutable container ID.
+protected_container_ids = []
+# Set true only after replacing the PostgreSQL protection placeholders above.
+database_protection_acknowledged = false
+
+[[services]]
+key = "blog/web"
+aliases = ["博客"]
+# An administrator-configured health endpoint; redirects are never followed.
+# health_url = "http://blog-web:8080/health"
+
+[[services]]
+key = "your-existing-postgres-project/postgres"
+aliases = ["数据库"]
+protected = true
+
+[[services]]
+key = "vey/agent-core"
+aliases = ["运维助手"]
+protected = true
+
+[[services]]
+key = "vey/ops-executor"
+aliases = ["执行器"]
+protected = true

@@ -1,0 +1,17 @@
+.venv/
+.idea/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.env
+.env.*
+!.env.example
+config/vey.toml
+secrets/
+.tools/
+.local/
+dist/
+*.egg-info/
+*.log

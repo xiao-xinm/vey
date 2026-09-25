@@ -1,0 +1,89 @@
+name: vey
+services:
+  agent-core:
+    build: .
+    image: vey-agent:0.1.0
+    command: ["serve", "core", "--host", "0.0.0.0"]
+    user: "10001:10000"
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    mem_limit: 512m
+    cpus: 1.0
+    pids_limit: 128
+    ports: ["127.0.0.1:8080:8080"]
+    environment:
+      VEY_CONFIG: /app/config/vey.toml
+      VEY_DATABASE_URL: ${VEY_CORE_DATABASE_URL:?Set existing PG connection URL}
+      VEY_EXECUTOR_TOKEN_FILE: /run/secrets/executor_token
+      VEY_MODEL_KEY_FILE: /run/secrets/deepseek_key
+      VEY_MODEL_BASE_URL: ${VEY_MODEL_BASE_URL:-https://api.deepseek.com}
+      VEY_MODEL_NAME: ${VEY_MODEL_NAME:-deepseek-flash}
+      VEY_WECOM_CORP_ID: ${VEY_WECOM_CORP_ID:-}
+      VEY_WECOM_AGENT_ID: ${VEY_WECOM_AGENT_ID:-0}
+      VEY_WECOM_SECRET_FILE: /run/secrets/wecom_secret
+      VEY_WECOM_TOKEN_FILE: /run/secrets/wecom_token
+      VEY_WECOM_AES_KEY_FILE: /run/secrets/wecom_aes_key
+      VEY_DEBUG_ENABLED: ${VEY_DEBUG_ENABLED:-false}
+      VEY_DEBUG_TOKEN_FILE: /run/secrets/debug_token
+    volumes:
+      - ./config/vey.toml:/app/config/vey.toml:ro
+      - ${VEY_RUNTIME_DIR:?Set owned runtime directory}:/run/vey
+    secrets: [executor_token, deepseek_key, wecom_secret, wecom_token, wecom_aes_key, debug_token]
+    networks: [database]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/ready', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+  ops-executor:
+    build: .
+    image: vey-agent:0.1.0
+    command: ["serve", "executor"]
+    user: "10002:10000"
+    group_add: ["${VEY_DOCKER_GID:?Set host docker socket GID}"]
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 128
+    environment:
+      VEY_CONFIG: /app/config/vey.toml
+      VEY_DATABASE_URL: ${VEY_EXEC_DATABASE_URL:?Set executor PG connection URL}
+      VEY_EXECUTOR_TOKEN_FILE: /run/secrets/executor_token
+      VEY_HOST_PROC: /host/proc
+      VEY_HOST_DISK_PATHS: '["/host/disk"]'
+    volumes:
+      - ./config/vey.toml:/app/config/vey.toml:ro
+      - ${VEY_RUNTIME_DIR:?Set owned runtime directory}:/run/vey
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc:/host/proc:ro
+      # statvfs of this directory reports its filesystem, without mounting the host root.
+      - ${VEY_RUNTIME_DIR}:/host/disk:ro
+    secrets: [executor_token]
+    networks: [database]
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+networks:
+  database:
+    external: true
+    name: ${VEY_DATABASE_NETWORK:?Set existing PostgreSQL Docker network}
+
+secrets:
+  executor_token: {file: ./secrets/executor_token}
+  deepseek_key: {file: ./secrets/deepseek_key}
+  wecom_secret: {file: ./secrets/wecom_secret}
+  wecom_token: {file: ./secrets/wecom_token}
+  wecom_aes_key: {file: ./secrets/wecom_aes_key}
+  debug_token: {file: ./secrets/debug_token}
