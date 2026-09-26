@@ -128,7 +128,7 @@ ops.example.com {
 
 最终真实验收至少包括：签名校验、重复回调、长结果分段、正确本人身份、模型一次自然语言调用、测试容器启动／停止／重启、PG 保护拒绝、超时后状态查询。域名备案及后台资格以用户所属部署地区和企微当前规则为准，本文不把这些条件视为已经满足。
 
-## 6. 结果未知、备份与恢复
+## 6. 结果未知与人工核对
 
 执行器超时／崩溃后可能出现 `unknown`：先查询 `操作 <原任务ID>`，再由管理员直接核对 Docker 状态及时间线。当前状态无法证明某次重启是否发生。需要接受未知历史并解除后续修改锁定时，在已完成核对后运行：
 
@@ -139,6 +139,18 @@ uv run python scripts/reconcile_operation.py TASK_ID \
 ```
 
 该脚本要求 `VEY_MIGRATION_DATABASE_URL`，只把 unknown 标记为 reconciled，保留原事实和理由；不执行 Docker、不改判成功、不复用旧确认。首次核对应等待可能尚在 Docker daemon 中执行的请求结束。
+
+## 7. 配置模型并验收
+
+将 DeepSeek Key 的完整值写入 `secrets/deepseek_key`，文件权限保持 `root:10000`、`0640`。编辑器可能替换文件 inode，配置后用 `docker compose up -d --no-deps --force-recreate --wait agent-core` 重建核心容器，以重新加载 secret 挂载。
+
+```bash
+docker compose exec -T agent-core python - < scripts/model_smoke.py
+```
+
+此脚本通过同一身份校验的任务入口提交请求，由已运行的核心 worker 调用真实模型和执行器；不必开启 HTTP 调试接口。它会清空当前配置用户的上下文，并产生实际模型 API 用量。场景仅包括宿主机资源查询和运维助手只读排查，不发送任何修改操作确认。脚本只输出状态、工具名、提示版本和用量元数据，不输出密钥或模型内部思维链。
+
+## 8. 备份与恢复流程
 
 备份应覆盖专用数据库、管理员维护的配置与密钥，以及现有 PG 的原备份策略。采用 `pg_dump -Fc` 生成逻辑备份；使用与服务器版本兼容的 PostgreSQL 客户端。密码使用交互输入或权限为 `0600` 的 pgpass 文件，避免出现在命令行。备份存储到另一故障域并加密，留存周期和目的地在上线前确定。
 

@@ -229,3 +229,26 @@ async def test_model_truncation_cannot_trigger_operation(settings):
     with pytest.raises(VeyError, match="格式无效"):
         await provider.route("查询", {}, [])
     await provider.close()
+
+
+async def test_model_stats_without_target_is_rejected(settings):
+    client = httpx.AsyncClient(
+        transport=httpx.MockTransport(
+            lambda _: httpx.Response(
+                200,
+                json={
+                    "choices": [
+                        {
+                            "finish_reason": "stop",
+                            "message": {"content": '{"kind":"query","tool":{"name":"stats"}}'},
+                        }
+                    ]
+                },
+            )
+        )
+    )
+    provider = DeepSeekProvider(settings, client)
+    with pytest.raises(VeyError, match="格式无效"):
+        await provider.route("这台服务器的 CPU 和内存使用情况", {}, [])
+    assert provider.metrics[0]["status"] == "error"
+    await provider.close()

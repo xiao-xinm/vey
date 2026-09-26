@@ -36,8 +36,14 @@ class Action(StrEnum):
 
 
 class ToolCall(StrictModel):
-    name: Literal["system", "services", "inspect", "stats", "logs", "health"]
-    target: str | None = Field(default=None, max_length=120)
+    name: Literal["system", "services", "inspect", "stats", "logs", "health"] = Field(
+        description="system=宿主机CPU/内存/磁盘；services=服务列表；inspect=指定服务容器状态；stats=指定服务容器资源；logs=指定服务日志；health=指定服务业务健康检查"
+    )
+    target: str | None = Field(
+        default=None,
+        max_length=120,
+        description="catalog中的项目/服务key；inspect、stats、health必须提供，logs首次查询必须提供；system和services不需要target，禁止虚构宿主机为容器目标",
+    )
     lines: int = Field(default=100, ge=1, le=500, strict=True)
     keyword: str | None = Field(default=None, max_length=100)
     since: datetime | None = None
