@@ -2,7 +2,7 @@
 
 通过企业微信自建应用管理个人 Ubuntu 服务器的运维 Agent。面向 AI 应用／Agent 开发实践，按三期建设：可靠运维闭环 → 诊断评测 → 管理后台。
 
-**当前是第一期本地实现，尚未完成服务器上线验收。** 已实现核心服务、独立执行器、DeepSeek 适配和 PostgreSQL 持久化；真实 Docker、企微、DeepSeek 联调进度见[开发记录](docs/development-plan.md)。
+**第一期核心已在 Ubuntu 完成 Docker／PostgreSQL 验收，DeepSeek 与企微真实联调待配置。** 已实现核心服务、独立执行器、DeepSeek 适配和 PostgreSQL 持久化；详见[服务器验收记录](docs/server-acceptance.md)与[开发进度](docs/development-plan.md)。
 
 ## 能做什么
 

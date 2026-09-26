@@ -41,6 +41,8 @@ class DockerBackend:
                 "status": state.get("Status", container.status),
                 "health": state.get("Health", {}).get("Status", "not_configured"),
                 "exit_code": state.get("ExitCode"),
+                "started_at": state.get("StartedAt"),
+                "finished_at": state.get("FinishedAt"),
                 "restarts": attrs.get("RestartCount"),
                 "image": attrs.get("Config", {}).get("Image"),
                 "ports": attrs.get("NetworkSettings", {}).get("Ports", {}),
@@ -94,7 +96,9 @@ class DockerBackend:
                 timestamps=True,
                 tail=self.settings.log_scan_lines,
                 since=call.since,
-                until=call.until or utcnow(),
+                # follow=False already yields a finite snapshot. The SDK truncates
+                # datetime cutoffs to seconds, so "now" would omit fresh records.
+                until=call.until,
             )
             decoder = codecs.getincrementaldecoder("utf-8")("replace")
             chunks = []

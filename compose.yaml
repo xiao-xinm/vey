@@ -6,6 +6,9 @@ services:
     command: ["serve", "core", "--host", "0.0.0.0"]
     user: "10001:10000"
     restart: unless-stopped
+    depends_on:
+      ops-executor:
+        condition: service_healthy
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
@@ -38,6 +41,8 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
+      start_period: 10s
+      start_interval: 2s
     logging:
       driver: json-file
       options: {max-size: "10m", max-file: "3"}
@@ -71,6 +76,13 @@ services:
       - ${VEY_RUNTIME_DIR}:/host/disk:ro
     secrets: [executor_token]
     networks: [database]
+    healthcheck:
+      test: ["CMD", "python", "-c", "from pathlib import Path; import httpx; c=httpx.Client(transport=httpx.HTTPTransport(uds='/run/vey/executor.sock'), base_url='http://executor', timeout=3); c.get('/health', headers={'Authorization':'Bearer '+Path('/run/secrets/executor_token').read_text().strip()}).raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
     logging:
       driver: json-file
       options: {max-size: "10m", max-file: "3"}

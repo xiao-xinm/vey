@@ -1,8 +1,8 @@
 # 个人服务器运维 Agent 技术选型与架构方案
 
-版本：v0.3  
-日期：2026-09-25  
-依据：[需求文档 v0.5](requirements.md)及[三期建设路线与数据设计](roadmap-and-data.md)  
+版本：v0.4  
+日期：2026-09-26  
+依据：[需求文档 v0.6](requirements.md)及[三期建设路线与数据设计](roadmap-and-data.md)  
 状态：第一期实现方案；本地代码及隔离测试已建立，真实环境验收见 [开发记录](development-plan.md)。
 
 ## 1. 选型结论
@@ -35,7 +35,7 @@
 
 Python 当前支持状态参考 [Python 官方版本列表](https://www.python.org/downloads/)。FastAPI 的类型模型、OpenAPI 和校验能力见 [FastAPI 文档](https://fastapi.tiangolo.com/features/)；Pydantic 的严格模式见 [官方文档](https://docs.pydantic.dev/latest/)。这些能力是接口基础，不替代业务权限校验。
 
-组件版本已写入 uv.lock，本地 Python 3.13 的安装和隔离测试通过；Linux 镜像构建仍待验证。复用用户已有 PostgreSQL 容器，不替用户升级数据库；当前测试版本为 PostgreSQL 17.11，生产版本及兼容性待核对。SQLAlchemy 对 psycopg 3 的支持见[官方方言文档](https://docs.sqlalchemy.org/en/20/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg)。
+组件版本已写入 uv.lock，本地 Python 3.13 的安装和隔离测试、Ubuntu Linux 镜像构建与运行均通过。复用用户已有 PostgreSQL 容器，不替用户升级数据库；本地集成测试使用 PostgreSQL 17.11，服务器核心验收使用已有的 PostgreSQL 16.15。SQLAlchemy 对 psycopg 3 的支持见[官方方言文档](https://docs.sqlalchemy.org/en/20/dialects/postgresql.html#module-sqlalchemy.dialects.postgresql.psycopg)。
 
 ## 3. 为什么选择这套组合
 
@@ -185,7 +185,7 @@ Docker SDK 提供 tail、since、until 和流式读取，但不提供本项目�
 | 配置文件维护保护清单 | 第三期增加受认证的配置管理和变更审计，保留必要依赖保护 |
 | 通用模型意图分类 | 第二期有版本化样本与基线后，评估 Jev 的准确性、成本和端到端收益 |
 
-具体建设顺序见配套三期路线，后两期内容不自动并入第一期验收。当前剩余需要配置的是现有 PG 容器／网络与版本、DeepSeek 本地密钥、实际项目服务清单、健康检查地址及企微接入信息；备份目的地和保留策略在部署前确定。这些不阻碍提出本文的基础选型建议。
+具体建设顺序见配套三期路线，后两期内容不自动并入第一期验收。现有 PG 的版本、私有网络、专用库和运行角色已配置并验证；后续需要配置 DeepSeek 本地密钥、实际业务管理范围与健康地址及企微接入信息；备份目的地和保留策略在部署前确定。这些不阻碍提出本文的基础选型建议。
 
 ## 11. 修订记录
 
@@ -193,5 +193,5 @@ Docker SDK 提供 tail、since、until 和流式读取，但不提供本项目�
 | --- | --- | --- |
 | v0.1 | 2026-09-25 | 按个人单机使用目标提出 SQLite 与双应用服务方案 |
 | v0.2 | 2026-09-25 | 根据 AI 应用／Agent 求职和三期规划，推荐 PostgreSQL 主存储，补充独立角色、持久化与恢复边界；未执行部署或迁移 |
-
 | v0.3 | 2026-09-25 | 对齐已有 PostgreSQL 容器、DeepSeek、本地实现及真实验收边界 |
+| v0.4 | 2026-09-26 | 记录实际 Ubuntu、Docker、PostgreSQL 16 验收与构建修复 |

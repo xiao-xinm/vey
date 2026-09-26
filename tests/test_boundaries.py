@@ -1,12 +1,14 @@
 import base64
 import json
 import time
+from types import SimpleNamespace
 
 import httpx
 import pytest
 from pydantic import ValidationError
 
 from vey.config import Settings
+from vey.docker_backend import DockerBackend
 from vey.domain import ToolCall, VeyError
 from vey.logs import page_logs, sanitize_records
 from vey.model import DeepSeekProvider, deterministic_intent
@@ -72,6 +74,55 @@ def test_log_hard_line_cap_reports_truncation():
     page = page_logs([str(i) for i in range(600)], requested=500)
     assert len(page.text.splitlines()) == 500
     assert page.truncated and page.reason == "lines" and len(page.remaining) == 100
+
+
+def test_default_log_snapshot_does_not_drop_current_second(settings):
+    captured = []
+
+    class Container:
+        def logs(self, **kwargs):
+            captured.append(kwargs)
+            return iter([b"2026-09-26T01:33:00.123456789Z fresh-log\n"])
+
+    class Containers:
+        def get(self, _):
+            return Container()
+
+    class Client:
+        containers = Containers()
+
+    backend = DockerBackend.__new__(DockerBackend)
+    backend.settings, backend.client = settings, Client()
+    records, _ = backend.logs(["fixture"], ToolCall(name="logs", target="fixture/web"))
+    assert records[0].endswith("fresh-log")
+    assert captured[0]["until"] is None and captured[0]["follow"] is False
+    explicit = ToolCall(name="logs", target="fixture/web", until="2026-09-26T01:33:00Z")
+    backend.logs(["fixture"], explicit)
+    assert captured[1]["until"] == explicit.until
+
+
+def test_container_summary_keeps_timestamps_without_environment_secrets():
+    container = SimpleNamespace(
+        id="fixture",
+        name="fixture-web",
+        status="running",
+        attrs={
+            "State": {
+                "Status": "running",
+                "StartedAt": "2026-09-26T01:00:00Z",
+                "FinishedAt": "0001-01-01T00:00:00Z",
+            },
+            "Config": {
+                "Env": ["PASSWORD=do-not-export"],
+                "Image": "nginx",
+                "Labels": {"com.docker.compose.project": "fixture"},
+            },
+        },
+    )
+    result = DockerBackend.__new__(DockerBackend)._summary(container)
+    assert result["started_at"] == "2026-09-26T01:00:00Z"
+    assert result["finished_at"] == "0001-01-01T00:00:00Z"
+    assert "do-not-export" not in json.dumps(result) and "Env" not in result
 
 
 def test_secret_file_setting_works_from_dotenv(tmp_path):

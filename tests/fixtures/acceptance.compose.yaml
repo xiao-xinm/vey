@@ -1,0 +1,25 @@
+name: vey-acceptance
+services:
+  web:
+    image: nginx:latest
+    user: "101:101"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=4m,mode=1777"]
+    entrypoint: ["nginx", "-g", "daemon off;"]
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    mem_limit: 64m
+    cpus: 0.25
+    pids_limit: 32
+    networks:
+      database:
+        aliases: [vey-smoke]
+    logging:
+      driver: json-file
+      options: {max-size: "1m", max-file: "1"}
+networks:
+  database:
+    external: true
+    name: ${VEY_DATABASE_NETWORK:-vey-db}

@@ -1,10 +1,10 @@
 # Ubuntu 部署、接入和恢复
 
-本手册是部署操作说明，尚未在用户服务器执行。所有占位名称必须先替换；凭据在服务器本地输入，不要发到聊天或提交 Git。
+本手册是通用部署操作说明，实际 Docker／PostgreSQL 部署结果见[服务器验收记录](server-acceptance.md)。所有占位名称必须先替换；凭据在服务器本地输入，不要发到聊天或提交 Git。
 
 ## 1. 核对现有环境
 
-需要 Docker Engine、Compose v2，以及已有 PostgreSQL 的管理员访问方式。先记录 Ubuntu／Docker／PostgreSQL 版本、PG 容器名、持久卷、所在 Docker 网络；当前集成测试使用 PostgreSQL 17，其他版本待验证。
+需要 Docker Engine、支持健康依赖及 start_interval 的较新 Compose 插件，以及已有 PostgreSQL 的管理员访问方式。先记录 Ubuntu／Docker／PostgreSQL 版本、PG 容器名、持久卷、所在 Docker 网络；本地集成测试使用 PostgreSQL 17.11，服务器实际验收使用 PostgreSQL 16.15 和 Compose v5.5.0。
 
 ```bash
 docker version
@@ -72,6 +72,8 @@ docker run --rm -it --network YOUR_EXISTING_PG_NETWORK \
 unset VEY_MIGRATION_DATABASE_URL
 ```
 
+如果服务器无法访问 PyPI，可指定管理员信任且网络可达的镜像，例如本次验收使用 `docker compose build --build-arg PYTHON_PACKAGE_INDEX=https://pypi.tuna.tsinghua.edu.cn/simple`。运行依赖仍使用锁文件中的精确版本和哈希；构建源参数不包含认证凭据。
+
 脚本交互要求两个独立、至少 20 字符的运行账号密码。它执行 Alembic 迁移，创建 `vey_core` 和 `vey_exec` schema，在一个事务内创建角色并授权。两个运行角色均非超级用户、不能建库／建角色，仅可操作自己的 schema 数据；公共 schema 的建表权限在专用库内撤销。迁移管理员凭据不提供给常驻服务。角色在 PG 实例内是全局对象，其他数据库的 PUBLIC 权限仍由现有实例管理员管理。
 
 把两个运行角色的 URL 分别填入 `.env` 中 `VEY_CORE_DATABASE_URL`、`VEY_EXEC_DATABASE_URL`。以后升级只由同一迁移所有者执行 `alembic upgrade head`，不要再次运行首次角色初始化，也不要让应用启动时自动执行迁移。
@@ -80,12 +82,23 @@ unset VEY_MIGRATION_DATABASE_URL
 
 ```bash
 docker compose run --rm agent-core check-config
-docker compose up -d
+docker compose up -d --wait --wait-timeout 60
 docker compose ps
 curl --fail http://127.0.0.1:8080/health/ready
 ```
 
 核心端口仅绑定宿主机 `127.0.0.1:8080`，执行器没有 TCP 监听端口。部署后先启用 `VEY_DEBUG_ENABLED=true` 进行认证调试（修改环境后重建核心容器），确认能查询测试服务，再验证一次需要确认的测试服务操作。不要用业务 PG 或 Agent 自身做修改测试。
+
+仓库提供独立验收夹具：先在只读策略中登记 `vey-acceptance/web`、配置健康地址 `http://vey-smoke/`，并启用本地调试，然后运行：
+
+```bash
+docker compose -f tests/fixtures/acceptance.compose.yaml up -d
+docker compose exec -T ops-executor python - --database-only < scripts/acceptance_smoke.py
+docker compose exec -T agent-core python - < scripts/acceptance_smoke.py
+docker compose -f tests/fixtures/acceptance.compose.yaml down
+```
+
+脚本只允许操作上述测试服务，并验证保护对象拒绝、日志、启停和重复确认。根文件系统只读时用标准输入运行，不使用 `docker cp` 放宽限制。验收后将调试开关恢复为 false 并重新应用 Compose 配置。
 
 若在宿主机用 Python 运行本地 CLI：`uv sync --frozen` 后，设置本地路径的 `VEY_EXECUTOR_TOKEN_FILE`／`VEY_DEBUG_TOKEN_FILE` 和 `VEY_DATABASE_URL`，再执行 `uv run vey message '服务列表' --wait`。可通过 SSH 转发访问此本地端口；不要公开代理 `/debug`。调试任务查询返回的是最多 3000 字符的审计摘要，完整日志页通过企微投递。
 
