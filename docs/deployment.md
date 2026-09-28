@@ -128,6 +128,65 @@ ops.example.com {
 
 最终真实验收至少包括：签名校验、重复回调、长结果分段、正确本人身份、模型一次自然语言调用、测试容器启动／停止／重启、PG 保护拒绝、超时后状态查询。域名备案及后台资格以用户所属部署地区和企微当前规则为准，本文不把这些条件视为已经满足。
 
+### 5.1 独立 HTTPS 网关（原 Nginx 仅占用 80 时）
+
+仓库提供可选 `compose.https.yaml`。当现有代理无法在不重建的情况下开放 443 时，可以让独立 Caddy 网关使用空闲 443，保留原 HTTP 服务。两种入口方案选一种，不同时占用 443。
+
+准备已解析到服务器的域名，并确认云安全组／防火墙允许 TCP 443。确认 UID 10003 未与宿主机其他身份冲突，然后创建证书持久化目录：
+
+```bash
+sudo install -d -o 10003 -g 10000 -m 0700 /opt/vey/tls
+```
+
+在现有 `.env` 追加以下设置，不能覆盖原数据库及企微配置：
+
+```dotenv
+COMPOSE_FILE=compose.yaml:compose.https.yaml
+VEY_PUBLIC_HOST=ops.example.com
+VEY_TLS_DATA_DIR=/opt/vey/tls
+VEY_ACME_CA=https://acme-staging-v02.api.letsencrypt.org/directory
+```
+
+`COMPOSE_FILE` 的冒号分隔形式用于 Ubuntu；Windows 需按所在平台改用分号或显式 `-f` 参数。
+
+```bash
+docker compose build https-gateway
+docker compose run --rm --no-deps https-gateway caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+docker compose --profile https up -d --wait --wait-timeout 60
+```
+
+网关只发布 443，内部监听 8443，通过私有 ingress 网络代理核心，数据库和执行器不加入 ingress。容器镜像移除了上游 Caddy 二进制的文件 capability，避免与 `cap_drop=ALL` 冲突。内部健康检查通过只证明进程工作，**不证明正式证书已签发或公网可达**。
+
+使用 TLS-ALPN-01 验证，不占用已有 HTTP 80；其外部入口仍必须是 443。[Caddy 内部 HTTPS 端口说明](https://caddyserver.com/docs/caddyfile/options#https-port)、[ACME 校验配置](https://caddyserver.com/docs/caddyfile/directives/tls#issuers)
+
+先检查网关日志确认测试环境签发成功，再把 `VEY_ACME_CA` 改为 `https://acme-v02.api.letsencrypt.org/directory`，执行：
+
+```bash
+docker compose --profile https up -d --no-deps --force-recreate --wait https-gateway
+curl --fail https://ops.example.com/wecom/callback
+```
+
+上述 curl 不应跳过证书校验；没有签名参数时预期返回 HTTP 422，所以 `--fail` 会报告 HTTP 错误。应检查是否已通过 TLS 验证，再使用带签名的回调验证实际明文响应。根路径、`/debug`、`/health`、`/openapi.json` 预期 404。测试环境证书不能用于企微正式接入。
+
+遇到尚未满足的公网条件时执行 `docker compose stop https-gateway` 停止反复签发；配置和证书目录保留。默认 `docker compose up` 不启用该 profile，恢复入口需要显式 `--profile https`。续期依赖入口长期可达及证书目录可写，应把证书到期检查纳入后续监控。
+
+### 5.2 升级到消息分段进度版本
+
+本次应用需要迁移 `0002`。先确认没有正在执行的任务，保存旧镜像，停止 Vey 核心／执行器并完成专用库备份。使用迁移所有者执行 `alembic upgrade head`，成功后再启动新应用；不要让运行角色获得 DDL 权限。
+
+例如服务器已将迁移 URL 保存在 root-only 的 `/opt/vey/.local/migration.env` 时：
+
+```bash
+docker compose stop agent-core ops-executor
+# 此处先执行并校验专用库备份，步骤见第 8 节。
+sudo docker run --rm --network YOUR_EXISTING_PG_NETWORK \
+  --env-file /opt/vey/.local/migration.env \
+  --entrypoint alembic vey-agent:0.1.0 upgrade head
+docker compose up -d --wait --wait-timeout 60
+```
+
+迁移文件中增加 `outbox.sent_parts`，旧行初始化为 0，保留正文、状态和已有尝试次数。旧版本发送中的分段没有进度，升级不能推断此前哪些段已经送达；升级前应先排空投递队列。当前服务器升级前确认任务／投递均为空。不要运行 downgrade 丢弃投递进度；故障回退应使用已验证的备份和对应镜像，并按第 8 节作废旧任务。
+
 ## 6. 结果未知与人工核对
 
 执行器超时／崩溃后可能出现 `unknown`：先查询 `操作 <原任务ID>`，再由管理员直接核对 Docker 状态及时间线。当前状态无法证明某次重启是否发生。需要接受未知历史并解除后续修改锁定时，在已完成核对后运行：

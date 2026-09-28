@@ -13,7 +13,7 @@ from vey.domain import ToolCall, VeyError
 from vey.logs import page_logs, sanitize_records
 from vey.model import DeepSeekProvider, deterministic_intent
 from vey.security import safe_value
-from vey.wecom import WeComCipher, chunks_utf8, parse_xml
+from vey.wecom import WeComCipher, WeComSender, chunks_utf8, parse_xml
 
 
 def test_policy_requires_dependency_protection(policy):
@@ -179,6 +179,29 @@ def test_wecom_utf8_chunks_preserve_text():
     chunks = chunks_utf8(original)
     assert "".join(chunks) == original
     assert all(len(chunk.encode()) <= 1800 for chunk in chunks)
+
+
+@pytest.mark.parametrize("errcode", [40014, 42001])
+async def test_expired_wecom_token_refreshes_on_next_attempt(settings, errcode):
+    token_requests, messages = [], []
+
+    def handler(request):
+        if request.url.path.endswith("/gettoken"):
+            token_requests.append(True)
+            return httpx.Response(
+                200, json={"access_token": f"token-{len(token_requests)}", "expires_in": 7200}
+            )
+        messages.append(request.url.params["access_token"])
+        return httpx.Response(200, json={"errcode": errcode if len(messages) == 1 else 0})
+
+    sender = WeComSender(settings, httpx.AsyncClient(transport=httpx.MockTransport(handler)))
+    try:
+        with pytest.raises(VeyError, match="消息发送失败"):
+            await sender.send("owner", "查询结果")
+        await sender.send("owner", "查询结果")
+        assert messages == ["token-1", "token-2"]
+    finally:
+        await sender.close()
 
 
 async def test_deepseek_output_is_validated_and_reasoning_not_stored(settings):

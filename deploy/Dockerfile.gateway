@@ -1,0 +1,5 @@
+FROM caddy:2.11.4-alpine@sha256:6aeddd44c3078b0f9a35206472a11420648a79c184603ef95957d0a20044cb2b
+# Port 8443 needs no privileged bind capability. Remove the upstream file
+# capability so the binary can run with cap_drop=ALL and no-new-privileges.
+RUN setcap -r /usr/bin/caddy
+USER 10003:10000

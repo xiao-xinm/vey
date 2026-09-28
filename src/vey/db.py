@@ -76,6 +76,7 @@ class Outbox(Base):
     body: Mapped[str] = mapped_column(Text)
     status: Mapped[str] = mapped_column(String(24), default="pending")
     attempts: Mapped[int] = mapped_column(Integer, default=0)
+    sent_parts: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
     next_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 

@@ -84,6 +84,18 @@ def chunks_utf8(value: str, max_bytes=1800) -> list[str]:
     return chunks
 
 
+def delivery_parts(body: str, task_id: str, kind: str) -> list[str]:
+    """Keep part boundaries and labels stable across retries and process restarts."""
+    parts = chunks_utf8(redact(body), max_bytes=1700)
+    if len(parts) <= 1:
+        return parts
+    label = "结果" if kind == "result" else "通知"
+    return [
+        f"[任务 {task_id} · {label} {index}/{len(parts)}]\n{part}"
+        for index, part in enumerate(parts, 1)
+    ]
+
+
 class WeComSender:
     def __init__(self, settings, client=None):
         self.settings = settings

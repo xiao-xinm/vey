@@ -2,7 +2,7 @@
 
 通过企业微信自建应用管理个人 Ubuntu 服务器的运维 Agent。面向 AI 应用／Agent 开发实践，按三期建设：可靠运维闭环 → 诊断评测 → 管理后台。
 
-**第一期核心已在 Ubuntu 完成 Docker／PostgreSQL 验收及 DeepSeek 真实只读流程验收，企微接入待配置。** 详见[服务器验收记录](docs/server-acceptance.md)、[模型验收记录](docs/model-acceptance.md)与[开发进度](docs/development-plan.md)。
+**第一期核心已在 Ubuntu 完成 Docker／PostgreSQL 验收及 DeepSeek 真实只读流程验收；企微凭据鉴权和本机回调已验证，公网聊天待备案及 HTTPS 验收。** 详见[服务器验收记录](docs/server-acceptance.md)、[模型验收记录](docs/model-acceptance.md)、[企微消息与 HTTPS 验收](docs/wecom-readiness.md)与[开发进度](docs/development-plan.md)。
 
 ## 能做什么
 
@@ -42,7 +42,7 @@ uv run pytest -q
 
 没有测试数据库时，PostgreSQL 集成用例会明确跳过。完整测试须设置 `VEY_TEST_DATABASE_URL=postgresql+psycopg://.../vey_test`，连接**专用测试实例／数据库**。测试会重建该库内的 Vey schema；数据库名必须以 `vey_test` 开头，权限测试需要可创建角色的测试管理员。不能用生产库跑测试。
 
-测试涵盖真实 PostgreSQL 迁移、事务、并发确认、去重、权限隔离和生命周期；Docker 和模型行为使用替身，企微使用本地加密消息测试。测试通过不等于外部服务已联调通过。
+测试涵盖真实 PostgreSQL 迁移、事务、并发确认、去重、权限隔离和生命周期；Docker 和模型行为使用替身，企微使用本地加密消息测试。测试通过不等于外部服务已联调通过。完整测试管理员还需具备建库权限，用于在临时 `vey_test_upgrade_*` 数据库验证旧版本升级，结束后自动清理。
 
 ## 部署和使用
 
@@ -79,5 +79,7 @@ uv run pytest -q
 日志读取内部有 5000 行／1 MB 扫描窗口；窗口内可翻页，更早内容需要明确时间范围。容量超限会提示缩小范围，不会假装完整读过全部历史。当前普通日志回复为脱敏原文，自动摘要／展开交互待完善。
 
 Docker 修改与数据库提交不能组成原子事务。调用前持久化 `executing`，超时或重启后保守标记 `unknown`，不自动重放。同一服务在结果未知时拒绝后续修改；管理员可按部署手册核对并记录解除锁定，不能把状态查询当成历史操作成功的证明。
+
+长回复按 UTF-8 分段并记录已确认投递的段数；发送失败从未确认段继续，每段最多尝试 10 次，投递总期限为创建后 1 小时。消息重试不会重跑 Docker。企微接收成功但本地进度尚未提交时仍有重复窗口，不能承诺端到端恰好一次投递。核心服务重启会为正在执行的企微任务保留一次中断通知，不自动重放任务。
 
 更多：[需求](docs/requirements.md) · [技术方案](docs/technical-design.md) · [三期路线和数据设计](docs/roadmap-and-data.md) · [开发进度与待验收项](docs/development-plan.md)

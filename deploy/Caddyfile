@@ -1,0 +1,41 @@
+{
+	admin off
+	persist_config off
+	https_port 8443
+	auto_https disable_redirects
+	servers {
+		protocols h1 h2
+		timeouts {
+			read_header 10s
+			read_body 15s
+			write 30s
+			idle 1m
+		}
+	}
+}
+
+https://{$VEY_PUBLIC_HOST} {
+	tls {
+		issuer acme {
+			dir {$VEY_ACME_CA:https://acme-v02.api.letsencrypt.org/directory}
+			disable_http_challenge
+		}
+	}
+	@callback {
+		path /wecom/callback
+		method GET POST
+	}
+	handle @callback {
+		request_body {
+			max_size 64KB
+		}
+		reverse_proxy agent-core:8080
+	}
+	handle {
+		respond 404
+	}
+}
+
+http://127.0.0.1:8081 {
+	respond /health 200
+}

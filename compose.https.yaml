@@ -1,0 +1,46 @@
+# Optional HTTPS ingress; leaves an existing port-80 web server untouched.
+services:
+  agent-core:
+    networks: [database, ingress]
+
+  https-gateway:
+    profiles: [https]
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.gateway
+    image: vey-gateway:2.11.4
+    user: "10003:10000"
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /config:size=16m,uid=10003,gid=10000,mode=0700
+    mem_limit: 128m
+    cpus: 0.5
+    pids_limit: 64
+    ports: ["443:8443"]
+    environment:
+      VEY_PUBLIC_HOST: ${VEY_PUBLIC_HOST:?Set a domain controlled by the administrator}
+      VEY_ACME_CA: ${VEY_ACME_CA:-https://acme-v02.api.letsencrypt.org/directory}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${VEY_TLS_DATA_DIR:?Set a persistent directory owned by UID 10003}:/data
+    networks: [ingress]
+    depends_on:
+      agent-core:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+
+networks:
+  ingress: {}

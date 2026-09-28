@@ -22,6 +22,7 @@ from vey.domain import (
 )
 from vey.model import deterministic_intent
 from vey.security import redact, safe_value
+from vey.wecom import delivery_parts
 
 CONTROL = re.compile(
     r"^(?:清空上下文|(?:确认|取消)\s+[A-Fa-f0-9]{8}|(?:任务|操作)\s+[a-f0-9]{32})$"
@@ -366,7 +367,7 @@ class Core:
     def recover(self):
         with self.factory.begin() as db:
             # Do not replay any started task, including confirmations, after a restart.
-            db.execute(
+            interrupted = db.execute(
                 update(Task)
                 .where(Task.status == "running")
                 .values(
@@ -375,7 +376,20 @@ class Core:
                     lease_until=None,
                     updated_at=utcnow(),
                 )
+                .returning(Task.id, Task.user_id, Task.channel, Task.result)
             )
+            for task in interrupted:
+                if task.channel == "wecom":
+                    db.execute(
+                        insert(Outbox)
+                        .values(
+                            task_id=task.id,
+                            kind="result",
+                            user_id=task.user_id,
+                            body=f"任务编号：{task.id}\n{task.result}",
+                        )
+                        .on_conflict_do_nothing()
+                    )
 
     def cleanup(self):
         now = utcnow()
@@ -433,7 +447,6 @@ class Core:
                 .where(
                     Outbox.status.in_(["pending", "sending"]),
                     Outbox.next_at <= utcnow(),
-                    Outbox.attempts < 10,
                 )
                 .order_by(Outbox.created_at)
                 .with_for_update(skip_locked=True)
@@ -441,21 +454,47 @@ class Core:
             )
             if not item:
                 return False
+            # A process can disappear during its last allowed attempt. Do not leave
+            # that row in 'sending', or retry beyond the per-part budget.
+            if item.attempts >= 10 or item.created_at < utcnow() - timedelta(hours=1):
+                item.status = "failed"
+                if item.created_at < utcnow() - timedelta(hours=1):
+                    item.body = ""
+                return True
+            parts = delivery_parts(item.body, item.task_id, item.kind)
+            if item.sent_parts >= len(parts):
+                item.status = "sent"
+                return True
             item.status, item.attempts, item.next_at = (
                 "sending",
                 item.attempts + 1,
                 utcnow() + timedelta(seconds=60),
             )
-            item_id, user, body = item.id, item.user_id, item.body
+            item_id, user = item.id, item.user_id
+            part_index, attempt = item.sent_parts, item.attempts
+            body = parts[part_index]
         try:
             await sender.send(user, body)
             status = "sent"
         except Exception:
             status = "pending"
         with self.factory.begin() as db:
-            item = db.get(Outbox, item_id)
-            item.status = "failed" if status == "pending" and item.attempts >= 10 else status
-            item.next_at = utcnow() + timedelta(seconds=min(300, 2**item.attempts))
+            item = db.get(Outbox, item_id, with_for_update=True)
+            if (
+                not item
+                or item.status != "sending"
+                or item.sent_parts != part_index
+                or item.attempts != attempt
+            ):
+                return True
+            if status == "sent":
+                item.sent_parts += 1
+                item.status = "sent" if item.sent_parts == len(parts) else "pending"
+                item.attempts = 0
+                item.next_at = utcnow()
+            else:
+                item.status = "failed" if item.attempts >= 10 else "pending"
+                item.next_at = utcnow() + timedelta(seconds=min(300, 2**item.attempts))
         return True
 
 
