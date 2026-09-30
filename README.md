@@ -2,11 +2,12 @@
 
 通过企业微信自建应用管理个人 Ubuntu 服务器的运维 Agent。面向 AI 应用／Agent 开发实践，按三期建设：可靠运维闭环 → 诊断评测 → 管理后台。
 
-**第一期核心已在 Ubuntu 完成 Docker／PostgreSQL 验收及 DeepSeek 真实只读流程验收；企微凭据鉴权、正式 HTTPS 和公网回调已验证，待企微后台保存回调及手机聊天验收。** 详见[服务器验收记录](docs/server-acceptance.md)、[模型验收记录](docs/model-acceptance.md)、[企微消息与 HTTPS 验收](docs/wecom-readiness.md)与[开发进度](docs/development-plan.md)。
+**第一期核心已在 Ubuntu 完成 Docker／PostgreSQL 验收及 DeepSeek 真实只读流程验收；正式 HTTPS 与企微真实系统查询已打通，确认操作等聊天场景仍待验收。** 详见[服务器验收记录](docs/server-acceptance.md)、[模型验收记录](docs/model-acceptance.md)、[企微消息与 HTTPS 验收](docs/wecom-readiness.md)与[开发进度](docs/development-plan.md)。
 
 ## 能做什么
 
 - 服务器信息、配置范围内的 Compose 服务状态、资源和业务健康检查。
+- 服务器概况以中文摘要展示采样时间、CPU、内存、运行时长、已配置磁盘及前五项进程常驻内存；缺失指标明确提示，不据此断言业务正常。
 - 日志默认最近 100 行，无默认时间筛选；每页最多 500 行／10000 Unicode 字符，支持关键词、时间范围、截断提示和向前翻页。
 - 故障排查最多 5 次只读工具调用、60 秒；到达上限后返回已有证据，不自动续查。
 - 对已有容器启动、停止、重启；8 位确认码 2 分钟有效，仅消费一次，保护清单在执行器内强制生效。

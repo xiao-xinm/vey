@@ -21,6 +21,7 @@ from vey.domain import (
     utcnow,
 )
 from vey.model import deterministic_intent
+from vey.presentation import render_system
 from vey.security import redact, safe_value
 from vey.wecom import delivery_parts
 
@@ -226,7 +227,9 @@ class Core:
                             "target": result.get("target", context.get("target")),
                         }
                     )
-                    self._finish(task_id, "succeeded", render_result(result), context_update)
+                    self._finish(
+                        task_id, "succeeded", render_result(result, call.name), context_update
+                    )
                     return
                 target = context_update.get("target") or context.get("target")
                 summary = ""
@@ -498,7 +501,9 @@ class Core:
         return True
 
 
-def render_result(result):
+def render_result(result, tool_name=None):
+    if tool_name == "system":
+        return render_system(result)
     if "text" in result:
         return f"{result.get('target', '')}\n{result['text']}\n{result.get('message', '')}".strip()
     return json.dumps(safe_value(result), ensure_ascii=False, indent=2, default=str)
