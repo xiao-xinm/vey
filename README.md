@@ -83,4 +83,4 @@ Docker 修改与数据库提交不能组成原子事务。调用前持久化 `ex
 
 长回复按 UTF-8 分段并记录已确认投递的段数；发送失败从未确认段继续，每段最多尝试 10 次，投递总期限为创建后 1 小时。消息重试不会重跑 Docker。企微接收成功但本地进度尚未提交时仍有重复窗口，不能承诺端到端恰好一次投递。核心服务重启会为正在执行的企微任务保留一次中断通知，不自动重放任务。
 
-更多：[需求](docs/requirements.md) · [技术方案](docs/technical-design.md) · [三期路线和数据设计](docs/roadmap-and-data.md) · [开发进度与待验收项](docs/development-plan.md)
+更多：[需求](docs/requirements.md) · [技术方案](docs/technical-design.md) · [三期路线和数据设计](docs/roadmap-and-data.md) · [开发进度与待验收项](docs/development-plan.md) · [聊天链路验收](docs/phase1-chat-acceptance.md) · [演示流程](docs/demo.md)

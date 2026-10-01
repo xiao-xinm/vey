@@ -213,8 +213,9 @@ def main():
         assert task("清空上下文")["status"] == "succeeded"
         assert task("确认 " + code)["status"] == "failed"
         checks.append("clear_context_revokes_confirmation")
-        assert task("帮我分析测试服务为何不可访问")["status"] == "failed"
-        checks.append("missing_model_key_fails_closed")
+        if not settings.model_key.get_secret_value():
+            assert task("帮我分析测试服务为何不可访问")["status"] == "failed"
+            checks.append("missing_model_key_fails_closed")
     print(json.dumps({"status": "passed", "checks": checks}, ensure_ascii=False))
 
 
