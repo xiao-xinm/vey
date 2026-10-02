@@ -157,6 +157,8 @@ docker compose --profile https up -d --wait --wait-timeout 60
 
 网关只发布 443，内部监听 8443，通过私有 ingress 网络代理核心，数据库和执行器不加入 ingress。容器镜像移除了上游 Caddy 二进制的文件 capability，避免与 `cap_drop=ALL` 冲突。内部健康检查通过只证明进程工作，**不证明正式证书已签发或公网可达**。
 
+如需在同一域名开放已有 MinIO 控制台，可显式叠加 `compose.minio.yaml`，见 [MinIO 控制台配置](minio-console.md)。默认 HTTPS 配置不会自动开放这个入口。
+
 使用 TLS-ALPN-01 验证，不占用已有 HTTP 80；其外部入口仍必须是 443。[Caddy 内部 HTTPS 端口说明](https://caddyserver.com/docs/caddyfile/options#https-port)、[ACME 校验配置](https://caddyserver.com/docs/caddyfile/directives/tls#issuers)
 
 先检查网关日志确认测试环境签发成功，再把 `VEY_ACME_CA` 改为 `https://acme-v02.api.letsencrypt.org/directory`，执行：

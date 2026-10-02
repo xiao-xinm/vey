@@ -21,6 +21,8 @@ https://{$VEY_PUBLIC_HOST} {
 			disable_http_challenge
 		}
 	}
+	# Optional routes are mounted explicitly by additional Compose overlays.
+	import /etc/caddy/optional/*.caddy
 	@callback {
 		path /wecom/callback
 		method GET POST

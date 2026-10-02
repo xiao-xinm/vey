@@ -1,0 +1,10 @@
+# Optional existing MinIO console, in addition to compose.https.yaml.
+# The upstream is the Linux host's already-published console port, never the S3 API.
+services:
+  https-gateway:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      VEY_MINIO_CONSOLE_UPSTREAM: ${VEY_MINIO_CONSOLE_UPSTREAM:-host.docker.internal:9001}
+    volumes:
+      - ./deploy/minio-console.caddy:/etc/caddy/optional/minio.caddy:ro

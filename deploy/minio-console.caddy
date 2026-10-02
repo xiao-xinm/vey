@@ -1,0 +1,6 @@
+# MinIO must set MINIO_BROWSER_REDIRECT_URL=https://YOUR_DOMAIN/minio/.
+# Caddy handles WebSocket upgrades and forwards the public host/protocol.
+redir /minio /minio/ 308
+handle_path /minio/* {
+	reverse_proxy {$VEY_MINIO_CONSOLE_UPSTREAM:host.docker.internal:9001}
+}
