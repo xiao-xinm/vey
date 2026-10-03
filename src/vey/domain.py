@@ -36,8 +36,8 @@ class Action(StrEnum):
 
 
 class ToolCall(StrictModel):
-    name: Literal["system", "services", "inspect", "stats", "logs", "health"] = Field(
-        description="system=宿主机CPU/内存/磁盘；services=服务列表；inspect=指定服务容器状态；stats=指定服务容器资源；logs=指定服务日志；health=指定服务业务健康检查"
+    name: Literal["system", "services", "inspect", "stats", "ranking", "logs", "health"] = Field(
+        description="system=宿主机CPU/内存/磁盘；services=服务列表；inspect=指定服务容器状态；stats=指定服务容器资源；ranking=已配置容器资源排行，无需target；logs=指定服务日志；health=指定服务业务健康检查"
     )
     target: str | None = Field(
         default=None,
@@ -49,6 +49,7 @@ class ToolCall(StrictModel):
     since: datetime | None = None
     until: datetime | None = None
     cursor: str | None = Field(default=None, max_length=64)
+    sort_by: Literal["memory", "cpu"] = "memory"
 
     @model_validator(mode="after")
     def check_dates(self):
@@ -57,7 +58,11 @@ class ToolCall(StrictModel):
                 raise ValueError("日志时间必须包含时区")
         if self.since and self.until and self.since >= self.until:
             raise ValueError("开始时间必须早于结束时间")
-        if self.name not in ("system", "services") and not self.target and not self.cursor:
+        if (
+            self.name not in ("system", "services", "ranking")
+            and not self.target
+            and not self.cursor
+        ):
             raise ValueError("此工具需要明确目标")
         if self.cursor and self.name != "logs":
             raise ValueError("只有日志工具支持游标")

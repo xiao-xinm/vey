@@ -25,6 +25,13 @@ class Service(StrictModel):
         return self
 
 
+class Thresholds(StrictModel):
+    cpu_percent: float = Field(default=90, gt=0, le=100)
+    memory_percent: float = Field(default=85, gt=0, le=100)
+    disk_percent: float = Field(default=90, gt=0, le=100)
+    load_per_cpu: float = Field(default=2, gt=0, le=100)
+
+
 class Policy(StrictModel):
     owner_id: str = Field(min_length=1)
     self_project: str = Field(min_length=1)
@@ -32,6 +39,7 @@ class Policy(StrictModel):
     protected_container_ids: list[str] = Field(default_factory=list)
     services: list[Service] = Field(min_length=1)
     database_protection_acknowledged: bool = False
+    thresholds: Thresholds = Field(default_factory=Thresholds)
 
     @model_validator(mode="after")
     def validate_policy(self):
@@ -97,6 +105,7 @@ class Settings(BaseSettings):
     worker_enabled: bool = True
     host_proc: Path | None = None
     host_disk_paths: list[str] = Field(default_factory=list)
+    host_disk_labels: dict[str, str] = Field(default_factory=dict)
     docker_timeout: int = Field(default=12, ge=1, le=20)
     log_scan_bytes: int = Field(default=1_000_000, ge=10000, le=2_000_000)
     log_scan_lines: int = Field(default=5000, ge=500, le=10000)

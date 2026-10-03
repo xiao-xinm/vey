@@ -147,6 +147,11 @@ def main():
         try:
             assert submit("清空上下文")["status"] == "succeeded"
             assert state()["status"] == "running"
+            system = submit("服务器概况", public=True)
+            assert system["status"] == "succeeded" and "阈值提示" in system["delivery_body"]
+            ranking = submit("资源排行", public=True)
+            assert ranking["status"] == "succeeded" and "容器资源排行" in ranking["delivery_body"]
+            record("system_thresholds_and_container_ranking")
             # Only the named fixture receives these requests; the dummy secret is deliberate.
             for index in range(240):
                 response = callback.get(
@@ -154,8 +159,15 @@ def main():
                     params={"line": f"acceptance-{index:04}", "password": "fixture-secret"},
                 )
                 assert response.status_code == 200
-            first = submit("日志 " + TARGET, public=True, duplicate=True)
-            second = submit("下一页", public=True)
+            summary = submit("日志 " + TARGET, public=True, duplicate=True)
+            assert (
+                "日志摘要" in summary["delivery_body"] and "本页 100 行" in summary["delivery_body"]
+            )
+            first = submit("展开日志", public=True)
+            assert "日志原文" in first["delivery_body"]
+            assert "日志摘要" in first["result"]  # Permanent audit remains a summary.
+            submit("下一页", public=True)
+            second = submit("展开日志", public=True)
             first_lines = set(re.findall(r"acceptance-\d{4}", first["delivery_body"]))
             second_lines = set(re.findall(r"acceptance-\d{4}", second["delivery_body"]))
             assert len(first_lines) == len(second_lines) == 100

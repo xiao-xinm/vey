@@ -15,6 +15,7 @@ from vey.security import redact, safe_value
 TOOL_GUIDE = (
     "\n工具语义：system 查询整台宿主机的 CPU、内存、磁盘、负载和进程，不需要 target；"
     "services 列出管理范围内的服务，不需要 target。"
+    "ranking 对配置范围内的容器资源排序，不需要 target，sort_by 为 memory 或 cpu。"
     "inspect 查询指定服务的容器状态；stats 查询指定服务的容器资源；"
     "logs 查询指定服务日志；health 检查指定服务的业务健康地址。"
     "inspect、stats、health 必须提供 catalog 中的准确 target，logs 首次查询同样必须提供。"
@@ -33,7 +34,7 @@ class ModelProvider(IntentRouter, Protocol):
 
 
 class DeepSeekProvider:
-    prompt_version = "v2"
+    prompt_version = "v3"
 
     def __init__(self, settings: Settings, client: httpx.AsyncClient | None = None):
         self.settings = settings
@@ -129,6 +130,10 @@ def deterministic_intent(message: str, policy: Policy, context: dict) -> Intent 
         return Intent(kind="query", tool=ToolCall(name="system"))
     if message in {"服务列表", "容器列表", "列出服务"}:
         return Intent(kind="query", tool=ToolCall(name="services"))
+    if message in {"资源排行", "容器资源排行", "内存排行", "哪个服务最占内存"}:
+        return Intent(kind="query", tool=ToolCall(name="ranking"))
+    if message.upper() in {"CPU排行", "CPU 排行"}:
+        return Intent(kind="query", tool=ToolCall(name="ranking", sort_by="cpu"))
     if message in {"下一页", "更早的日志"}:
         if not context.get("cursor"):
             return Intent(kind="clarify", message="当前没有有效日志游标，请先查询日志")

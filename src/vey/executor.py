@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import secrets
+import time
 from datetime import timedelta
 
 from sqlalchemy import delete, func, select, text, update
@@ -245,7 +246,26 @@ class Executor:
             self._actor(db, request.actor)
         call = request.call
         if call.name == "system":
-            return collect_system(self.settings.host_proc, self.settings.host_disk_paths)
+            result = collect_system(
+                self.settings.host_proc,
+                self.settings.host_disk_paths,
+                self.settings.host_disk_labels,
+                self.policy.thresholds,
+            )
+            result["container_anomalies"] = [
+                {
+                    "target": s.key,
+                    "name": c.get("name", c["id"][:12]),
+                    "status": c.get("status"),
+                    "health": c.get("health"),
+                }
+                for s in self.policy.services
+                for c in self.backend.resolve(s)
+                if c.get("status") != "running" or c.get("health") == "unhealthy"
+            ]
+            return result
+        if call.name == "ranking":
+            return self._ranking(call.sort_by)
         if call.name == "services":
             return {
                 "services": [
@@ -259,11 +279,13 @@ class Executor:
         if call.name == "inspect":
             return {"target": service.key, "instances": instances, "deployed": bool(instances)}
         if call.name == "health":
-            return self.backend.health(service)
+            return {"target": service.key, **self.backend.health(service)}
         if call.name == "stats":
             return {
                 "target": service.key,
-                "instances": [self.backend.stats(c["id"]) for c in instances],
+                "instances": [
+                    {"name": c.get("name"), **self.backend.stats(c["id"])} for c in instances
+                ],
             }
         if not instances:
             raise VeyError("not_deployed", "没有可读取日志的容器")
@@ -306,6 +328,8 @@ class Executor:
                 )
         return {
             "target": target,
+            "container_ids": ids,
+            "sampled_at": utcnow().isoformat(),
             "text": page.text,
             "cursor": cursor_id,
             "truncated": page.truncated,
@@ -318,6 +342,47 @@ class Executor:
             else "到达本次可读窗口边界；更早日志请指定时间范围"
             if boundary
             else "已到日志末页",
+        }
+
+    def _ranking(self, sort_by):
+        started = time.monotonic()
+        candidates, failures, rows = {}, [], []
+        for service in self.policy.services:
+            for c in self.backend.resolve(service):
+                candidates[c["id"]] = {"target": service.key, **c}
+        # Explicitly protected legacy containers have no Compose labels, but can be read.
+        for container_id in self.policy.protected_container_ids:
+            if container_id not in candidates:
+                try:
+                    candidates[container_id] = {
+                        "target": "受保护容器",
+                        **self.backend.inspect(container_id),
+                    }
+                except Exception:
+                    failures.append({"id": container_id[:12], "reason": "容器不可读取"})
+        skipped = 0
+        for c in candidates.values():
+            if len(rows) >= 50 or time.monotonic() - started >= 12:
+                skipped += 1
+                continue
+            if c.get("status") != "running":
+                failures.append({"id": c["id"][:12], "reason": "未运行，未采集资源"})
+                continue
+            try:
+                rows.append(
+                    {"target": c["target"], "name": c.get("name"), **self.backend.stats(c["id"])}
+                )
+            except Exception:
+                failures.append({"id": c["id"][:12], "reason": "资源采集失败"})
+        metric = "memory_bytes" if sort_by == "memory" else "cpu_percent"
+        rows.sort(key=lambda r: r.get(metric) if r.get(metric) is not None else -1, reverse=True)
+        return {
+            "ranking": rows,
+            "sort_by": sort_by,
+            "failures": failures,
+            "skipped": skipped,
+            "sampled_at": utcnow().isoformat(),
+            "scope": "仅已配置服务和受保护容器；逐个瞬时采样",
         }
 
     def _next_log(self, request):

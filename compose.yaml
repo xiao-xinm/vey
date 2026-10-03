@@ -67,6 +67,7 @@ services:
       VEY_EXECUTOR_TOKEN_FILE: /run/secrets/executor_token
       VEY_HOST_PROC: /host/proc
       VEY_HOST_DISK_PATHS: '["/host/disk"]'
+      VEY_HOST_DISK_LABELS: '{"/host/disk":"/"}'
     volumes:
       - ./config/vey.toml:/app/config/vey.toml:ro
       - ${VEY_RUNTIME_DIR:?Set owned runtime directory}:/run/vey

@@ -92,6 +92,9 @@ def main():
                     "status": "passed",
                     "check": "real_15_minute_idle_expiry",
                     "task": receipt["task_id"],
+                    "observed_at": utcnow().isoformat(),
+                    "expires_at": expires.isoformat(),
+                    "cleanup_delay_seconds_upper_bound": (utcnow() - expires).total_seconds(),
                 }
             ),
             flush=True,

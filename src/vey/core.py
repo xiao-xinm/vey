@@ -4,7 +4,7 @@ import asyncio
 import json
 import re
 import time
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from sqlalchemy import delete, select, update
 from sqlalchemy.dialects.postgresql import insert
@@ -21,7 +21,7 @@ from vey.domain import (
     utcnow,
 )
 from vey.model import deterministic_intent
-from vey.presentation import render_system
+from vey.presentation import render_logs, render_readable
 from vey.security import redact, safe_value
 from vey.wecom import delivery_parts
 
@@ -140,7 +140,7 @@ class Core:
         with self.factory.begin() as db:
             db.add(Event(task_id=task_id, kind=kind, data=clean))
 
-    def _finish(self, task_id, status, message, context_update=None):
+    def _finish(self, task_id, status, message, context_update=None, audit_message=None):
         with self.factory.begin() as db:
             task = db.get(Task, task_id, with_for_update=True)
             session = db.get(ChatSession, task.user_id, with_for_update=True)
@@ -148,13 +148,14 @@ class Core:
                 session and session.generation == task.generation and session.expires_at > utcnow()
             )
             if not valid:
+                audit_message = None
                 status, message = (
                     "cancelled",
                     "任务所属上下文已失效，未恢复旧会话；已执行操作可通过任务编号查询",
                 )
             task.status, task.updated_at, task.lease_until = status, utcnow(), None
             # Persist a bounded summary, not a permanent archive of raw logs/chat.
-            task.result = redact(message)[:3000]
+            task.result = redact(audit_message if audit_message is not None else message)[:3000]
             if valid:
                 context = dict(session.context)
                 if context_update:
@@ -191,10 +192,30 @@ class Core:
                 await self._control(task_id, actor, message.strip())
                 return
             async with asyncio.timeout(CHECK_TIMEOUT_SECONDS):
+                if message.strip() in {"展开日志", "展开原文"}:
+                    page = context.get("log_page")
+                    if not page or datetime.fromisoformat(page["expires_at"]) <= utcnow():
+                        raise VeyError("expired_log_page", "没有有效的本页日志快照，请先查询日志")
+                    result = await self._read(
+                        task_id, actor, ToolCall(name="inspect", target=page["target"]), evidence
+                    )
+                    if sorted(i["id"] for i in result["instances"]) != sorted(
+                        page["container_ids"]
+                    ):
+                        raise VeyError("target_changed", "日志对应容器已变化，请重新查询日志")
+                    self._finish(
+                        task_id,
+                        "succeeded",
+                        render_logs(page, expanded=True),
+                        audit_message=render_logs(page),
+                    )
+                    return
                 intent = deterministic_intent(message, self.policy, context)
                 if intent is None:
                     intent = await (self.router or self.model).route(
-                        message, context, self.policy.catalog()
+                        message,
+                        {k: v for k, v in context.items() if k != "log_page"},
+                        self.policy.catalog(),
                     )
                 self.event(task_id, "intent", intent.model_dump(mode="json"))
                 # Check session again before admitting any action after a model call.
@@ -211,22 +232,27 @@ class Core:
                         )
                     )
                     self.event(task_id, "operation_prepared", grant)
+                    action_label = {"start": "启动", "stop": "停止", "restart": "重启"}[
+                        grant["action"]
+                    ]
                     self._finish(
                         task_id,
                         "awaiting_confirmation",
-                        f"将对本机 Ubuntu 的 {grant['target']} 执行 {grant['action']}，共 {grant['instances']} 个实例。可能短暂中断服务。\n容器 ID：{', '.join(i[:12] for i in grant['container_ids'])}\n回复「确认 {grant['code']}」执行，或「取消 {grant['code']}」。2 分钟内有效。",
+                        f"将对本机 Ubuntu 的 {grant['target']} 执行 {action_label}，共 {grant['instances']} 个实例。可能短暂中断服务。\n容器 ID：{', '.join(i[:12] for i in grant['container_ids'])}\n回复「确认 {grant['code']}」执行，或「取消 {grant['code']}」。2 分钟内有效。",
                         context_update,
                     )
                     return
                 if intent.kind == "query":
                     call = intent.tool or ToolCall(name="inspect", target=intent.target)
                     result = await self._read(task_id, actor, call, evidence)
-                    context_update.update(
-                        {
-                            "cursor": result.get("cursor"),
-                            "target": result.get("target", context.get("target")),
-                        }
-                    )
+                    if call.name == "logs":
+                        context_update.update(
+                            {
+                                "cursor": result.get("cursor"),
+                                "target": result["target"],
+                                "log_page": {**result, "expires_at": actor.expires_at.isoformat()},
+                            }
+                        )
                     self._finish(
                         task_id, "succeeded", render_result(result, call.name), context_update
                     )
@@ -502,11 +528,7 @@ class Core:
 
 
 def render_result(result, tool_name=None):
-    if tool_name == "system":
-        return render_system(result)
-    if "text" in result:
-        return f"{result.get('target', '')}\n{result['text']}\n{result.get('message', '')}".strip()
-    return json.dumps(safe_value(result), ensure_ascii=False, indent=2, default=str)
+    return redact(render_readable(safe_value(result), tool_name))
 
 
 def render_evidence(evidence, summary):
@@ -514,10 +536,12 @@ def render_evidence(evidence, summary):
     if not evidence:
         return text + "\n尚未取得工具证据。"
     for item in evidence:
-        text += (
-            f"\n[{item['id']}] "
-            + json.dumps(safe_value(item.get("result", item)), ensure_ascii=False, default=str)[
-                :1200
-            ]
+        tool = item.get("tool")
+        name = tool.get("name") if isinstance(tool, dict) else tool
+        detail = (
+            render_result(item["result"], name)
+            if "result" in item
+            else item.get("message", "检查失败")
         )
+        text += f"\n[{item['id']}] " + detail[:1200]
     return text

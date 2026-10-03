@@ -203,7 +203,7 @@ def main():
             repeat = task("确认 " + code)
             assert repeat["status"] == "succeeded"
             # PostgreSQL JSONB may reorder object keys on the replay response.
-            assert json.loads(repeat["result"]) == json.loads(confirmed["result"])
+            assert repeat["result"] == confirmed["result"]
             after_replay = read({"name": "inspect", "target": target})["instances"][0]
             assert all(after_replay[key] == state[key] for key in ("started_at", "finished_at"))
         checks.append("confirmed_stop_start_restart_and_duplicate_handling")

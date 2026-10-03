@@ -6,6 +6,13 @@ protected_container_ids = []
 # Set true only after replacing the PostgreSQL protection placeholders above.
 database_protection_acknowledged = false
 
+# On-demand sample warnings, not background monitoring or automatic repair.
+[thresholds]
+cpu_percent = 90
+memory_percent = 85
+disk_percent = 90
+load_per_cpu = 2
+
 [[services]]
 key = "blog/web"
 aliases = ["博客"]
