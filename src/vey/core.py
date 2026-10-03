@@ -142,8 +142,10 @@ class Core:
 
     def _finish(self, task_id, status, message, context_update=None, audit_message=None):
         with self.factory.begin() as db:
+            user_id = db.scalar(select(Task.user_id).where(Task.id == task_id))
+            # Admission and cleanup lock the session before touching tasks; keep this order.
+            session = db.get(ChatSession, user_id, with_for_update=True)
             task = db.get(Task, task_id, with_for_update=True)
-            session = db.get(ChatSession, task.user_id, with_for_update=True)
             valid = (
                 session and session.generation == task.generation and session.expires_at > utcnow()
             )
@@ -423,13 +425,18 @@ class Core:
     def cleanup(self):
         now = utcnow()
         with self.factory.begin() as db:
-            expired = list(
-                db.scalars(select(ChatSession.user_id).where(ChatSession.expires_at <= now))
-            )
+            expired = []
+            for session in db.scalars(select(ChatSession).with_for_update()):
+                if session.expires_at <= now:
+                    session.context = {}
+                    expired.append(session.user_id)
+                else:
+                    context = dict(session.context)
+                    page = context.get("log_page")
+                    if page and datetime.fromisoformat(page["expires_at"]) <= now:
+                        context.pop("log_page")
+                        session.context = context
             if expired:
-                db.execute(
-                    update(ChatSession).where(ChatSession.user_id.in_(expired)).values(context={})
-                )
                 db.execute(update(Task).where(Task.user_id.in_(expired)).values(text=""))
             db.execute(
                 update(Task)

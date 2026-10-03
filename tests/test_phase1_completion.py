@@ -165,3 +165,23 @@ async def test_cached_log_page_is_not_sent_to_intent_model(core):
     task = core.accept("route", "owner", "这是什么意思")
     await core.process(core.claim())
     assert core.task(task["task_id"])["status"] == "succeeded"
+
+
+@pytest.mark.postgres
+async def test_cleanup_removes_expired_page_in_active_conversation(core):
+    core.accept("page", "owner", "日志 博客")
+    await core.process(core.claim())
+    with core.factory.begin() as db:
+        session = db.get(ChatSession, "owner")
+        context = dict(session.context)
+        context["log_page"] = {
+            **context["log_page"],
+            "expires_at": (utcnow() - timedelta(seconds=1)).isoformat(),
+        }
+        session.context = context
+    core.cleanup()
+    with core.factory() as db:
+        session = db.get(ChatSession, "owner")
+        assert session.expires_at > utcnow()
+        assert "log_page" not in session.context
+        assert session.context["target"] == "blog/web" and session.context["history"]
