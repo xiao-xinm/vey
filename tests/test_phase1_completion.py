@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from sqlalchemy import select
 
 from vey.config import Thresholds
+from vey.core import render_evidence
 from vey.db import ChatSession, Outbox
 from vey.domain import Intent, ReadRequest, ToolCall, utcnow
 from vey.presentation import render_logs, render_operation, render_stats, render_system
@@ -24,6 +25,25 @@ def test_log_summary_is_bounded_evidence_not_diagnosis():
     assert "private" not in result and len(result) < 1800
     assert "已截断" in result
     assert "没有匹配日志" in render_logs({"text": ""})
+
+
+def test_diagnostic_evidence_does_not_offer_uncached_page_expansion():
+    rendered = render_evidence(
+        [
+            {
+                "id": "E1",
+                "tool": {"name": "logs"},
+                "result": {
+                    "target": "blog/web",
+                    "text": "ERROR request failed",
+                    "cursor": "internal-cursor",
+                },
+            }
+        ],
+        "需要继续核对",
+    )
+    assert "展开日志" not in rendered and "下一页" not in rendered
+    assert "日志 blog/web" in rendered and "[E1]" in rendered
 
 
 def test_thresholds_missing_data_and_mounts(tmp_path, monkeypatch):

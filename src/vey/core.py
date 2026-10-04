@@ -546,7 +546,9 @@ def render_evidence(evidence, summary):
         tool = item.get("tool")
         name = tool.get("name") if isinstance(tool, dict) else tool
         detail = (
-            render_result(item["result"], name)
+            render_logs(item["result"], interactive=False)
+            if name == "logs" and "result" in item
+            else render_result(item["result"], name)
             if "result" in item
             else item.get("message", "检查失败")
         )

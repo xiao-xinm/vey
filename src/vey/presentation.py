@@ -143,7 +143,7 @@ def status(value):
     }.get(value, "状态未知")
 
 
-def render_logs(result, expanded=False):
+def render_logs(result, expanded=False, interactive=True):
     raw = redact(result.get("text", ""))[:10000]
     records = raw.splitlines()
     title = f"{result.get('target', '')} · 日志{'原文' if expanded else '摘要'}"
@@ -171,8 +171,13 @@ def render_logs(result, expanded=False):
     for index in selected:
         line = records[index]
         lines.append(f"第 {index + 1} 行：{line[:240]}" + ("…（摘录）" if len(line) > 240 else ""))
-    lines.append(result.get("message", ""))
-    lines.append("发送「展开日志」查看本页完整原文；「下一页」查看后续分页内容。")
+    if interactive:
+        lines.append(result.get("message", ""))
+        lines.append("发送「展开日志」查看本页完整原文；「下一页」查看后续分页内容。")
+    else:
+        if result.get("truncated"):
+            lines.append("证据日志已达到本次输出上限，内容有截断。")
+        lines.append(f"此为排查证据摘要；需要原文请发送「日志 {result.get('target', '')}」。")
     return "\n".join(lines)
 
 
