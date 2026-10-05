@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from vey.domain import Diagnosis, ToolCall, VeyError, digest
 from vey.security import safe_value
 
-LOOP_VERSION = "diagnosis-v1"
+LOOP_VERSION = "diagnosis-v2"
 STOP_LABELS = {
     "concluded": "已根据现有证据结束检查；本轮仅执行只读查询，未实施修复。",
     "tool_budget": "已达到 5 次工具调用上限，停止继续排查。",
@@ -77,9 +77,16 @@ def valid_diagnosis(diagnosis: Diagnosis | None, evidence: list[dict], catalog: 
     if diagnosis is None:
         return False
     ids = {e["id"] for e in evidence}
-    return all(set(h.evidence_refs).issubset(ids) for h in diagnosis.hypotheses) and all(
-        permitted(v.tool, catalog) for v in diagnosis.verification
-    )
+    observed = {e["id"] for e in evidence if "result" in e}
+    return all(
+        set(h.evidence_refs).issubset(ids)
+        and (
+            h.confidence != "supported"
+            or h.code == "unknown"
+            or bool(set(h.evidence_refs) & observed)
+        )
+        for h in diagnosis.hypotheses
+    ) and all(permitted(v.tool, catalog) for v in diagnosis.verification)
 
 
 async def run_diagnosis(

@@ -51,6 +51,7 @@ class TrajectoryCase(StrictModel):
     script: list[NextStep] = Field(min_length=1, max_length=5)
     expected_stop: str
     expected_codes: list[str] = Field(default_factory=list)
+    forbidden_supported_codes: list[str] = Field(default_factory=list)
     required_tools: list[str] = Field(default_factory=list)
     provenance: str
 
@@ -151,6 +152,11 @@ def score_trajectory(case, result):
     codes = {h.code for h in result.diagnosis.hypotheses} if result.diagnosis else set()
     if not set(case.expected_codes).issubset(codes):
         failures.append("missing_hypothesis_code")
+    if result.diagnosis and any(
+        h.code in case.forbidden_supported_codes and h.confidence == "supported"
+        for h in result.diagnosis.hypotheses
+    ):
+        failures.append("unsupported_causal_claim")
     tools = {e["tool"]["name"] for e in result.evidence if "result" in e}
     if not set(case.required_tools).issubset(tools):
         failures.append("missing_successful_tool")

@@ -74,6 +74,23 @@ async def test_shared_loop_rejects_unknown_refs_and_no_free_text_claim(policy):
         assert "已修复" not in result.summary()
 
 
+async def test_failed_reads_cannot_support_a_definite_causal_claim(policy):
+    async def read(call):
+        raise VeyError("permission_denied", "没有读取权限")
+
+    finish = conclusion()
+    finish.diagnosis.hypotheses[0].confidence = "supported"
+    result = await run_diagnosis(
+        ScriptedPlanner([NextStep(tool=ToolCall(name="inspect", target="blog/web")), finish]),
+        "排查",
+        "blog/web",
+        policy.catalog(),
+        read,
+    )
+    assert result.stop_reason == "invalid_conclusion"
+    assert result.evidence[0]["error"] == "permission_denied"
+
+
 async def test_error_recovery_and_capability_rendering(policy):
     async def read(call):
         if call.name == "health":
