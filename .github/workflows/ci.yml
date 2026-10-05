@@ -33,9 +33,10 @@ jobs:
       - run: uv run pytest -q
       - run: uv run python -m vey.evaluation validate evals/datasets/phase2-v1.json
       - run: uv run python -m vey.evaluation run evals/datasets/phase2-v1.json --split dev --mode rules --output .local/evals/ci-rules
+      - run: uv run python -m vey.evaluation trajectory evals/datasets/trajectories-v1.json --output .local/evals/ci-trajectories
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: evaluation-rules-report
-          path: .local/evals/ci-rules/
+          path: .local/evals/
           if-no-files-found: ignore

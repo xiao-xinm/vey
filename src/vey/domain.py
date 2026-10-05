@@ -85,9 +85,35 @@ class Intent(StrictModel):
         return self
 
 
+class Hypothesis(StrictModel):
+    code: Literal[
+        "container_exit",
+        "dependency_unavailable",
+        "configuration_error",
+        "resource_pressure",
+        "application_error",
+        "unknown",
+    ]
+    statement: str = Field(min_length=1, max_length=500)
+    confidence: Literal["possible", "supported"]
+    evidence_refs: list[str] = Field(min_length=1, max_length=5)
+
+
+class Verification(StrictModel):
+    question: str = Field(min_length=1, max_length=300)
+    tool: ToolCall
+
+
+class Diagnosis(StrictModel):
+    hypotheses: list[Hypothesis] = Field(default_factory=list, max_length=5)
+    uncertainty: str = Field(min_length=1, max_length=600)
+    verification: list[Verification] = Field(default_factory=list, max_length=3)
+
+
 class NextStep(StrictModel):
     tool: ToolCall | None = None
     summary: str = Field(default="", max_length=3000)
+    diagnosis: Diagnosis | None = None
 
 
 class Actor(StrictModel):

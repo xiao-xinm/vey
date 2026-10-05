@@ -11,7 +11,26 @@ from pydantic import SecretStr
 
 from vey.evaluation.runner import compare_reports, run_evaluation
 from vey.evaluation.schema import Pricing, load_dataset
+from vey.evaluation.trajectory import load_trajectories, run_trajectories
 from vey.model import DeepSeekProvider
+
+
+def live_provider(args):
+    url = urlsplit(args.base_url)
+    if url.scheme != "https" or not url.hostname or url.username or url.query or url.fragment:
+        raise ValueError("Explicit HTTPS model endpoint required")
+    if not args.key_file:
+        raise ValueError("Explicit model key file required")
+    key = args.key_file.read_text(encoding="utf-8").strip()
+    if not key:
+        raise ValueError("Empty key")
+    settings = SimpleNamespace(
+        model_key=SecretStr(key),
+        model_name=args.model,
+        model_base_url=args.base_url,
+        model_timeout=min(args.timeout, 30),
+    )
+    return lambda: DeepSeekProvider(settings)
 
 
 def main(argv=None):
@@ -29,6 +48,17 @@ def main(argv=None):
     compare.add_argument("left", type=Path)
     compare.add_argument("right", type=Path)
     compare.add_argument("--output", type=Path, required=True)
+    trajectory = sub.add_parser(
+        "trajectory", help="Run the shared diagnosis loop on offline tool fixtures"
+    )
+    trajectory.add_argument("dataset", type=Path)
+    trajectory.add_argument("--output", type=Path, required=True)
+    trajectory.add_argument("--mode", choices=["scripted", "live"], default="scripted")
+    trajectory.add_argument("--key-file", type=Path)
+    trajectory.add_argument("--model", default="deepseek-flash")
+    trajectory.add_argument("--base-url", default="https://api.deepseek.com")
+    trajectory.add_argument("--max-model-calls", type=int, default=100)
+    trajectory.add_argument("--timeout", type=float, default=60)
     run = sub.add_parser("run")
     run.add_argument("dataset", type=Path)
     run.add_argument("--split", choices=["dev", "test"], required=True)
@@ -57,6 +87,33 @@ def main(argv=None):
                 json.dump(result, file, ensure_ascii=False, indent=2)
             print(json.dumps(result, ensure_ascii=False, indent=2))
             return 0
+        if args.command == "trajectory":
+            dataset = load_trajectories(args.dataset)
+            factory = None
+            if args.mode == "live":
+                factory = live_provider(args)
+            report = asyncio.run(
+                run_trajectories(
+                    dataset,
+                    args.output,
+                    provider_factory=factory,
+                    max_model_calls=args.max_model_calls,
+                    timeout=args.timeout,
+                )
+            )
+            print(
+                json.dumps(
+                    {
+                        k: report[k]
+                        for k in ("run_id", "status", "executed", "passed", "model_calls")
+                    }
+                )
+            )
+            return (
+                0
+                if report["status"] == "completed" and report["passed"] == report["executed"]
+                else 1
+            )
         dataset, fingerprint = load_dataset(args.dataset)
         if args.command == "validate":
             print(
@@ -81,33 +138,7 @@ def main(argv=None):
         )
         provider_factory = None
         if args.mode == "live":
-            url = urlsplit(args.base_url)
-            if (
-                url.scheme != "https"
-                or not url.hostname
-                or url.username
-                or url.query
-                or url.fragment
-            ):
-                parser.error(
-                    "model endpoint must be an explicit HTTPS base URL without credentials/query"
-                )
-            if not args.key_file:
-                parser.error(
-                    "live evaluation requires --key-file; .env and production credentials are not auto-loaded"
-                )
-            key = args.key_file.read_text(encoding="utf-8").strip()
-            if not key:
-                parser.error("model key file is empty")
-            settings = SimpleNamespace(
-                model_key=SecretStr(key),
-                model_name=args.model,
-                model_base_url=args.base_url,
-                model_timeout=min(args.timeout, 30),
-            )
-
-            def provider_factory():
-                return DeepSeekProvider(settings)
+            provider_factory = live_provider(args)
 
         report = asyncio.run(
             run_evaluation(

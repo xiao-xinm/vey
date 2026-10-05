@@ -10,6 +10,7 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.dialects.postgresql import insert
 
 from vey.db import ChatSession, Event, Outbox, Task, uid
+from vey.diagnosis import run_diagnosis
 from vey.domain import (
     Actor,
     ConfirmRequest,
@@ -183,7 +184,7 @@ class Core:
                 )
 
     async def process(self, task_id):
-        evidence, calls, context_update = [], set(), {}
+        evidence, context_update = [], {}
         model_metrics_start = len(getattr(self.model, "metrics", []))
         is_control = False
         try:
@@ -264,35 +265,35 @@ class Core:
                     )
                     return
                 target = context_update.get("target") or context.get("target")
-                summary = ""
-                for _ in range(5):
-                    self._input(task_id)
-                    step = await self.model.next_step(
-                        message, evidence, target, self.policy.catalog()
-                    )
-                    if step.tool is None:
-                        summary = step.summary
-                        break
-                    fingerprint = digest(step.tool.model_dump(mode="json"))
-                    if fingerprint in calls:
-                        summary = "检测到重复检查，已停止继续排查。"
-                        break
-                    calls.add(fingerprint)
-                    try:
-                        await self._read(task_id, actor, step.tool, evidence)
-                    except VeyError as error:
-                        evidence.append(
-                            {
-                                "id": f"E{len(evidence) + 1}",
-                                "tool": step.tool.name,
-                                "error": error.code,
-                                "message": error.message,
-                            }
-                        )
-                else:
-                    summary = "已达到 5 次工具调用上限，停止继续排查。"
+
+                async def read_diagnostic(call):
+                    return await self._read(task_id, actor, call, [])
+
+                diagnosis = await run_diagnosis(
+                    self.model,
+                    message,
+                    target,
+                    self.policy.catalog(),
+                    read_diagnostic,
+                    evidence=evidence,
+                    before_step=lambda: self._input(task_id),
+                )
+                self.event(
+                    task_id,
+                    "diagnosis",
+                    {
+                        "loop_version": diagnosis.as_dict()["loop_version"],
+                        "stop_reason": diagnosis.stop_reason,
+                        "diagnosis": diagnosis.as_dict()["diagnosis"],
+                        "model_calls": diagnosis.model_calls,
+                        "tool_calls": diagnosis.tool_calls,
+                    },
+                )
                 self._finish(
-                    task_id, "succeeded", render_evidence(evidence, summary), context_update
+                    task_id,
+                    "succeeded" if diagnosis.stop_reason == "concluded" else "partial",
+                    render_evidence(evidence, diagnosis.summary()),
+                    context_update,
                 )
         except TimeoutError:
             self._finish(

@@ -41,6 +41,7 @@ class DockerBackend:
                 "status": state.get("Status", container.status),
                 "health": state.get("Health", {}).get("Status", "not_configured"),
                 "exit_code": state.get("ExitCode"),
+                "oom_killed": state.get("OOMKilled"),
                 "started_at": state.get("StartedAt"),
                 "finished_at": state.get("FinishedAt"),
                 "restarts": attrs.get("RestartCount"),
