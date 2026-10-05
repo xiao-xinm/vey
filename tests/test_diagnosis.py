@@ -8,7 +8,37 @@ from sqlalchemy import select
 from vey.db import Event, Grant
 from vey.diagnosis import run_diagnosis
 from vey.domain import Diagnosis, NextStep, ToolCall, Verification, VeyError
-from vey.evaluation.trajectory import ScriptedPlanner, load_trajectories, run_trajectories
+from vey.evaluation.trajectory import (
+    ReplayTools,
+    ScriptedPlanner,
+    ToolFixture,
+    load_trajectories,
+    run_trajectories,
+)
+
+
+async def test_complete_log_replay_supports_bounded_filtering_but_not_unknown_time_ranges():
+    replay = ReplayTools(
+        [
+            ToolFixture(
+                call=ToolCall(name="logs", target="blog/web"),
+                result={"text": "info start\nerror one\nerror two", "truncated": False},
+                complete_log=True,
+            )
+        ]
+    )
+    result = await replay.read(ToolCall(name="logs", target="blog/web", lines=1, keyword="error"))
+    assert result["text"] == "error two" and result["replay_has_earlier"]
+    from vey.domain import utcnow
+
+    with pytest.raises(VeyError, match="没有该工具参数"):
+        await replay.read(ToolCall(name="logs", target="blog/web", since=utcnow()))
+    with pytest.raises(ValueError, match="untruncated"):
+        ToolFixture(
+            call=ToolCall(name="logs", target="blog/web"),
+            result={"text": "x", "truncated": True},
+            complete_log=True,
+        )
 
 
 def conclusion(ref="E1"):

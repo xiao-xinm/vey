@@ -16,6 +16,7 @@ from vey.diagnosis import LOOP_VERSION, run_diagnosis
 from vey.domain import NextStep, StrictModel, ToolCall, VeyError, digest, utcnow
 from vey.evaluation.runner import implementation_hash
 from vey.evaluation.scoring import usage_totals
+from vey.logs import page_logs
 from vey.security import safe_value
 
 
@@ -23,11 +24,22 @@ class ToolFixture(StrictModel):
     call: ToolCall
     result: dict | None = None
     error: str | None = None
+    complete_log: bool = False
 
     @model_validator(mode="after")
     def exclusive(self):
         if (self.result is None) == (self.error is None):
             raise ValueError("Fixture requires exactly one result/error")
+        if self.complete_log and (
+            self.call.name != "logs"
+            or self.call.keyword
+            or self.call.since
+            or self.call.until
+            or not isinstance((self.result or {}).get("text"), str)
+            or self.result.get("truncated")
+            or self.result.get("cursor")
+        ):
+            raise ValueError("Complete log fixtures require unfiltered, untruncated text")
         return self
 
 
@@ -79,6 +91,27 @@ class ReplayTools:
 
     async def read(self, call):
         fixture = self.fixtures.get(digest(call.model_dump(mode="json")))
+        if (
+            fixture is None
+            and call.name == "logs"
+            and not (call.since or call.until or call.cursor)
+        ):
+            candidates = [
+                f for f in self.fixtures.values() if f.complete_log and f.call.target == call.target
+            ]
+            if len(candidates) == 1:
+                source = candidates[0].result
+                records = source["text"].splitlines()
+                if call.keyword:
+                    records = [r for r in records if call.keyword in r]
+                page = page_logs(records, call.lines)
+                return {
+                    **source,
+                    "text": page.text,
+                    "truncated": page.truncated,
+                    "cursor": None,
+                    "replay_has_earlier": bool(page.remaining or page.pending),
+                }
         if fixture is None:
             raise VeyError("fixture_unavailable", "此隔离场景没有该工具参数的快照")
         if fixture.error:

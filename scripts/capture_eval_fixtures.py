@@ -30,7 +30,11 @@ def main():
     run(["docker", "image", "inspect", args.image])
     dataset = json.loads((root / "evals/datasets/trajectories-v1.json").read_text(encoding="utf-8"))
     dataset["cases"] = [c for c in dataset["cases"] if c["id"] in {"exit", "dependency", "config"}]
-    dataset["version"] = "docker-trajectories-v1"
+    dataset["version"] = "docker-trajectories-v2"
+    # This isolated environment contains only the normalized fixture service.
+    dataset["policy"]["services"] = [
+        s for s in dataset["policy"]["services"] if s["key"] == "blog/web"
+    ]
     captures = []
     try:
         run([*compose, "up", "-d", "--no-build"])
@@ -55,6 +59,13 @@ def main():
                 oom_killed=item["State"]["OOMKilled"],
             )
             case["fixtures"][1]["result"]["text"] = logs
+            case["fixtures"][1]["complete_log"] = True
+            case["fixtures"].append(
+                {
+                    "call": {"name": "health", "target": "blog/web"},
+                    "result": {"target": "blog/web", "status": "not_configured"},
+                }
+            )
             case["provenance"] = (
                 "captured isolated Docker fixture; identifiers normalized to synthetic catalog"
             )
