@@ -1,0 +1,874 @@
+{
+  "run_id": "4b388de9b1564596986290b26f8e5889",
+  "scope": "full_readonly_diagnosis",
+  "dataset_version": "docker-trajectories-v2",
+  "dataset_hash": "e0fb0699bd646ed544fd81fabca55ce3f8839de0f62c005d6ad16f945db3f266",
+  "implementation_hash": "9033c5825992e1beeb0407b01164a1cd45092ce97f2175c45491ad167ab82302",
+  "loop_version": "diagnosis-v1",
+  "mode": "live",
+  "started_at": "2026-10-05T02:07:09.953733+00:00",
+  "status": "completed",
+  "actual_docker_calls": 0,
+  "model_calls": 11,
+  "scheduled": 3,
+  "max_model_calls": 15,
+  "trajectory_timeout_seconds": 60,
+  "results": [
+    {
+      "case_id": "exit",
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 3136.18,
+      "metrics": [
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1404,
+            "completion_tokens": 27,
+            "total_tokens": 1431,
+            "prompt_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "prompt_cache_hit_tokens": 1152,
+            "prompt_cache_miss_tokens": 252
+          },
+          "duration_ms": 588
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1499,
+            "completion_tokens": 32,
+            "total_tokens": 1531,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 219
+          },
+          "duration_ms": 636
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1588,
+            "completion_tokens": 59,
+            "total_tokens": 1647,
+            "prompt_tokens_details": {
+              "cached_tokens": 1408
+            },
+            "prompt_cache_hit_tokens": 1408,
+            "prompt_cache_miss_tokens": 180
+          },
+          "duration_ms": 507
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1688,
+            "completion_tokens": 267,
+            "total_tokens": 1955,
+            "prompt_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "prompt_cache_hit_tokens": 1536,
+            "prompt_cache_miss_tokens": 152
+          },
+          "duration_ms": 1403
+        }
+      ],
+      "prompt_version": "v4-structured",
+      "loop_version": "diagnosis-v1",
+      "stop_reason": "concluded",
+      "evidence": [
+        {
+          "id": "E1",
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "instances": [
+              {
+                "status": "exited",
+                "exit_code": 7,
+                "oom_killed": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "text": "application stopped with exit 7",
+            "truncated": false,
+            "cursor": null
+          }
+        },
+        {
+          "id": "E3",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 200,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "text": "application stopped with exit 7",
+            "truncated": false,
+            "cursor": null,
+            "replay_has_earlier": false
+          }
+        }
+      ],
+      "diagnosis": {
+        "hypotheses": [
+          {
+            "code": "container_exit",
+            "statement": "blog/web 容器已退出，退出码为 7，且未被 OOM 杀死，说明进程以非零状态自行终止。",
+            "confidence": "supported",
+            "evidence_refs": [
+              "E1"
+            ]
+          },
+          {
+            "code": "application_error",
+            "statement": "日志仅显示 'application stopped with exit 7'，提示应用层主动退出，但缺少具体错误堆栈，无法确定是配置、依赖还是代码问题。",
+            "confidence": "possible",
+            "evidence_refs": [
+              "E2",
+              "E3"
+            ]
+          }
+        ],
+        "uncertainty": "退出码 7 的具体含义取决于应用自身约定，日志中未出现堆栈或依赖连接失败信息；尚未确认是启动阶段失败还是运行中退出，也未检查依赖服务（如数据库）是否可用。",
+        "verification": [
+          {
+            "question": "blog/web 依赖的后端服务（如数据库）是否健康可用？",
+            "tool": {
+              "name": "health",
+              "target": "blog/web",
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          },
+          {
+            "question": "宿主机是否存在资源压力导致进程异常退出？",
+            "tool": {
+              "name": "system",
+              "target": null,
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          }
+        ]
+      },
+      "trace": [
+        {
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 200,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": null,
+          "summary": "",
+          "diagnosis": {
+            "hypotheses": [
+              {
+                "code": "container_exit",
+                "statement": "blog/web 容器已退出，退出码为 7，且未被 OOM 杀死，说明进程以非零状态自行终止。",
+                "confidence": "supported",
+                "evidence_refs": [
+                  "E1"
+                ]
+              },
+              {
+                "code": "application_error",
+                "statement": "日志仅显示 'application stopped with exit 7'，提示应用层主动退出，但缺少具体错误堆栈，无法确定是配置、依赖还是代码问题。",
+                "confidence": "possible",
+                "evidence_refs": [
+                  "E2",
+                  "E3"
+                ]
+              }
+            ],
+            "uncertainty": "退出码 7 的具体含义取决于应用自身约定，日志中未出现堆栈或依赖连接失败信息；尚未确认是启动阶段失败还是运行中退出，也未检查依赖服务（如数据库）是否可用。",
+            "verification": [
+              {
+                "question": "blog/web 依赖的后端服务（如数据库）是否健康可用？",
+                "tool": {
+                  "name": "health",
+                  "target": "blog/web",
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              },
+              {
+                "question": "宿主机是否存在资源压力导致进程异常退出？",
+                "tool": {
+                  "name": "system",
+                  "target": null,
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "model_calls": 4,
+      "tool_calls": 3,
+      "planner_steps": 4
+    },
+    {
+      "case_id": "dependency",
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 3697.57,
+      "metrics": [
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1404,
+            "completion_tokens": 27,
+            "total_tokens": 1431,
+            "prompt_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "prompt_cache_hit_tokens": 1152,
+            "prompt_cache_miss_tokens": 252
+          },
+          "duration_ms": 661
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1499,
+            "completion_tokens": 32,
+            "total_tokens": 1531,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 219
+          },
+          "duration_ms": 406
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1597,
+            "completion_tokens": 26,
+            "total_tokens": 1623,
+            "prompt_tokens_details": {
+              "cached_tokens": 1408
+            },
+            "prompt_cache_hit_tokens": 1408,
+            "prompt_cache_miss_tokens": 189
+          },
+          "duration_ms": 574
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1673,
+            "completion_tokens": 382,
+            "total_tokens": 2055,
+            "prompt_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "prompt_cache_hit_tokens": 1536,
+            "prompt_cache_miss_tokens": 137
+          },
+          "duration_ms": 2055
+        }
+      ],
+      "prompt_version": "v4-structured",
+      "loop_version": "diagnosis-v1",
+      "stop_reason": "concluded",
+      "evidence": [
+        {
+          "id": "E1",
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "instances": [
+              {
+                "status": "exited",
+                "exit_code": 3,
+                "oom_killed": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "text": "dependency connection refused at 127.0.0.1:65432",
+            "truncated": false,
+            "cursor": null
+          }
+        },
+        {
+          "id": "E3",
+          "tool": {
+            "name": "health",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "status": "not_configured"
+          }
+        }
+      ],
+      "diagnosis": {
+        "hypotheses": [
+          {
+            "code": "dependency_unavailable",
+            "statement": "容器日志显示连接 127.0.0.1:65432 被拒绝，说明 blog/web 启动时依赖的本地服务未监听或不可达，可能导致进程以退出码 3 退出。",
+            "confidence": "supported",
+            "evidence_refs": [
+              "E1",
+              "E2"
+            ]
+          },
+          {
+            "code": "container_exit",
+            "statement": "blog/web 容器当前状态为 exited、退出码 3 且未被 OOM 杀死，表明进程已非正常终止，但退出码本身不能确定根因。",
+            "confidence": "supported",
+            "evidence_refs": [
+              "E1"
+            ]
+          },
+          {
+            "code": "configuration_error",
+            "statement": "依赖地址被配置为 127.0.0.1:65432，若该端口配置错误或依赖服务未随容器启动，也会造成连接被拒绝。",
+            "confidence": "possible",
+            "evidence_refs": [
+              "E2"
+            ]
+          }
+        ],
+        "uncertainty": "尚未确认 127.0.0.1:65432 对应的依赖服务是什么、是否在管理范围内、当前是否运行；也未确认退出码 3 是否直接由该连接失败引起。health 未配置，无法通过业务健康检查判断。",
+        "verification": [
+          {
+            "question": "管理范围内是否存在并运行着 blog/web 所依赖的服务（如数据库/缓存）？",
+            "tool": {
+              "name": "services",
+              "target": null,
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          },
+          {
+            "question": "blog/web 容器退出前的完整日志是否只有依赖连接失败，还是伴随其他启动错误？",
+            "tool": {
+              "name": "logs",
+              "target": "blog/web",
+              "lines": 200,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          }
+        ]
+      },
+      "trace": [
+        {
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "health",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": null,
+          "summary": "",
+          "diagnosis": {
+            "hypotheses": [
+              {
+                "code": "dependency_unavailable",
+                "statement": "容器日志显示连接 127.0.0.1:65432 被拒绝，说明 blog/web 启动时依赖的本地服务未监听或不可达，可能导致进程以退出码 3 退出。",
+                "confidence": "supported",
+                "evidence_refs": [
+                  "E1",
+                  "E2"
+                ]
+              },
+              {
+                "code": "container_exit",
+                "statement": "blog/web 容器当前状态为 exited、退出码 3 且未被 OOM 杀死，表明进程已非正常终止，但退出码本身不能确定根因。",
+                "confidence": "supported",
+                "evidence_refs": [
+                  "E1"
+                ]
+              },
+              {
+                "code": "configuration_error",
+                "statement": "依赖地址被配置为 127.0.0.1:65432，若该端口配置错误或依赖服务未随容器启动，也会造成连接被拒绝。",
+                "confidence": "possible",
+                "evidence_refs": [
+                  "E2"
+                ]
+              }
+            ],
+            "uncertainty": "尚未确认 127.0.0.1:65432 对应的依赖服务是什么、是否在管理范围内、当前是否运行；也未确认退出码 3 是否直接由该连接失败引起。health 未配置，无法通过业务健康检查判断。",
+            "verification": [
+              {
+                "question": "管理范围内是否存在并运行着 blog/web 所依赖的服务（如数据库/缓存）？",
+                "tool": {
+                  "name": "services",
+                  "target": null,
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              },
+              {
+                "question": "blog/web 容器退出前的完整日志是否只有依赖连接失败，还是伴随其他启动错误？",
+                "tool": {
+                  "name": "logs",
+                  "target": "blog/web",
+                  "lines": 200,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "model_calls": 4,
+      "tool_calls": 3,
+      "planner_steps": 4
+    },
+    {
+      "case_id": "config",
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2983.88,
+      "metrics": [
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1404,
+            "completion_tokens": 27,
+            "total_tokens": 1431,
+            "prompt_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "prompt_cache_hit_tokens": 1152,
+            "prompt_cache_miss_tokens": 252
+          },
+          "duration_ms": 509
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1499,
+            "completion_tokens": 32,
+            "total_tokens": 1531,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 219
+          },
+          "duration_ms": 592
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1590,
+            "completion_tokens": 284,
+            "total_tokens": 1874,
+            "prompt_tokens_details": {
+              "cached_tokens": 1408
+            },
+            "prompt_cache_hit_tokens": 1408,
+            "prompt_cache_miss_tokens": 182
+          },
+          "duration_ms": 1882
+        }
+      ],
+      "prompt_version": "v4-structured",
+      "loop_version": "diagnosis-v1",
+      "stop_reason": "concluded",
+      "evidence": [
+        {
+          "id": "E1",
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "instances": [
+              {
+                "status": "exited",
+                "exit_code": 2,
+                "oom_killed": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "text": "configuration error: required SETTING is missing",
+            "truncated": false,
+            "cursor": null
+          }
+        }
+      ],
+      "diagnosis": {
+        "hypotheses": [
+          {
+            "code": "configuration_error",
+            "statement": "容器以退出码 2 退出，日志显示缺少必需配置项（required SETTING is missing），符合配置缺失导致启动失败的特征。",
+            "confidence": "supported",
+            "evidence_refs": [
+              "E1",
+              "E2"
+            ]
+          },
+          {
+            "code": "application_error",
+            "statement": "应用在启动阶段因配置校验失败而主动退出，可能属于应用自身的启动校验逻辑，但根因仍指向配置缺失。",
+            "confidence": "possible",
+            "evidence_refs": [
+              "E1",
+              "E2"
+            ]
+          }
+        ],
+        "uncertainty": "尚未确认具体缺失的是哪个配置项、其期望值来源（环境变量/配置文件/密钥），也未排除配置挂载或依赖服务不可用等并发因素；退出码 2 本身不能唯一确定根因。",
+        "verification": [
+          {
+            "question": "确认缺失的具体配置项名称及其来源（环境变量或配置文件）？",
+            "tool": {
+              "name": "inspect",
+              "target": "blog/web",
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          },
+          {
+            "question": "查看完整启动日志，确认配置校验失败前后的上下文与是否还有其他错误？",
+            "tool": {
+              "name": "logs",
+              "target": "blog/web",
+              "lines": 200,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          }
+        ]
+      },
+      "trace": [
+        {
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": null,
+          "summary": "",
+          "diagnosis": {
+            "hypotheses": [
+              {
+                "code": "configuration_error",
+                "statement": "容器以退出码 2 退出，日志显示缺少必需配置项（required SETTING is missing），符合配置缺失导致启动失败的特征。",
+                "confidence": "supported",
+                "evidence_refs": [
+                  "E1",
+                  "E2"
+                ]
+              },
+              {
+                "code": "application_error",
+                "statement": "应用在启动阶段因配置校验失败而主动退出，可能属于应用自身的启动校验逻辑，但根因仍指向配置缺失。",
+                "confidence": "possible",
+                "evidence_refs": [
+                  "E1",
+                  "E2"
+                ]
+              }
+            ],
+            "uncertainty": "尚未确认具体缺失的是哪个配置项、其期望值来源（环境变量/配置文件/密钥），也未排除配置挂载或依赖服务不可用等并发因素；退出码 2 本身不能唯一确定根因。",
+            "verification": [
+              {
+                "question": "确认缺失的具体配置项名称及其来源（环境变量或配置文件）？",
+                "tool": {
+                  "name": "inspect",
+                  "target": "blog/web",
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              },
+              {
+                "question": "查看完整启动日志，确认配置校验失败前后的上下文与是否还有其他错误？",
+                "tool": {
+                  "name": "logs",
+                  "target": "blog/web",
+                  "lines": 200,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "model_calls": 3,
+      "tool_calls": 2,
+      "planner_steps": 3
+    }
+  ],
+  "finished_at": "2026-10-05T02:07:19.986731+00:00",
+  "executed": 3,
+  "not_run": 0,
+  "tokens": {
+    "prompt_tokens": 16845,
+    "completion_tokens": 1195,
+    "total_tokens": 18040
+  },
+  "estimated_cost": null,
+  "passed": 3
+}

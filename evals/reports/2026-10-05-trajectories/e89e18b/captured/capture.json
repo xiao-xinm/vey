@@ -1,0 +1,24 @@
+{
+  "project": "vey-eval-8c6fabe4cda5",
+  "captures": [
+    {
+      "scenario": "exit",
+      "image_id": "sha256:e0d4899b80825f04c9396e8e5cf3bcac1404a91b0bb347a373e1bf639e313cd3",
+      "exit_code": 7,
+      "started_at": "2026-10-05T02:02:56.96469915Z"
+    },
+    {
+      "scenario": "dependency",
+      "image_id": "sha256:e0d4899b80825f04c9396e8e5cf3bcac1404a91b0bb347a373e1bf639e313cd3",
+      "exit_code": 3,
+      "started_at": "2026-10-05T02:02:56.966037939Z"
+    },
+    {
+      "scenario": "config",
+      "image_id": "sha256:e0d4899b80825f04c9396e8e5cf3bcac1404a91b0bb347a373e1bf639e313cd3",
+      "exit_code": 2,
+      "started_at": "2026-10-05T02:02:56.957896246Z"
+    }
+  ],
+  "cleanup": "compose down succeeded"
+}

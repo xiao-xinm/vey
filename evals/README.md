@@ -1,6 +1,6 @@
 # 路由与单步规划评测
 
-此目录是第二期第一个里程碑：60 条虚构案例（开发集 40，保留测试集 20），覆盖明确查询、启停意图、否定、条件请求、上下文、歧义、恶意日志、缺失指标和异常工具结果。
+此目录从第二期 M1 建立基线：60 条虚构案例（开发集 40，保留测试集 20），覆盖明确查询、启停意图、否定、条件请求、上下文、歧义、恶意日志、缺失指标和异常工具结果。
 
 首轮真实 DeepSeek 实验已完成，见 [基线及失败复核](../docs/phase2-baseline.md)。原始结果固定在 `reports/2026-10-04-baseline`；此后代码新增了多目标修改意图防护，重新运行时实现哈希会不同，不能覆盖原始实验。
 
@@ -59,4 +59,33 @@ API 未返回用量时报告 null，不当作 0；有调用但缺少指标时同
 
 ## 数据持久化边界
 
-版本化案例和发布的脱敏实验报告是可复制的实验产物，随 Git 保存；日常运行结果默认放在忽略目录 `.local/evals`，需自行归档。它们不替代线上 PostgreSQL 中的任务、会话和审计。第二期后续里程碑将加入 PostgreSQL 实验归档与任务关联，目前没有更改生产数据库结构或运行服务。
+版本化案例和发布的脱敏实验报告是可复制的实验产物，随 Git 保存；日常运行结果默认放在忽略目录 `.local/evals`，需自行归档。它们不替代线上 PostgreSQL 中的任务、会话和审计。M2 已加入独立 PostgreSQL 实验归档，运行报告记录完整只读轨迹；没有关联真实用户任务，也没有更改生产业务数据库结构或运行服务。
+
+## M2 完整诊断与独立归档
+
+M2 运行生产同一诊断循环，详见 [验收和局限](../docs/phase2-diagnosis.md)。预设控制回放验证流程，不代表模型效果；模型回放不执行 Docker 命令。
+
+```powershell
+python -m vey.evaluation trajectory evals/datasets/trajectories-v1.json --output .local/evals/m2-scripted
+# 在 Docker 主机采集三个独立故障，需指定已有 Python 运行镜像；结束自动清理随机 Compose 项目。
+python scripts/capture_eval_fixtures.py --image vey-agent:phase1-7720a45 --output .local/evals/m2-captured
+python -m vey.evaluation trajectory .local/evals/m2-captured/dataset.json --mode live --key-file /run/secrets/model_key --max-model-calls 15 --output .local/evals/m2-live
+```
+
+每个完整轨迹最多 5 次模型请求。开始前预留最坏情况的调用预算，剩余不足 5 次时不启动下一案例。中断时保存已经发生的请求和证据，缺失用量记为未知。输出目录必须不存在；原始运行不可覆盖。
+
+`complete_log=true` 仅用于已取得完整、未过滤、未截断的日志，可以重新按行数和关键词分页；没有时间戳的快照不支持时间范围查询。未提供的工具结果会明确失败，不能臆造健康结果。
+
+### 归档命令
+
+管理员先准备独立 `vey_eval` 数据库和单独的归档账号，禁止共用线上 core/executor 账号。`init` 由数据库结构所有者执行，`import/list` 由仅 SELECT/INSERT 的写入账号执行，URL 放入受限权限文件。命令不会自动读取生产 `.env`。
+
+```text
+python -m vey.evaluation.archive init --url-file /run/secrets/archive_owner_url --writer-role vey_eval_writer
+python -m vey.evaluation.archive import --url-file /run/secrets/archive_writer_url --report path/to/report.json
+python -m vey.evaluation.archive list --url-file /run/secrets/archive_writer_url
+```
+
+数据库名必须为 `vey_eval` 或 `vey_test_eval*`，且不得含生产 `vey_core/vey_exec` schema。初始化只创建自己的归档 schema，不删除已有表。数据库所有者应关闭运行期登录，writer 不应拥有数据库／schema 所有权。相同 ID 的不同报告必须使用新运行 ID 保存，不能改写历史。
+
+备份使用 PostgreSQL `pg_dump -Fc`，恢复应先在独立临时库验证。服务器此次手动备份和恢复已验收；定时与异地备份尚未配置。

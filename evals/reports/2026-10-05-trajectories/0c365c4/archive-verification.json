@@ -1,0 +1,18 @@
+{
+  "database": "vey_eval",
+  "runs": 8,
+  "samples": 222,
+  "idempotent_import_verified": true,
+  "writer_privileges": {
+    "select": true,
+    "insert": true,
+    "update": false,
+    "delete": false
+  },
+  "owner_login": false,
+  "backup_file": "vey_eval-20261005.dump",
+  "backup_bytes": 77723,
+  "restore_checked": true,
+  "restore_report_hashes_match": true,
+  "temporary_restore_database_removed": true
+}

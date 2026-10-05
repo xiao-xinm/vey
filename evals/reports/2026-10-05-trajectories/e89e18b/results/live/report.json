@@ -1,0 +1,807 @@
+{
+  "run_id": "1d7d1b205bfb4d9091eca7b150b13700",
+  "scope": "full_readonly_diagnosis",
+  "dataset_version": "docker-trajectories-v1",
+  "dataset_hash": "40f16226d3ffdfb8cdb0e043c3f7a3fb4ad5613202b0a91b9d0bd3a673b41127",
+  "implementation_hash": "07e43374a22e59af8048032b06bcba84d0e3c9901b70c90bc7ff80e0709cd0fe",
+  "loop_version": "diagnosis-v1",
+  "mode": "live",
+  "started_at": "2026-10-05T02:04:09.535073+00:00",
+  "status": "completed",
+  "actual_docker_calls": 0,
+  "model_calls": 11,
+  "scheduled": 3,
+  "max_model_calls": 15,
+  "trajectory_timeout_seconds": 60,
+  "results": [
+    {
+      "case_id": "exit",
+      "status": "failed",
+      "failures": [
+        "stop_reason_mismatch",
+        "missing_hypothesis_code",
+        "missing_successful_tool",
+        "unavailable_fixture_requested"
+      ],
+      "duration_ms": 2067.72,
+      "metrics": [
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1469,
+            "completion_tokens": 27,
+            "total_tokens": 1496,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            },
+            "prompt_cache_hit_tokens": 0,
+            "prompt_cache_miss_tokens": 1469
+          },
+          "duration_ms": 716
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1564,
+            "completion_tokens": 32,
+            "total_tokens": 1596,
+            "prompt_tokens_details": {
+              "cached_tokens": 1152
+            },
+            "prompt_cache_hit_tokens": 1152,
+            "prompt_cache_miss_tokens": 412
+          },
+          "duration_ms": 655
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1643,
+            "completion_tokens": 32,
+            "total_tokens": 1675,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 363
+          },
+          "duration_ms": 695
+        }
+      ],
+      "prompt_version": "v4-structured",
+      "loop_version": "diagnosis-v1",
+      "stop_reason": "duplicate",
+      "evidence": [
+        {
+          "id": "E1",
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "instances": [
+              {
+                "status": "exited",
+                "exit_code": 7,
+                "oom_killed": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 200,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "error": "fixture_unavailable",
+          "message": "此隔离场景没有该工具参数的快照"
+        }
+      ],
+      "diagnosis": null,
+      "trace": [
+        {
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 200,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 200,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        }
+      ],
+      "model_calls": 3,
+      "tool_calls": 2,
+      "planner_steps": 3
+    },
+    {
+      "case_id": "dependency",
+      "status": "failed",
+      "failures": [
+        "unavailable_fixture_requested"
+      ],
+      "duration_ms": 4582.37,
+      "metrics": [
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1469,
+            "completion_tokens": 27,
+            "total_tokens": 1496,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 189
+          },
+          "duration_ms": 450
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1564,
+            "completion_tokens": 32,
+            "total_tokens": 1596,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 284
+          },
+          "duration_ms": 505
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1662,
+            "completion_tokens": 26,
+            "total_tokens": 1688,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 382
+          },
+          "duration_ms": 596
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1741,
+            "completion_tokens": 34,
+            "total_tokens": 1775,
+            "prompt_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "prompt_cache_hit_tokens": 1536,
+            "prompt_cache_miss_tokens": 205
+          },
+          "duration_ms": 593
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1822,
+            "completion_tokens": 450,
+            "total_tokens": 2272,
+            "prompt_tokens_details": {
+              "cached_tokens": 1536
+            },
+            "prompt_cache_hit_tokens": 1536,
+            "prompt_cache_miss_tokens": 286
+          },
+          "duration_ms": 2437
+        }
+      ],
+      "prompt_version": "v4-structured",
+      "loop_version": "diagnosis-v1",
+      "stop_reason": "concluded",
+      "evidence": [
+        {
+          "id": "E1",
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "instances": [
+              {
+                "status": "exited",
+                "exit_code": 3,
+                "oom_killed": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "text": "dependency connection refused at 127.0.0.1:65432",
+            "truncated": false,
+            "cursor": null
+          }
+        },
+        {
+          "id": "E3",
+          "tool": {
+            "name": "health",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "error": "fixture_unavailable",
+          "message": "此隔离场景没有该工具参数的快照"
+        },
+        {
+          "id": "E4",
+          "tool": {
+            "name": "logs",
+            "target": "infra/postgres",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "error": "fixture_unavailable",
+          "message": "此隔离场景没有该工具参数的快照"
+        }
+      ],
+      "diagnosis": {
+        "hypotheses": [
+          {
+            "code": "dependency_unavailable",
+            "statement": "博客服务容器已退出（exit_code=3），日志显示连接 127.0.0.1:65432 被拒绝，提示其依赖的下游服务（可能是数据库或本地代理端口）不可用，导致启动失败。",
+            "confidence": "supported",
+            "evidence_refs": [
+              "E1",
+              "E2"
+            ]
+          },
+          {
+            "code": "configuration_error",
+            "statement": "日志中的依赖地址为 127.0.0.1:65432，若该端口并非容器内可达地址（如应指向 infra/postgres 服务名），则可能是连接配置错误导致连接被拒。",
+            "confidence": "possible",
+            "evidence_refs": [
+              "E2"
+            ]
+          },
+          {
+            "code": "application_error",
+            "statement": "退出码 3 可能对应应用自身的启动校验失败（如依赖探测失败后主动退出），而非容器被外部终止。",
+            "confidence": "possible",
+            "evidence_refs": [
+              "E1",
+              "E2"
+            ]
+          }
+        ],
+        "uncertainty": "尚未确认 127.0.0.1:65432 对应的具体依赖服务，也未获取 infra/postgres 的日志与状态（E4 快照不可用），无法区分是依赖服务真的宕机还是博客侧连接地址配置错误；health 检查因快照缺失（E3）未能验证业务健康。",
+        "verification": [
+          {
+            "question": "infra/postgres 容器当前是否运行、是否曾异常退出？",
+            "tool": {
+              "name": "inspect",
+              "target": "infra/postgres",
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          },
+          {
+            "question": "infra/postgres 日志中是否有连接拒绝或启动失败记录？",
+            "tool": {
+              "name": "logs",
+              "target": "infra/postgres",
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          },
+          {
+            "question": "博客服务退出前是否有更完整的启动错误堆栈？",
+            "tool": {
+              "name": "logs",
+              "target": "blog/web",
+              "lines": 200,
+              "keyword": "error",
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          }
+        ]
+      },
+      "trace": [
+        {
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "health",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "infra/postgres",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": null,
+          "summary": "",
+          "diagnosis": {
+            "hypotheses": [
+              {
+                "code": "dependency_unavailable",
+                "statement": "博客服务容器已退出（exit_code=3），日志显示连接 127.0.0.1:65432 被拒绝，提示其依赖的下游服务（可能是数据库或本地代理端口）不可用，导致启动失败。",
+                "confidence": "supported",
+                "evidence_refs": [
+                  "E1",
+                  "E2"
+                ]
+              },
+              {
+                "code": "configuration_error",
+                "statement": "日志中的依赖地址为 127.0.0.1:65432，若该端口并非容器内可达地址（如应指向 infra/postgres 服务名），则可能是连接配置错误导致连接被拒。",
+                "confidence": "possible",
+                "evidence_refs": [
+                  "E2"
+                ]
+              },
+              {
+                "code": "application_error",
+                "statement": "退出码 3 可能对应应用自身的启动校验失败（如依赖探测失败后主动退出），而非容器被外部终止。",
+                "confidence": "possible",
+                "evidence_refs": [
+                  "E1",
+                  "E2"
+                ]
+              }
+            ],
+            "uncertainty": "尚未确认 127.0.0.1:65432 对应的具体依赖服务，也未获取 infra/postgres 的日志与状态（E4 快照不可用），无法区分是依赖服务真的宕机还是博客侧连接地址配置错误；health 检查因快照缺失（E3）未能验证业务健康。",
+            "verification": [
+              {
+                "question": "infra/postgres 容器当前是否运行、是否曾异常退出？",
+                "tool": {
+                  "name": "inspect",
+                  "target": "infra/postgres",
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              },
+              {
+                "question": "infra/postgres 日志中是否有连接拒绝或启动失败记录？",
+                "tool": {
+                  "name": "logs",
+                  "target": "infra/postgres",
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              },
+              {
+                "question": "博客服务退出前是否有更完整的启动错误堆栈？",
+                "tool": {
+                  "name": "logs",
+                  "target": "blog/web",
+                  "lines": 200,
+                  "keyword": "error",
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "model_calls": 5,
+      "tool_calls": 4,
+      "planner_steps": 5
+    },
+    {
+      "case_id": "config",
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2913.14,
+      "metrics": [
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1469,
+            "completion_tokens": 27,
+            "total_tokens": 1496,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 189
+          },
+          "duration_ms": 739
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1564,
+            "completion_tokens": 32,
+            "total_tokens": 1596,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 284
+          },
+          "duration_ms": 522
+        },
+        {
+          "model": "deepseek-flash",
+          "prompt_version": "v4-structured",
+          "schema": "NextStep",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1655,
+            "completion_tokens": 302,
+            "total_tokens": 1957,
+            "prompt_tokens_details": {
+              "cached_tokens": 1280
+            },
+            "prompt_cache_hit_tokens": 1280,
+            "prompt_cache_miss_tokens": 375
+          },
+          "duration_ms": 1652
+        }
+      ],
+      "prompt_version": "v4-structured",
+      "loop_version": "diagnosis-v1",
+      "stop_reason": "concluded",
+      "evidence": [
+        {
+          "id": "E1",
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "instances": [
+              {
+                "status": "exited",
+                "exit_code": 2,
+                "oom_killed": false
+              }
+            ]
+          }
+        },
+        {
+          "id": "E2",
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "result": {
+            "target": "blog/web",
+            "text": "configuration error: required SETTING is missing",
+            "truncated": false,
+            "cursor": null
+          }
+        }
+      ],
+      "diagnosis": {
+        "hypotheses": [
+          {
+            "code": "configuration_error",
+            "statement": "容器以退出码 2 退出，日志显示“configuration error: required SETTING is missing”，表明启动时缺少必需配置项，导致进程在初始化阶段主动退出。",
+            "confidence": "supported",
+            "evidence_refs": [
+              "E1",
+              "E2"
+            ]
+          },
+          {
+            "code": "dependency_unavailable",
+            "statement": "若缺失的 SETTING 指向数据库等外部依赖连接参数，则可能同时存在依赖不可用问题，但当前证据未显示连接失败。",
+            "confidence": "possible",
+            "evidence_refs": [
+              "E2"
+            ]
+          }
+        ],
+        "uncertainty": "尚未确认缺失的具体配置项名称、其来源（环境变量/配置文件/密钥）以及是否由依赖服务不可用间接导致；退出码 2 仅说明进程异常退出，不能单独确定根因。",
+        "verification": [
+          {
+            "question": "确认 blog/web 当前容器状态与退出码是否仍为 exited/2，排除已重启或状态变化。",
+            "tool": {
+              "name": "inspect",
+              "target": "blog/web",
+              "lines": 100,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          },
+          {
+            "question": "查看完整启动日志，定位缺失的 SETTING 名称及是否有依赖连接相关报错。",
+            "tool": {
+              "name": "logs",
+              "target": "blog/web",
+              "lines": 200,
+              "keyword": null,
+              "since": null,
+              "until": null,
+              "cursor": null,
+              "sort_by": "memory"
+            }
+          }
+        ]
+      },
+      "trace": [
+        {
+          "tool": {
+            "name": "inspect",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": {
+            "name": "logs",
+            "target": "blog/web",
+            "lines": 100,
+            "keyword": null,
+            "since": null,
+            "until": null,
+            "cursor": null,
+            "sort_by": "memory"
+          },
+          "summary": "",
+          "diagnosis": null
+        },
+        {
+          "tool": null,
+          "summary": "",
+          "diagnosis": {
+            "hypotheses": [
+              {
+                "code": "configuration_error",
+                "statement": "容器以退出码 2 退出，日志显示“configuration error: required SETTING is missing”，表明启动时缺少必需配置项，导致进程在初始化阶段主动退出。",
+                "confidence": "supported",
+                "evidence_refs": [
+                  "E1",
+                  "E2"
+                ]
+              },
+              {
+                "code": "dependency_unavailable",
+                "statement": "若缺失的 SETTING 指向数据库等外部依赖连接参数，则可能同时存在依赖不可用问题，但当前证据未显示连接失败。",
+                "confidence": "possible",
+                "evidence_refs": [
+                  "E2"
+                ]
+              }
+            ],
+            "uncertainty": "尚未确认缺失的具体配置项名称、其来源（环境变量/配置文件/密钥）以及是否由依赖服务不可用间接导致；退出码 2 仅说明进程异常退出，不能单独确定根因。",
+            "verification": [
+              {
+                "question": "确认 blog/web 当前容器状态与退出码是否仍为 exited/2，排除已重启或状态变化。",
+                "tool": {
+                  "name": "inspect",
+                  "target": "blog/web",
+                  "lines": 100,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              },
+              {
+                "question": "查看完整启动日志，定位缺失的 SETTING 名称及是否有依赖连接相关报错。",
+                "tool": {
+                  "name": "logs",
+                  "target": "blog/web",
+                  "lines": 200,
+                  "keyword": null,
+                  "since": null,
+                  "until": null,
+                  "cursor": null,
+                  "sort_by": "memory"
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "model_calls": 3,
+      "tool_calls": 2,
+      "planner_steps": 3
+    }
+  ],
+  "finished_at": "2026-10-05T02:04:19.254181+00:00",
+  "executed": 3,
+  "not_run": 0,
+  "tokens": {
+    "prompt_tokens": 17622,
+    "completion_tokens": 1021,
+    "total_tokens": 18643
+  },
+  "estimated_cost": null,
+  "passed": 1
+}
