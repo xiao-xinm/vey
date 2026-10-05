@@ -1,0 +1,81 @@
+{
+  "left_run": "5669a3997b48482798bb1f88a4469423",
+  "right_run": "88284a1c15dd4df8a2cc30c7273a50f0",
+  "dataset_hash": "3b74024a0e343b7759667ed794174d5ce87bb5dde43c6c26d4349faf026ae8e2",
+  "split": "test",
+  "paired_executed": 36,
+  "unpaired_or_not_run": 0,
+  "left_pass_right_fail": [],
+  "left_fail_right_pass": [],
+  "left": {
+    "strategy": "hybrid",
+    "model": "deepseek-flash",
+    "implementation_hash": "602f264dde902a206ccb4e33df3667c0c95e0d64e970ede8d9a5555cb1ef3bb2",
+    "summary": {
+      "scheduled": 36,
+      "executed": 36,
+      "not_run": 0,
+      "passed": 36,
+      "failed": 0,
+      "contract_pass_rate": 1.0,
+      "coverage": 1.0,
+      "distinct_cases": 18,
+      "fully_executed_cases": 18,
+      "all_repeats_passed_cases": 18,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.8241,
+        1.0
+      ],
+      "failures": {},
+      "latency_ms_p50": 600.378,
+      "latency_ms_p95": 938.167,
+      "model_calls": 28,
+      "tokens": {
+        "prompt_tokens": 30128,
+        "completion_tokens": 768,
+        "total_tokens": 30896
+      },
+      "estimated_cost": null,
+      "cost_per_passed_sample": null,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 22
+    }
+  },
+  "right": {
+    "strategy": "model",
+    "model": "deepseek-flash",
+    "implementation_hash": "602f264dde902a206ccb4e33df3667c0c95e0d64e970ede8d9a5555cb1ef3bb2",
+    "summary": {
+      "scheduled": 36,
+      "executed": 36,
+      "not_run": 0,
+      "passed": 36,
+      "failed": 0,
+      "contract_pass_rate": 1.0,
+      "coverage": 1.0,
+      "distinct_cases": 18,
+      "fully_executed_cases": 18,
+      "all_repeats_passed_cases": 18,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.8241,
+        1.0
+      ],
+      "failures": {},
+      "latency_ms_p50": 774.74,
+      "latency_ms_p95": 1107.84,
+      "model_calls": 36,
+      "tokens": {
+        "prompt_tokens": 38610,
+        "completion_tokens": 893,
+        "total_tokens": 39503
+      },
+      "estimated_cost": null,
+      "cost_per_passed_sample": null,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 22
+    }
+  },
+  "limits": "Single-step fixture contracts, not full diagnosis accuracy; sequential API runs are not a controlled latency experiment."
+}

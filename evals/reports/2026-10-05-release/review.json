@@ -1,0 +1,48 @@
+{
+  "reviewer": "development_assistant_not_independent",
+  "original_scores_changed": false,
+  "items": [
+    {
+      "run": "diagnosis-1",
+      "case_id": "recovered-old-error",
+      "original_failures": [
+        "unsupported_causal_claim"
+      ],
+      "review_category": "classification_time_and_negation_ambiguity"
+    },
+    {
+      "run": "diagnosis-1",
+      "case_id": "permission-insufficient",
+      "original_failures": [
+        "stop_reason_mismatch",
+        "unavailable_fixture_requested"
+      ],
+      "review_category": "fixture_coverage_and_bounded_exhaustion"
+    },
+    {
+      "run": "diagnosis-2",
+      "case_id": "recovered-old-error",
+      "original_failures": [
+        "unsupported_causal_claim"
+      ],
+      "review_category": "classification_time_and_negation_ambiguity"
+    },
+    {
+      "run": "diagnosis-2",
+      "case_id": "permission-insufficient",
+      "original_failures": [
+        "stop_reason_mismatch",
+        "unavailable_fixture_requested"
+      ],
+      "review_category": "fixture_coverage_and_bounded_exhaustion"
+    },
+    {
+      "run": "diagnosis-2",
+      "case_id": "unconfigured-health",
+      "original_failures": [
+        "missing_successful_tool"
+      ],
+      "review_category": "missed_requested_business_health"
+    }
+  ]
+}

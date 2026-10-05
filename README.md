@@ -6,7 +6,7 @@
 
 ## 能做什么
 
-第二期 M1、M2 已完成：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。评测独立运行，线上继续使用第一期已验收版本。
+第二期已发布（`1990d16`，Jev 暂保留）：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。[M3 发布与限制](docs/phase2-release.md)记录新增评测和真实服务器验收；当前路由仍为规则优先＋DeepSeek。
 
 - 服务器信息、配置范围内的 Compose 服务状态、资源和业务健康检查。
 - 服务器概况以中文摘要展示采样时间、CPU、内存、运行时长、已配置磁盘及前五项进程常驻内存；缺失指标明确提示，不据此断言业务正常。

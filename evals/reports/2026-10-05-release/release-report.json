@@ -1,0 +1,140 @@
+{
+  "revision": "1990d16",
+  "runtime_versions": "v4-structured diagnosis-v2",
+  "status": "passed",
+  "smoke": {
+    "status": "passed",
+    "checks": [
+      {
+        "check": "query:服务器概况",
+        "task_id": "3f1ed8e72d734bdeb5345e68e28b4cf0",
+        "status": "succeeded"
+      },
+      {
+        "check": "query:资源排行",
+        "task_id": "5b020b7ed8004a8c9328395e738935a0",
+        "status": "succeeded"
+      },
+      {
+        "check": "query:日志 vey-acceptance/web",
+        "task_id": "321951644447494b979f93e5b4f629e2",
+        "status": "succeeded"
+      },
+      {
+        "check": "structured_readonly_diagnosis",
+        "task_id": "3e45096231904aed81234305ef2f4bb2",
+        "status": "succeeded"
+      },
+      {
+        "check": "multitarget_requires_clarification",
+        "task_id": "431cb0b8187444b08739ba95c4e69758",
+        "status": "succeeded"
+      },
+      {
+        "check": "self_service_protected",
+        "task_id": "28ccbb7d2c174b4eaea07b6f515d2e04",
+        "status": "failed"
+      },
+      {
+        "check": "fixture_confirmation_and_no_replay",
+        "task_id": "83cba90f48f741aa93878b16e1e74f2f",
+        "status": "succeeded"
+      }
+    ],
+    "public_callback_challenge": true,
+    "private_paths_hidden": true,
+    "minio_https": true,
+    "wecom_messages_sent": 0,
+    "only_modified_target": "vey-acceptance/web"
+  },
+  "before": {
+    "vey-agent-core-1": {
+      "image": "sha256:e0d4899b80825f04c9396e8e5cf3bcac1404a91b0bb347a373e1bf639e313cd3",
+      "started_at": "2026-10-04T05:08:50.751635836Z"
+    },
+    "vey-ops-executor-1": {
+      "image": "sha256:97335ec8299204c9a60cc39b7d331fc01ba446db8a37ac6262e13612b810879e",
+      "started_at": "2026-10-03T04:47:51.77203772Z"
+    },
+    "vey-https-gateway-1": {
+      "image": "sha256:f40664e5134a978879e9083231018d5c2c7b567af7a08c7d813e53d977bb5ec8",
+      "started_at": "2026-10-02T03:12:50.861253397Z"
+    },
+    "nginx": {
+      "image": "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
+      "started_at": "2026-08-27T06:14:43.519580822Z"
+    },
+    "rag-postgres": {
+      "image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "started_at": "2026-08-31T13:54:03.048091817Z"
+    },
+    "redis": {
+      "image": "sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5",
+      "started_at": "2026-09-06T13:32:16.677911485Z"
+    },
+    "rag-minio": {
+      "image": "sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+      "started_at": "2026-10-02T03:12:49.14118371Z"
+    }
+  },
+  "after": {
+    "vey-agent-core-1": {
+      "image": "sha256:3687e6fae063bd409148027ac0c7169d1beea0ef670cd86a0d659913798cd7cb",
+      "started_at": "2026-10-05T11:00:43.158908546Z",
+      "status": "running",
+      "health": "healthy"
+    },
+    "vey-ops-executor-1": {
+      "image": "sha256:3687e6fae063bd409148027ac0c7169d1beea0ef670cd86a0d659913798cd7cb",
+      "started_at": "2026-10-05T11:00:36.078999039Z",
+      "status": "running",
+      "health": "healthy"
+    },
+    "vey-https-gateway-1": {
+      "image": "sha256:f40664e5134a978879e9083231018d5c2c7b567af7a08c7d813e53d977bb5ec8",
+      "started_at": "2026-10-02T03:12:50.861253397Z",
+      "status": "running",
+      "health": "healthy"
+    },
+    "nginx": {
+      "image": "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
+      "started_at": "2026-08-27T06:14:43.519580822Z",
+      "status": "running",
+      "health": null
+    },
+    "rag-postgres": {
+      "image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "started_at": "2026-08-31T13:54:03.048091817Z",
+      "status": "running",
+      "health": "healthy"
+    },
+    "redis": {
+      "image": "sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5",
+      "started_at": "2026-09-06T13:32:16.677911485Z",
+      "status": "running",
+      "health": null
+    },
+    "rag-minio": {
+      "image": "sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+      "started_at": "2026-10-02T03:12:49.14118371Z",
+      "status": "running",
+      "health": "healthy"
+    }
+  },
+  "business_and_gateway_unchanged": true,
+  "fixture_containers_remaining": [],
+  "database_migration": "none",
+  "rollback_images": [
+    "vey-agent:rollback-core-1990d16",
+    "vey-agent:rollback-executor-1990d16"
+  ],
+  "production_backup_bytes": 62962,
+  "eval_archive": {
+    "runs": 12,
+    "samples": 306,
+    "backup_bytes": 100635,
+    "restore_counts_and_report_hashes_match": true,
+    "runtime_connect_permissions": "f|f"
+  },
+  "jev": "deferred_by_user_no_registration"
+}

@@ -33,7 +33,7 @@ python -m vey.evaluation compare .local/evals/hybrid-dev/report.json \
 
 `hybrid` 使用线上同一个 `deterministic_intent`，未命中时调用同一个 `DeepSeekProvider.route`；`model` 将路由全部交给同一个模型。两种方案的规划样本都调用 `DeepSeekProvider.next_step`，属于相同路径的重复观测，不能声称它们代表不同诊断算法。未实现的 Jev 方案不参加计分。
 
-基线后的当前代码对两种路由方案都应用 `guard_operation_intent`，与开发分支核心一致；报告同时保留 `proposed_intent` 和防护后的 `actual`、`guard_changed_intent`，并记录防护版本。该防护尚未部署到第一期线上。
+基线后的当前代码对两种路由方案都应用 `guard_operation_intent`，与开发分支核心一致；报告同时保留 `proposed_intent` 和防护后的 `actual`、`guard_changed_intent`，并记录防护版本。该防护已随第二期 `1990d16` 部署；此前基线报告保留原始版本。
 
 每个样本至多一次模型请求，不自动重试；默认单样本超时 25 秒，最大请求数 100，命令行上限 500。次数耗尽或中断保留已完成结果，剩余样本记为未运行。`--limit` 只截取选定分组前 N 条，用于排错，不能代表整个分组。
 
@@ -89,3 +89,9 @@ python -m vey.evaluation.archive list --url-file /run/secrets/archive_writer_url
 数据库名必须为 `vey_eval` 或 `vey_test_eval*`，且不得含生产 `vey_core/vey_exec` schema。初始化只创建自己的归档 schema，不删除已有表。数据库所有者应关闭运行期登录，writer 不应拥有数据库／schema 所有权。相同 ID 的不同报告必须使用新运行 ID 保存，不能改写历史。
 
 备份使用 PostgreSQL `pg_dump -Fc`，恢复应先在独立临时库验证。服务器此次手动备份和恢复已验收；定时与异地备份尚未配置。
+
+## M3 发布评测
+
+新增数据为 `m3-routing-v1.json`（18 路由案例，含 4 控制）和 `m3-trajectories-v1.json`（6 诊断场景）。首次运行前冻结，路由每方案重复两次、完整诊断分别运行两次。Jev 不可用，未运行也未评分；保留现有 IntentRouter 接口。
+
+结果和未消除的诊断限制见 [M3 发布报告](../docs/phase2-release.md)。已分析的所有数据都属于已知回归集，后续调参不能拿它们充当新的独立测试集。
