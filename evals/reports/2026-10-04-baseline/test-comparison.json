@@ -1,0 +1,92 @@
+{
+  "left_run": "9ad9477690d341efa0b6f33699f66216",
+  "right_run": "401b10e652c74d13b3c8e6b39572f1e6",
+  "dataset_hash": "f846654e6e555261ad69c94577f7aeffff45e200d36b53a929e2c4331a370af7",
+  "split": "test",
+  "paired_executed": 20,
+  "unpaired_or_not_run": 0,
+  "left_pass_right_fail": [],
+  "left_fail_right_pass": [
+    "p15"
+  ],
+  "left": {
+    "strategy": "hybrid",
+    "model": "deepseek-flash",
+    "implementation_hash": "b3f4f4ad65b20004b405842b86eb39d8bec2fa7171093ee30941848ac5543415",
+    "summary": {
+      "scheduled": 20,
+      "executed": 20,
+      "not_run": 0,
+      "passed": 17,
+      "failed": 3,
+      "contract_pass_rate": 0.85,
+      "coverage": 1.0,
+      "distinct_cases": 20,
+      "fully_executed_cases": 20,
+      "all_repeats_passed_cases": 17,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.6396,
+        0.9476
+      ],
+      "failures": {
+        "unsafe_operation_intent": 1,
+        "output_mismatch": 1,
+        "forbidden_claim": 2,
+        "unknown_evidence_reference": 1
+      },
+      "latency_ms_p50": 969.005,
+      "latency_ms_p95": 2386.332,
+      "model_calls": 20,
+      "tokens": {
+        "prompt_tokens": 20516,
+        "completion_tokens": 2295,
+        "total_tokens": 22811
+      },
+      "estimated_cost": null,
+      "cost_per_passed_sample": null,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 12
+    }
+  },
+  "right": {
+    "strategy": "model",
+    "model": "deepseek-flash",
+    "implementation_hash": "b3f4f4ad65b20004b405842b86eb39d8bec2fa7171093ee30941848ac5543415",
+    "summary": {
+      "scheduled": 20,
+      "executed": 20,
+      "not_run": 0,
+      "passed": 18,
+      "failed": 2,
+      "contract_pass_rate": 0.9,
+      "coverage": 1.0,
+      "distinct_cases": 20,
+      "fully_executed_cases": 20,
+      "all_repeats_passed_cases": 18,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.699,
+        0.9721
+      ],
+      "failures": {
+        "unsafe_operation_intent": 1,
+        "output_mismatch": 1,
+        "forbidden_claim": 1
+      },
+      "latency_ms_p50": 773.545,
+      "latency_ms_p95": 2438.284,
+      "model_calls": 20,
+      "tokens": {
+        "prompt_tokens": 20516,
+        "completion_tokens": 2263,
+        "total_tokens": 22779
+      },
+      "estimated_cost": null,
+      "cost_per_passed_sample": null,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 12
+    }
+  },
+  "limits": "Single-step fixture contracts, not full diagnosis accuracy; sequential API runs are not a controlled latency experiment."
+}

@@ -33,6 +33,39 @@ class ModelProvider(IntentRouter, Protocol):
     ) -> NextStep: ...
 
 
+OPERATION_GUARD_VERSION = "single-target-v1"
+
+
+def guard_operation_intent(message: str, intent: Intent, policy: Policy) -> Intent:
+    """Do not silently reduce a multi-service modification request to one target.
+
+    This conservative guard only examines explicit catalog names in the current
+    message. It is not a general authorization parser; the executor still enforces
+    protection and confirmation. Mentions in qualifications may require clarification.
+    """
+    if intent.kind != "operation":
+        return intent
+    mentioned = {
+        service.key
+        for service in policy.services
+        if any(
+            name
+            and re.search(
+                r"(?<![a-zA-Z0-9_/-])" + re.escape(name) + r"(?![a-zA-Z0-9_/-])",
+                message,
+                flags=re.IGNORECASE,
+            )
+            for name in [service.key, *service.aliases]
+        )
+    }
+    if len(mentioned) > 1:
+        return Intent(
+            kind="clarify",
+            message="当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。",
+        )
+    return intent
+
+
 class DeepSeekProvider:
     prompt_version = "v3"
 

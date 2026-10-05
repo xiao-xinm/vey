@@ -12,7 +12,7 @@ from vey.evaluation.cli import main
 from vey.evaluation.runner import compare_reports, run_evaluation
 from vey.evaluation.schema import Dataset, Pricing, load_dataset
 from vey.evaluation.scoring import aggregate, estimated_cost, percentile, score, usage_totals
-from vey.model import DeepSeekProvider
+from vey.model import DeepSeekProvider, guard_operation_intent
 
 DATASET = Path(__file__).parents[1] / "evals/datasets/phase2-v1.json"
 
@@ -326,3 +326,51 @@ def test_eval_cli_never_requires_production_config(tmp_path, monkeypatch):
                 str(tmp_path / "no-key"),
             ]
         )
+
+
+@pytest.mark.parametrize("run", ["hybrid-test", "model-test"])
+def test_multiservice_guard_replays_real_baseline_failure(run):
+    dataset, _ = load_dataset(DATASET)
+    case = next(c for c in dataset.cases if c.id == "r37")
+    report = json.loads(
+        (DATASET.parents[1] / "reports/2026-10-04-baseline" / run / "report.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    proposed = Intent.model_validate(
+        next(r for r in report["results"] if r["case_id"] == "r37")["actual"]
+    )
+    guarded = guard_operation_intent(case.message, proposed, dataset.policy)
+    assert guarded.kind == "clarify"
+    assert score(case, guarded.model_dump(mode="json")) == []
+    assert guard_operation_intent("请重启博客。", proposed, dataset.policy) is proposed
+    assert guard_operation_intent("重启 blog/web", proposed, dataset.policy) is proposed
+    # Repeated aliases for the same service are not multiple targets.
+    assert guard_operation_intent("重启博客 blog/web", proposed, dataset.policy) is proposed
+    assert (
+        guard_operation_intent("先重启博客，别动数据库", proposed, dataset.policy).kind == "clarify"
+    )
+    query = Intent(kind="query", tool={"name": "services"})
+    assert guard_operation_intent("博客和商店都有什么状态", query, dataset.policy) is query
+
+
+@pytest.mark.postgres
+@pytest.mark.asyncio
+async def test_core_blocks_multitarget_model_output_before_preparing(core, db_factory, backend):
+    from sqlalchemy import select
+
+    from vey.db import Event, Grant
+
+    class UnsafeRouter:
+        async def route(self, *args):
+            return Intent(kind="operation", target="blog/web", action="restart")
+
+    core.router = UnsafeRouter()
+    receipt = core.accept("multi-service-regression", "owner", "把博客和数据库都重启一下")
+    await core.process(receipt["task_id"])
+    assert core.task(receipt["task_id"])["status"] == "succeeded"
+    assert "未生成操作确认" in core.task(receipt["task_id"])["result"]
+    with db_factory() as db:
+        assert db.scalar(select(Grant)) is None
+        assert db.scalar(select(Event).where(Event.kind == "intent_guard")) is not None
+    assert backend.actions == []

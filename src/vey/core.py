@@ -20,7 +20,7 @@ from vey.domain import (
     digest,
     utcnow,
 )
-from vey.model import deterministic_intent
+from vey.model import deterministic_intent, guard_operation_intent
 from vey.presentation import render_logs, render_readable
 from vey.security import redact, safe_value
 from vey.wecom import delivery_parts
@@ -219,6 +219,10 @@ class Core:
                         {k: v for k, v in context.items() if k != "log_page"},
                         self.policy.catalog(),
                     )
+                guarded = guard_operation_intent(message, intent, self.policy)
+                if guarded is not intent:
+                    self.event(task_id, "intent_guard", {"reason": "multiple_explicit_targets"})
+                intent = guarded
                 self.event(task_id, "intent", intent.model_dump(mode="json"))
                 # Check session again before admitting any action after a model call.
                 self._input(task_id)

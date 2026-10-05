@@ -12,7 +12,12 @@ from pathlib import Path
 from vey.domain import ToolCall, VeyError, digest, utcnow
 from vey.evaluation.schema import Dataset, Pricing
 from vey.evaluation.scoring import aggregate, estimated_cost, score
-from vey.model import DeepSeekProvider, deterministic_intent
+from vey.model import (
+    OPERATION_GUARD_VERSION,
+    DeepSeekProvider,
+    deterministic_intent,
+    guard_operation_intent,
+)
 from vey.security import safe_value
 
 
@@ -116,6 +121,7 @@ async def run_evaluation(
         "dataset_hash": dataset_hash,
         "implementation_hash": implementation_hash(),
         "prompt_version": DeepSeekProvider.prompt_version,
+        "operation_guard_version": OPERATION_GUARD_VERSION,
         "tool_schema_hash": digest(ToolCall.model_json_schema()),
         "scope": dataset.scope,
         "split": split,
@@ -182,6 +188,11 @@ async def run_evaluation(
                             actual = await provider.next_step(
                                 case.message, case.evidence, case.target, dataset.policy.catalog()
                             )
+                if case.stage == "route":
+                    row["proposed_intent"] = safe_value(actual.model_dump(mode="json"))
+                    guarded = guard_operation_intent(case.message, actual, dataset.policy)
+                    row["guard_changed_intent"] = guarded is not actual
+                    actual = guarded
                 row["actual"] = safe_value(actual.model_dump(mode="json"))
                 row["failures"] = score(case, row["actual"])
                 targets = {service.key for service in dataset.policy.services}

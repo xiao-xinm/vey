@@ -1,0 +1,46 @@
+{
+  "kind": "offline_regression_not_new_model_evaluation",
+  "guard_version": "single-target-v1",
+  "implementation_hash": "4506fc140510a549566a6e9e878b596f2bbe3240f7ecd2c1f0295f11d6cdd48a",
+  "dataset_hash": "f846654e6e555261ad69c94577f7aeffff45e200d36b53a929e2c4331a370af7",
+  "model_calls": 0,
+  "tool_executions": 0,
+  "cases": [
+    {
+      "baseline_run": "9ad9477690d341efa0b6f33699f66216",
+      "case_id": "r37",
+      "original": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "restart",
+        "tool": null,
+        "message": "重启博客（blog/web）和商店（shop/api）需要分别执行，请确认先重启哪一个，或我将依次重启两者。"
+      },
+      "guarded": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。"
+      }
+    },
+    {
+      "baseline_run": "401b10e652c74d13b3c8e6b39572f1e6",
+      "case_id": "r37",
+      "original": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "restart",
+        "tool": null,
+        "message": "重启博客服务；商店服务需确认目标后单独执行。"
+      },
+      "guarded": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。"
+      }
+    }
+  ]
+}

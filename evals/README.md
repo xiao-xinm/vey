@@ -2,6 +2,8 @@
 
 此目录是第二期第一个里程碑：60 条虚构案例（开发集 40，保留测试集 20），覆盖明确查询、启停意图、否定、条件请求、上下文、歧义、恶意日志、缺失指标和异常工具结果。
 
+首轮真实 DeepSeek 实验已完成，见 [基线及失败复核](../docs/phase2-baseline.md)。原始结果固定在 `reports/2026-10-04-baseline`；此后代码新增了多目标修改意图防护，重新运行时实现哈希会不同，不能覆盖原始实验。
+
 这里衡量的是**路由与单步规划契约通过率**，不是完整诊断准确率。规划器只接收预先构造的证据，不会执行返回的工具。评测进程不读取生产 `.env`，不连接数据库、Docker socket 或执行器，不发企微消息，不接受确认码。
 
 ## 运行
@@ -30,6 +32,8 @@ python -m vey.evaluation compare .local/evals/hybrid-dev/report.json \
 ```
 
 `hybrid` 使用线上同一个 `deterministic_intent`，未命中时调用同一个 `DeepSeekProvider.route`；`model` 将路由全部交给同一个模型。两种方案的规划样本都调用 `DeepSeekProvider.next_step`，属于相同路径的重复观测，不能声称它们代表不同诊断算法。未实现的 Jev 方案不参加计分。
+
+基线后的当前代码对两种路由方案都应用 `guard_operation_intent`，与开发分支核心一致；报告同时保留 `proposed_intent` 和防护后的 `actual`、`guard_changed_intent`，并记录防护版本。该防护尚未部署到第一期线上。
 
 每个样本至多一次模型请求，不自动重试；默认单样本超时 25 秒，最大请求数 100，命令行上限 500。次数耗尽或中断保留已完成结果，剩余样本记为未运行。`--limit` 只截取选定分组前 N 条，用于排错，不能代表整个分组。
 
