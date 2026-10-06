@@ -1,0 +1,104 @@
+{
+  "status": "passed",
+  "checks": [
+    "unauthenticated_denied",
+    "origin_enforced",
+    "secure_cookie",
+    "readonly_queries",
+    "pagination",
+    "no_write_endpoint",
+    "logout_revokes_session",
+    "private_paths_hidden",
+    "readonly_evaluation_archive",
+    "evaluation_pagination",
+    "audit_export_offline_validation"
+  ],
+  "wecom_messages_sent": 0,
+  "docker_mutations": 0,
+  "evaluation_reader_select_only": true,
+  "reader_runtime_connect": false,
+  "archive_runs": 13,
+  "archive_samples": 312,
+  "dashboard_revision": "feea6be",
+  "before": {
+    "vey-agent-core-1": {
+      "image": "sha256:0d301fdc89c51fab47e34c873d54bd87a307035baf27e3378eeeba859738d729",
+      "started_at": "2026-10-06T01:19:48.941448352Z"
+    },
+    "vey-ops-executor-1": {
+      "image": "sha256:3687e6fae063bd409148027ac0c7169d1beea0ef670cd86a0d659913798cd7cb",
+      "started_at": "2026-10-05T11:00:36.078999039Z"
+    },
+    "vey-https-gateway-1": {
+      "image": "sha256:f40664e5134a978879e9083231018d5c2c7b567af7a08c7d813e53d977bb5ec8",
+      "started_at": "2026-10-06T01:56:00.699432737Z"
+    },
+    "vey-dashboard-1": {
+      "image": "sha256:cfa7007b7949cffef0f97c7dd418526ee21b50639dfa4f866222be7da6cf61b1",
+      "started_at": "2026-10-06T01:55:49.899631286Z"
+    },
+    "nginx": {
+      "image": "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
+      "started_at": "2026-08-27T06:14:43.519580822Z"
+    },
+    "rag-postgres": {
+      "image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "started_at": "2026-08-31T13:54:03.048091817Z"
+    },
+    "redis": {
+      "image": "sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5",
+      "started_at": "2026-09-06T13:32:16.677911485Z"
+    },
+    "rag-minio": {
+      "image": "sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+      "started_at": "2026-10-02T03:12:49.14118371Z"
+    }
+  },
+  "after": {
+    "vey-agent-core-1": {
+      "image": "sha256:0d301fdc89c51fab47e34c873d54bd87a307035baf27e3378eeeba859738d729",
+      "started_at": "2026-10-06T01:19:48.941448352Z",
+      "health": "healthy"
+    },
+    "vey-ops-executor-1": {
+      "image": "sha256:3687e6fae063bd409148027ac0c7169d1beea0ef670cd86a0d659913798cd7cb",
+      "started_at": "2026-10-05T11:00:36.078999039Z",
+      "health": "healthy"
+    },
+    "vey-https-gateway-1": {
+      "image": "sha256:f40664e5134a978879e9083231018d5c2c7b567af7a08c7d813e53d977bb5ec8",
+      "started_at": "2026-10-06T01:56:00.699432737Z",
+      "health": "healthy"
+    },
+    "vey-dashboard-1": {
+      "image": "sha256:56d34261a2174f637efc8b6df505de12f3fad6ea55a70426c90cc5a5218e63d2",
+      "started_at": "2026-10-06T07:02:04.25493225Z",
+      "health": "healthy"
+    },
+    "nginx": {
+      "image": "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
+      "started_at": "2026-08-27T06:14:43.519580822Z",
+      "health": null
+    },
+    "rag-postgres": {
+      "image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "started_at": "2026-08-31T13:54:03.048091817Z",
+      "health": "healthy"
+    },
+    "redis": {
+      "image": "sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5",
+      "started_at": "2026-09-06T13:32:16.677911485Z",
+      "health": null
+    },
+    "rag-minio": {
+      "image": "sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+      "started_at": "2026-10-02T03:12:49.14118371Z",
+      "health": "healthy"
+    }
+  },
+  "only_dashboard_updated": true,
+  "browser_m2_acceptance": "not_run_tooling_blocked",
+  "task_payloads_persisted": false,
+  "audit_snapshots_verified_in_memory": true,
+  "m2_assets_http_verified": true
+}

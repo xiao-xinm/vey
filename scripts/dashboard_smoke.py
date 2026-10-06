@@ -54,6 +54,8 @@ def check(base_url, password_file, include_evals=False):
             assert not {i["id"] for i in items} & {i["id"] for i in older.json()["items"]}
         assert client.post("/admin/api/tasks", json={}).status_code == 405
         if include_evals:
+            assets = client.get("/admin/assets/evidence.js")
+            assert assets.status_code == 200 and "loadLocalSnapshot" in assets.text
             runs = client.get("/admin/api/evaluations?limit=2")
             assert runs.status_code == 200 and runs.json()["items"]
             for run in runs.json()["items"]:
@@ -96,7 +98,7 @@ def check(base_url, password_file, include_evals=False):
         "checks": checks,
         "wecom_messages_sent": 0,
         "docker_mutations": 0,
-        "task_payloads_exported": False,
+        "task_payloads_persisted": False,
     }
 
 
