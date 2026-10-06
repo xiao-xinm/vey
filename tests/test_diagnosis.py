@@ -318,3 +318,31 @@ async def test_production_uses_shared_loop_and_persists_structured_outcome(
         assert db.scalar(select(Grant)) is None
     assert core.task(receipt["task_id"])["status"] == "succeeded"
     assert not backend.actions
+
+
+@pytest.mark.postgres
+async def test_core_audits_the_missing_requested_check(core, db_factory, backend):
+    from vey.domain import Intent
+
+    class Planner(ScriptedPlanner):
+        async def route(self, *args):
+            return Intent(kind="diagnose", target="blog/web")
+
+    core.model = Planner(
+        [
+            NextStep(tool=ToolCall(name="inspect", target="blog/web")),
+            NextStep(tool=ToolCall(name="logs", target="blog/web")),
+            conclusion(),
+            conclusion("E3"),
+        ]
+    )
+    receipt = core.accept("complete-requested-checks", "owner", "请检查状态、日志和业务健康")
+    await core.process(receipt["task_id"])
+    with db_factory() as db:
+        event = db.scalar(select(Event).where(Event.kind == "diagnosis"))
+        assert event.data["required_checks"] == ["inspect", "logs", "health"]
+        assert event.data["required_checks_added"][0]["name"] == "health"
+        assert event.data["tool_calls"] == 3
+        assert db.scalar(select(Grant)) is None
+    assert core.task(receipt["task_id"])["status"] == "succeeded"
+    assert not backend.actions

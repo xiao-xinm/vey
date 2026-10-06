@@ -95,3 +95,7 @@ python -m vey.evaluation.archive list --url-file /run/secrets/archive_writer_url
 新增数据为 `m3-routing-v1.json`（18 路由案例，含 4 控制）和 `m3-trajectories-v1.json`（6 诊断场景）。首次运行前冻结，路由每方案重复两次、完整诊断分别运行两次。Jev 不可用，未运行也未评分；保留现有 IntentRouter 接口。
 
 结果和未消除的诊断限制见 [M3 发布报告](../docs/phase2-release.md)。已分析的所有数据都属于已知回归集，后续调参不能拿它们充当新的独立测试集。
+
+## 诊断观察语义修复
+
+10 月 6 日核心 `bff3e8a` 使用 `v5-observations` 提示和 `diagnosis-v3` 循环，结构化假设新增时态与观察立场，明确清单漏项可在原预算内补查。[已知回归及生产验收](../docs/diagnosis-followthrough.md)保留本轮 5/6 的原始结果。评分版本 `trajectory-v2-temporal-polarity` 不再把历史／明确否定观察直接计为当前故障，不能与旧评分直接比较。历史报告不改写，新增报告追加至独立 PG，当前 13 次运行／312 条样本。
