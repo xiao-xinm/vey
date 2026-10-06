@@ -8,6 +8,8 @@
 
 第二期已发布，10 月 6 日核心更新至 `bff3e8a`，执行器保持 `1990d16`，Jev 暂保留：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。[M3 发布与限制](docs/phase2-release.md)和[诊断修复验收](docs/diagnosis-followthrough.md)保留原始评测与生产验证；当前完整测试 99 项，路由仍为规则优先＋DeepSeek。
 
+第三期 M1 只读管理后台已上线（`5196374`）：登录后查看任务、状态筛选、诊断／工具事件和操作有效期，独立进程与 SELECT-only 数据库角色；[使用与部署](docs/dashboard.md)、[验收记录](docs/dashboard-acceptance.md)、[后续计划](docs/phase3-plan.md)。目前完整测试为 **106 项**；配置编辑、评测展示与导出回放尚未实现。
+
 - 服务器信息、配置范围内的 Compose 服务状态、资源和业务健康检查。
 - 服务器概况以中文摘要展示采样时间、CPU、内存、运行时长、已配置磁盘及前五项进程常驻内存；缺失指标明确提示，不据此断言业务正常。
 - 日志默认最近 100 行，无默认时间筛选；每页最多 500 行／10000 Unicode 字符，支持关键词、时间范围、截断提示和向前翻页。
