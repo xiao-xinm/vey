@@ -1,0 +1,5 @@
+# Optional independent evaluation archive. No writer or runtime-core credentials.
+services:
+  dashboard:
+    environment:
+      VEY_DASHBOARD_EVAL_DATABASE_URL: ${VEY_DASHBOARD_EVAL_DATABASE_URL:?Set dedicated evaluation reader URL}

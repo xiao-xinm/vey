@@ -12,7 +12,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from fastapi import Depends, FastAPI, Query, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import text
@@ -20,6 +20,8 @@ from sqlalchemy import text
 from vey.api_common import install_errors
 from vey.db import database
 from vey.domain import VeyError
+from vey.evaluation.reader import EvaluationReader
+from vey.replay import export_snapshot
 from vey.security import safe_value
 
 COOKIE = "__Host-vey_dashboard"
@@ -43,6 +45,7 @@ class DashboardSettings(BaseSettings):
     password_file: Path
     public_origin: str
     session_seconds: int = Field(default=900, ge=60, le=3600)
+    eval_database_url: SecretStr | None = None
 
     @model_validator(mode="after")
     def validate_settings(self):
@@ -61,6 +64,10 @@ class DashboardSettings(BaseSettings):
             )
         if not self.database_url.get_secret_value().startswith("postgresql+psycopg://"):
             raise ValueError("PostgreSQL required")
+        if self.eval_database_url and not self.eval_database_url.get_secret_value().startswith(
+            "postgresql+psycopg://"
+        ):
+            raise ValueError("Evaluation archive requires PostgreSQL")
         return self
 
 
@@ -214,7 +221,7 @@ class DashboardStore:
         )
 
 
-def create_app(settings=None, store=None, sessions=None):
+def create_app(settings=None, store=None, sessions=None, evaluation=None):
     settings = settings or DashboardSettings()
     sessions = sessions or Sessions(
         settings.password_file.read_text().strip(), settings.session_seconds
@@ -223,6 +230,8 @@ def create_app(settings=None, store=None, sessions=None):
     if store is None:
         engine, factory = database(settings.database_url.get_secret_value())
         store = DashboardStore(factory)
+    if evaluation is None and settings.eval_database_url:
+        evaluation = EvaluationReader(settings.eval_database_url.get_secret_value())
 
     @asynccontextmanager
     async def lifespan(app):
@@ -268,7 +277,7 @@ def create_app(settings=None, store=None, sessions=None):
 
     @app.get("/admin/assets/{name}")
     def asset(name: str):
-        if name not in {"app.js", "style.css"}:
+        if name not in {"app.js", "style.css", "evidence.js"}:
             raise VeyError("not_found", "文件不存在", 404)
         return FileResponse(ASSETS / name)
 
@@ -317,5 +326,45 @@ def create_app(settings=None, store=None, sessions=None):
         if not re.fullmatch(r"[a-f0-9]{32}", task_id):
             raise VeyError("not_found", "任务编号格式不正确", 404)
         return store.detail(task_id)
+
+    @app.get("/admin/api/tasks/{task_id}/export", dependencies=[Depends(auth)])
+    def export(task_id: str):
+        if not re.fullmatch(r"[a-f0-9]{32}", task_id):
+            raise VeyError("not_found", "任务编号格式不正确", 404)
+        try:
+            payload = export_snapshot(store.detail(task_id))
+        except ValueError:
+            raise VeyError(
+                "export_too_large",
+                "审计导出超过大小限制（总计 1 MB／单字段 12000 字符），未生成文件",
+                413,
+            ) from None
+        return Response(
+            payload,
+            media_type="application/json",
+            headers={"Content-Disposition": f'attachment; filename="vey-audit-{task_id}.json"'},
+        )
+
+    def require_evaluation():
+        if evaluation is None:
+            raise VeyError("evaluation_not_configured", "尚未配置独立评测库只读连接", 503)
+        return evaluation
+
+    @app.get("/admin/api/evaluations", dependencies=[Depends(auth)])
+    def evaluations(
+        before: str | None = Query(default=None, pattern=r"^[a-f0-9]{32}$"),
+        limit: int = Query(default=20, ge=1, le=30),
+    ):
+        return require_evaluation().runs(before, limit)
+
+    @app.get("/admin/api/evaluations/{run_id}", dependencies=[Depends(auth)])
+    def evaluation_detail(
+        run_id: str, offset: int = Query(default=0, ge=0, le=10000), status: str | None = None
+    ):
+        if not re.fullmatch(r"[a-f0-9]{32}", run_id):
+            raise VeyError("not_found", "评测编号格式不正确", 404)
+        if status and status not in {"passed", "failed", "not_run", "uncovered"}:
+            raise VeyError("invalid_status", "不支持的样本状态")
+        return require_evaluation().detail(run_id, offset, status)
 
     return app

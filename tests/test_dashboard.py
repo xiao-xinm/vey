@@ -286,3 +286,58 @@ def test_real_query_pagination_detail_and_absent_sensitive_fields(dashboard_pg, 
                 "SELECT data FROM vey_dashboard.events WHERE kind='operation_prepared'"
             ).fetchone()[0]
         )
+
+
+async def test_authenticated_export_and_optional_evaluation_archive(dashboard_settings):
+    from vey.replay import load_snapshot
+
+    class ExportStore(FakeStore):
+        def detail(self, task_id):
+            return {
+                "task": {"id": task_id, "result": "确认 ABCD1234"},
+                "events": [],
+                "events_truncated": False,
+                "operation": None,
+            }
+
+    class Reader:
+        def runs(self, before, limit):
+            return {"items": [], "next": None}
+
+        def detail(self, run_id, offset, status):
+            return {"run_id": run_id, "offset": offset, "status": status}
+
+    app = create_app(dashboard_settings, ExportStore(), evaluation=Reader())
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url=dashboard_settings.public_origin
+    ) as client:
+        endpoint = "/admin/api/tasks/" + "a" * 32 + "/export"
+        assert (await client.get(endpoint)).status_code == 401
+        assert (await client.get("/admin/api/evaluations")).status_code == 401
+        await client.post(
+            "/admin/api/login",
+            headers={"Origin": dashboard_settings.public_origin},
+            json={"password": dashboard_settings.password_file.read_text()},
+        )
+        response = await client.get(endpoint)
+        assert response.status_code == 200
+        assert "attachment" in response.headers["content-disposition"]
+        assert "ABCD1234" not in response.text
+        assert load_snapshot(response.content)["events"] == []
+        assert (await client.get("/admin/api/evaluations")).json()["items"] == []
+        assert (await client.get("/admin/api/evaluations/invalid")).status_code == 404
+        run = "/admin/api/evaluations/" + "b" * 32
+        assert (await client.get(run + "?offset=-1")).status_code == 422
+        assert (await client.get(run + "?status=invalid")).status_code == 400
+        assert (await client.get(run + "?status=failed")).json()["status"] == "failed"
+    absent = create_app(dashboard_settings, ExportStore())
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=absent), base_url=dashboard_settings.public_origin
+    ) as client:
+        await client.post(
+            "/admin/api/login",
+            headers={"Origin": dashboard_settings.public_origin},
+            json={"password": dashboard_settings.password_file.read_text()},
+        )
+        assert (await client.get("/admin/api/evaluations")).status_code == 503
+        assert (await client.get("/admin/api/tasks")).status_code == 200

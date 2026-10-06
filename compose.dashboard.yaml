@@ -14,6 +14,7 @@ services:
     pids_limit: 64
     environment:
       VEY_DASHBOARD_DATABASE_URL: ${VEY_DASHBOARD_DATABASE_URL:?Set independent SELECT-only connection}
+      # Set via compose.dashboard-evals.yaml only when the independent archive is ready.
       VEY_DASHBOARD_PASSWORD_FILE: /run/secrets/dashboard_password
       VEY_DASHBOARD_PUBLIC_ORIGIN: https://${VEY_PUBLIC_HOST}
     secrets: [dashboard_password]
