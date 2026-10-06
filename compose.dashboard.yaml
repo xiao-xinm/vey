@@ -1,0 +1,35 @@
+# Add after compose.https.yaml; mounts no core/executor/model credentials.
+services:
+  dashboard:
+    image: ${VEY_DASHBOARD_IMAGE:-vey-agent:0.1.0}
+    command: ["serve", "dashboard", "--host", "0.0.0.0"]
+    user: "10004:10000"
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    mem_limit: 192m
+    cpus: 0.5
+    pids_limit: 64
+    environment:
+      VEY_DASHBOARD_DATABASE_URL: ${VEY_DASHBOARD_DATABASE_URL:?Set independent SELECT-only connection}
+      VEY_DASHBOARD_PASSWORD_FILE: /run/secrets/dashboard_password
+      VEY_DASHBOARD_PUBLIC_ORIGIN: https://${VEY_PUBLIC_HOST}
+    secrets: [dashboard_password]
+    networks: [database, ingress]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/ready', timeout=6)"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+      start_period: 10s
+      start_interval: 2s
+    logging:
+      driver: json-file
+      options: {max-size: "10m", max-file: "3"}
+  https-gateway:
+    volumes:
+      - ./deploy/dashboard.caddy:/etc/caddy/optional/dashboard.caddy:ro
+secrets:
+  dashboard_password: {file: ./secrets/dashboard_password}

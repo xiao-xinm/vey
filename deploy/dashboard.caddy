@@ -1,0 +1,7 @@
+redir /admin /admin/ 308
+handle /admin/* {
+    request_body {
+        max_size 2KB
+    }
+    reverse_proxy dashboard:8080
+}

@@ -15,7 +15,7 @@ def main():
     parser = argparse.ArgumentParser(prog="vey")
     sub = parser.add_subparsers(dest="command", required=True)
     serve = sub.add_parser("serve")
-    serve.add_argument("component", choices=["core", "executor"])
+    serve.add_argument("component", choices=["core", "executor", "dashboard"])
     serve.add_argument("--host", default="127.0.0.1")
     serve.add_argument("--port", type=int, default=8080)
     sub.add_parser("check-config")
@@ -24,6 +24,16 @@ def main():
     message.add_argument("--url", default="http://127.0.0.1:8080")
     message.add_argument("--wait", action="store_true")
     args = parser.parse_args()
+    if args.command == "serve" and args.component == "dashboard":
+        uvicorn.run(
+            "vey.dashboard:create_app",
+            factory=True,
+            host=args.host,
+            port=args.port,
+            workers=1,
+            access_log=False,
+        )
+        return
     settings = Settings()
     policy = settings.policy()
     if args.command == "check-config":
