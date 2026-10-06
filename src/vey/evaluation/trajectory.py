@@ -153,7 +153,10 @@ def score_trajectory(case, result):
     if not set(case.expected_codes).issubset(codes):
         failures.append("missing_hypothesis_code")
     if result.diagnosis and any(
-        h.code in case.forbidden_supported_codes and h.confidence == "supported"
+        h.code in case.forbidden_supported_codes
+        and h.confidence == "supported"
+        and h.temporal_scope != "historical"
+        and h.polarity != "absent"
         for h in result.diagnosis.hypotheses
     ):
         failures.append("unsupported_causal_claim")
@@ -185,6 +188,7 @@ async def run_trajectories(
         "dataset_hash": digest(dataset.model_dump(mode="json")),
         "implementation_hash": implementation_hash(),
         "loop_version": LOOP_VERSION,
+        "scoring_version": "trajectory-v2-temporal-polarity",
         "mode": "live" if provider_factory else "scripted",
         "started_at": utcnow().isoformat(),
         "status": "running",

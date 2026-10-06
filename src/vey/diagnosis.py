@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from dataclasses import dataclass, field
 
 from vey.domain import Diagnosis, ToolCall, VeyError, digest
 from vey.security import safe_value
 
-LOOP_VERSION = "diagnosis-v2"
+LOOP_VERSION = "diagnosis-v3"
 STOP_LABELS = {
     "concluded": "已根据现有证据结束检查；本轮仅执行只读查询，未实施修复。",
     "tool_budget": "已达到 5 次工具调用上限，停止继续排查。",
@@ -37,6 +38,7 @@ class DiagnosisResult:
     trace: list[dict] = field(default_factory=list)
     model_calls: int = 0
     tool_calls: int = 0
+    required_checks: list[str] = field(default_factory=list)
 
     def as_dict(self):
         return safe_value(
@@ -48,6 +50,7 @@ class DiagnosisResult:
                 "trace": self.trace,
                 "model_calls": self.model_calls,
                 "tool_calls": self.tool_calls,
+                "required_checks": self.required_checks,
             }
         )
 
@@ -55,8 +58,16 @@ class DiagnosisResult:
         lines = [STOP_LABELS[self.stop_reason]]
         if self.diagnosis:
             for h in self.diagnosis.hypotheses:
-                certainty = "有证据支持的假设" if h.confidence == "supported" else "待验证假设"
-                lines.append(f"{certainty}：{h.statement}（{', '.join(h.evidence_refs)}）")
+                certainty = "证据支持" if h.confidence == "supported" else "待验证"
+                scope = {"current": "当前", "historical": "历史", "unknown": "时间范围未确定"}[
+                    h.temporal_scope
+                ]
+                polarity = {"present": "观察到", "absent": "未观察到", "unknown": "尚未确认"}[
+                    h.polarity
+                ]
+                lines.append(
+                    f"{scope} · {polarity}（{certainty}）：{h.statement}（{', '.join(h.evidence_refs)}）"
+                )
             lines.append("尚未确定：" + self.diagnosis.uncertainty)
             for v in self.diagnosis.verification:
                 # The capability is deterministic; never present a model's promise of historical data.
@@ -64,6 +75,21 @@ class DiagnosisResult:
                     f"可继续查询：{CAPABILITIES[v.tool.name]}，目标 {v.tool.target or '本机范围'}。"
                 )
         return "\n".join(lines)
+
+
+def explicit_checklist(message: str, target: str | None) -> list[str]:
+    """Recognize only the affirmative fixed checklist; never infer wider consent.
+
+    Negation, qualifications, numeric/log filters disable automatic completion.
+    Free-form requests remain the planner's responsibility.
+    """
+    if not target or re.search(
+        r"不要|不用|无需|无须|不需要|不必|不得|没必要|不检查|不查看|不查询|不读取|别|勿|不查|不读|跳过|忽略|禁止|仅|只查|只看|只要|如果|假如|关键词|过滤|[0-9]",
+        message,
+    ):
+        return []
+    pattern = r"(?:检查|查看|查询|先查)(?:容器)?状态[、，,和及与\s]*(?:近期|最近|容器)?日志[、，,和及与\s]*(?:已配置的)?(?:业务)?健康(?:检查)?"
+    return ["inspect", "logs", "health"] if re.search(pattern, message) else []
 
 
 def permitted(call: ToolCall, catalog: list[dict]) -> bool:
@@ -101,6 +127,7 @@ async def run_diagnosis(
     if not 0 < timeout <= 60:
         raise ValueError("diagnosis timeout must be in (0, 60]")
     result = DiagnosisResult("tool_budget", evidence if evidence is not None else [])
+    result.required_checks = explicit_checklist(message, target)
     seen = set()
     try:
         async with asyncio.timeout(timeout):
@@ -115,14 +142,32 @@ async def run_diagnosis(
                     break
                 if before_step:
                     before_step()
-                result.trace.append(safe_value(step.model_dump(mode="json")))
+                trace = safe_value(step.model_dump(mode="json"))
+                result.trace.append(trace)
                 if step.tool is None:
-                    if valid_diagnosis(step.diagnosis, result.evidence, catalog):
+                    attempted = {
+                        e["tool"]["name"]
+                        for e in result.evidence
+                        if isinstance(e.get("tool"), dict) and e["tool"].get("target") == target
+                    }
+                    pending = [name for name in result.required_checks if name not in attempted]
+                    if pending:
+                        # Replace an early finish with one explicitly requested read.
+                        # This uses the same iteration/time budget; no sixth call.
+                        step = step.model_copy(
+                            update={
+                                "tool": ToolCall(name=pending[0], target=target),
+                                "diagnosis": None,
+                            }
+                        )
+                        trace["required_check_added"] = step.tool.model_dump(mode="json")
+                    elif valid_diagnosis(step.diagnosis, result.evidence, catalog):
                         result.diagnosis = step.diagnosis
                         result.stop_reason = "concluded"
+                        break
                     else:
                         result.stop_reason = "invalid_conclusion"
-                    break
+                        break
                 if not permitted(step.tool, catalog):
                     result.stop_reason = "invalid_tool"
                     break

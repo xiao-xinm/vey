@@ -67,7 +67,7 @@ def guard_operation_intent(message: str, intent: Intent, policy: Policy) -> Inte
 
 
 class DeepSeekProvider:
-    prompt_version = "v4-structured"
+    prompt_version = "v5-observations"
 
     def __init__(self, settings: Settings, client: httpx.AsyncClient | None = None):
         self.settings = settings
@@ -145,6 +145,10 @@ class DeepSeekProvider:
             "不重复相同检查。证据充分或无法继续时结束；区分事实、可能原因和建议。"
             "最终 tool=null 时必须填写 diagnosis，summary 留空。diagnosis 包含 hypotheses、uncertainty、verification。"
             "每个假设使用 code 分类、statement 中文描述、confidence=possible或supported、evidence_refs 数组。"
+            "每项明确 temporal_scope=current/historical/unknown 和 polarity=present/absent/unknown。"
+            "历史故障用 historical；没有观察到某类故障用 absent，不得当成当前故障。"
+            "Docker inspect 的 health 与业务 health 工具不是同一种检查；不能由前者未配置推断后者不可用。"
+            "用户明确要求的检查应逐项尝试；失败不重复尝试，无法完成则说明限制。"
             "只引用实际 evidence 的 id；有退出码不等于已确定根因，错误证据也只能支持检查失败。"
             "uncertainty 必须说明尚未确定事项；verification 仅可给固定只读工具，不得建议其没有的能力。"
             "工具错误允许换一种只读检查；五次工具预算用尽时程序自动停止，不要求额外总结调用。"

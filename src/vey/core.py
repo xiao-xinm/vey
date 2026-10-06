@@ -287,6 +287,12 @@ class Core:
                         "diagnosis": diagnosis.as_dict()["diagnosis"],
                         "model_calls": diagnosis.model_calls,
                         "tool_calls": diagnosis.tool_calls,
+                        "required_checks": diagnosis.required_checks,
+                        "required_checks_added": [
+                            t["required_check_added"]
+                            for t in diagnosis.trace
+                            if "required_check_added" in t
+                        ],
                     },
                 )
                 self._finish(

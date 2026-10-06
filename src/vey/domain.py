@@ -97,6 +97,8 @@ class Hypothesis(StrictModel):
     statement: str = Field(min_length=1, max_length=500)
     confidence: Literal["possible", "supported"]
     evidence_refs: list[str] = Field(min_length=1, max_length=5)
+    temporal_scope: Literal["current", "historical", "unknown"] = "unknown"
+    polarity: Literal["present", "absent", "unknown"] = "unknown"
 
 
 class Verification(StrictModel):

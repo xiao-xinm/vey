@@ -6,7 +6,7 @@ import pytest
 from sqlalchemy import select
 
 from vey.db import Event, Grant
-from vey.diagnosis import run_diagnosis
+from vey.diagnosis import DiagnosisResult, explicit_checklist, run_diagnosis
 from vey.domain import Diagnosis, NextStep, ToolCall, Verification, VeyError
 from vey.evaluation.trajectory import (
     ReplayTools,
@@ -14,7 +14,87 @@ from vey.evaluation.trajectory import (
     ToolFixture,
     load_trajectories,
     run_trajectories,
+    score_trajectory,
 )
+
+
+async def test_early_finish_completes_explicit_health_check_within_budget(policy):
+    steps = [
+        NextStep(tool=ToolCall(name="inspect", target="blog/web")),
+        NextStep(tool=ToolCall(name="logs", target="blog/web")),
+        conclusion(),
+        conclusion("E3"),
+    ]
+    calls = []
+
+    async def read(call):
+        calls.append(call.name)
+        return {"status": "not_configured"}
+
+    result = await run_diagnosis(
+        ScriptedPlanner(steps),
+        "请检查容器状态、日志和已配置的健康检查，再说明不确定性",
+        "blog/web",
+        policy.catalog(),
+        read,
+    )
+    assert result.stop_reason == "concluded"
+    assert calls == ["inspect", "logs", "health"]
+    assert result.model_calls == 4 and result.tool_calls == 3
+    assert result.trace[2]["tool"] is None
+    assert result.trace[2]["required_check_added"]["name"] == "health"
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "不要检查状态、日志和业务健康",
+        "不需要检查状态、日志和业务健康",
+        "如果检查状态、日志和业务健康会怎样",
+        "检查状态、日志和业务健康，但日志只要最后20行",
+        "先查状态、日志和业务健康，不过别查日志",
+    ],
+)
+def test_restricted_or_hypothetical_checklist_is_not_auto_completed(message):
+    assert explicit_checklist(message, "blog/web") == []
+
+
+async def test_checklist_completion_does_not_add_sixth_call_or_retry_failures(policy):
+    calls = []
+
+    async def read(call):
+        calls.append(call.name)
+        raise VeyError("permission_denied", "没有读取权限")
+
+    steps = [
+        NextStep(tool=ToolCall(name="stats", target="blog/web")),
+        NextStep(tool=ToolCall(name="system")),
+        NextStep(),
+        NextStep(),
+        NextStep(),
+    ]
+    result = await run_diagnosis(
+        ScriptedPlanner(steps), "检查状态、日志和业务健康", "blog/web", policy.catalog(), read
+    )
+    assert result.stop_reason == "tool_budget" and result.model_calls == result.tool_calls == 5
+    assert calls == ["stats", "system", "inspect", "logs", "health"]
+
+
+def test_historical_and_absent_observations_render_and_score_separately():
+    dataset = load_trajectories(Path("evals/datasets/m3-trajectories-v1.json"))
+    case = next(c for c in dataset.cases if c.id == "recovered-old-error")
+    finish = conclusion()
+    h = finish.diagnosis.hypotheses[0]
+    h.code, h.confidence = "dependency_unavailable", "supported"
+    evidence = [{"id": "E1", "tool": {"name": tool}, "result": {}} for tool in case.required_tools]
+    result = DiagnosisResult("concluded", evidence, finish.diagnosis)
+    assert "unsupported_causal_claim" in score_trajectory(case, result)
+    h.temporal_scope, h.polarity = "historical", "present"
+    assert "unsupported_causal_claim" not in score_trajectory(case, result)
+    assert "历史 · 观察到" in result.summary()
+    h.temporal_scope, h.polarity = "current", "absent"
+    assert "unsupported_causal_claim" not in score_trajectory(case, result)
+    assert "当前 · 未观察到" in result.summary()
 
 
 async def test_complete_log_replay_supports_bounded_filtering_but_not_unknown_time_ranges():
