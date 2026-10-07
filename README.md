@@ -8,7 +8,7 @@
 
 第二期已发布，10 月 6 日核心更新至 `bff3e8a`，执行器保持 `1990d16`，Jev 暂保留：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。[M3 发布与限制](docs/phase2-release.md)和[诊断修复验收](docs/diagnosis-followthrough.md)保留原始评测与生产验证；当前完整测试 99 项，路由仍为规则优先＋DeepSeek。
 
-第三期后台已更新至 `feea6be`：独立只读账号查询任务与评测，支持任务快照导出和离线逐步复核。目前完整测试为 **111 项**，另有 JavaScript 离线契约测试；M2 生产接口验收通过，真实浏览器验收因工具不可用待补。[后台手册](docs/dashboard.md)、[M1 验收](docs/dashboard-acceptance.md)、[M2 功能与边界](docs/dashboard-evidence.md)、[M2 验收](docs/dashboard-evidence-acceptance.md)、[后续计划](docs/phase3-plan.md)。配置编辑和第三期运维完善尚未实现。
+第三期后台已更新至 `849c19a`：任务与评测只读查询、审计快照导出和离线复核，新增“备份与容量”。当前完整测试 **117 项**，另有 JavaScript 契约测试。本机双库备份已完成隔离恢复，核对数据、视图与权限并作废旧任务；容量展示明确标注采样时间。[后台手册](docs/dashboard.md)、[M1 验收](docs/dashboard-acceptance.md)、[M2 验收](docs/dashboard-evidence-acceptance.md)、[备份恢复手册](docs/operations-recovery.md)、[M3 运维验收](docs/operations-recovery-acceptance.md)、[后续计划](docs/phase3-plan.md)。配置编辑尚未实现；异地、加密、定时备份待后续，M2 和新增页面的真实浏览器验收仍因工具不可用待补。
 
 - 服务器信息、配置范围内的 Compose 服务状态、资源和业务健康检查。
 - 服务器概况以中文摘要展示采样时间、CPU、内存、运行时长、已配置磁盘及前五项进程常驻内存；缺失指标明确提示，不据此断言业务正常。

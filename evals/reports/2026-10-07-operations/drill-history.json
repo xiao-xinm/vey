@@ -1,0 +1,703 @@
+{
+  "runs": [
+    {
+      "status": "failed",
+      "run_id": "568d0aa73f2a426295a4cc26c90b59bc",
+      "started_at": "2026-10-07T02:56:45.531052+00:00",
+      "databases": {
+        "vey": {
+          "snapshot_started_at": "2026-10-07T02:56:46.050097+00:00",
+          "dump_bytes": 74974,
+          "dump_sha256": "bd18e54ff775ca1ce1f41391b6e7e7b49a29c586eea1587e81adececf7402ede",
+          "database_bytes": 9509911,
+          "tables": 8,
+          "views": 3,
+          "rows": {
+            "public.alembic_version": 1,
+            "vey_core.events": 422,
+            "vey_core.outbox": 44,
+            "vey_core.sessions": 2,
+            "vey_core.tasks": 229,
+            "vey_exec.grants": 24,
+            "vey_exec.log_cursors": 0,
+            "vey_exec.sessions": 2
+          },
+          "relations": [
+            {
+              "schema": "vey_core",
+              "name": "tasks",
+              "table_bytes": 425984,
+              "index_bytes": 114688,
+              "total_bytes": 540672
+            },
+            {
+              "schema": "vey_core",
+              "name": "events",
+              "table_bytes": 204800,
+              "index_bytes": 73728,
+              "total_bytes": 278528
+            },
+            {
+              "schema": "vey_core",
+              "name": "sessions",
+              "table_bytes": 196608,
+              "index_bytes": 16384,
+              "total_bytes": 212992
+            },
+            {
+              "schema": "vey_core",
+              "name": "outbox",
+              "table_bytes": 90112,
+              "index_bytes": 32768,
+              "total_bytes": 122880
+            },
+            {
+              "schema": "vey_exec",
+              "name": "grants",
+              "table_bytes": 57344,
+              "index_bytes": 49152,
+              "total_bytes": 106496
+            },
+            {
+              "schema": "vey_exec",
+              "name": "log_cursors",
+              "table_bytes": 65536,
+              "index_bytes": 32768,
+              "total_bytes": 98304
+            },
+            {
+              "schema": "vey_exec",
+              "name": "sessions",
+              "table_bytes": 40960,
+              "index_bytes": 16384,
+              "total_bytes": 57344
+            },
+            {
+              "schema": "public",
+              "name": "alembic_version",
+              "table_bytes": 8192,
+              "index_bytes": 16384,
+              "total_bytes": 24576
+            }
+          ]
+        },
+        "vey_eval": {
+          "snapshot_started_at": "2026-10-07T02:56:47.589951+00:00",
+          "dump_bytes": 109217,
+          "dump_sha256": "53a4720927ec1a2ca00c368fd6fe509f1a06619add911ce5f4ba5d11f72c14c3",
+          "database_bytes": 8543255,
+          "tables": 2,
+          "views": 0,
+          "rows": {
+            "vey_eval.runs": 13,
+            "vey_eval.samples": 312
+          },
+          "relations": [
+            {
+              "schema": "vey_eval",
+              "name": "samples",
+              "table_bytes": 475136,
+              "index_bytes": 49152,
+              "total_bytes": 524288
+            },
+            {
+              "schema": "vey_eval",
+              "name": "runs",
+              "table_bytes": 188416,
+              "index_bytes": 16384,
+              "total_bytes": 204800
+            }
+          ]
+        }
+      },
+      "offsite": false,
+      "encrypted": false,
+      "scheduled": false,
+      "source_writers_stopped": false,
+      "stage": "restore_vey",
+      "filesystem_before": {
+        "total": 42156257280,
+        "used": 14735949824,
+        "free": 25578446848
+      },
+      "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+      "configuration": {
+        "files": 89,
+        "bytes": 139309,
+        "sha256": "a50c37ebdf14783535741340f1197b6e6dea0f3936c12280c57ac4f7c9d048b8"
+      },
+      "error_type": "CalledProcessError",
+      "cleanup": "removed",
+      "finished_at": "2026-10-07T02:56:51.866134+00:00",
+      "filesystem_after": {
+        "total": 42156257280,
+        "used": 14736363520,
+        "free": 25578033152
+      }
+    },
+    {
+      "status": "failed",
+      "run_id": "bf59f0f062d840bab6fe3753f7125f0e",
+      "started_at": "2026-10-07T02:57:53.395506+00:00",
+      "databases": {
+        "vey": {
+          "snapshot_started_at": "2026-10-07T02:57:53.904803+00:00",
+          "dump_bytes": 74891,
+          "dump_sha256": "ed278ab15f1d5f51fcee9dac887b1c1846593b9bcd4d9a5a44957f32c3142b4b",
+          "database_bytes": 9509911,
+          "tables": 8,
+          "views": 3,
+          "rows": {
+            "public.alembic_version": 1,
+            "vey_core.events": 422,
+            "vey_core.outbox": 44,
+            "vey_core.sessions": 2,
+            "vey_core.tasks": 229,
+            "vey_exec.grants": 24,
+            "vey_exec.log_cursors": 0,
+            "vey_exec.sessions": 2
+          },
+          "relations": [
+            {
+              "schema": "vey_core",
+              "name": "tasks",
+              "table_bytes": 425984,
+              "index_bytes": 114688,
+              "total_bytes": 540672
+            },
+            {
+              "schema": "vey_core",
+              "name": "events",
+              "table_bytes": 204800,
+              "index_bytes": 73728,
+              "total_bytes": 278528
+            },
+            {
+              "schema": "vey_core",
+              "name": "sessions",
+              "table_bytes": 196608,
+              "index_bytes": 16384,
+              "total_bytes": 212992
+            },
+            {
+              "schema": "vey_core",
+              "name": "outbox",
+              "table_bytes": 90112,
+              "index_bytes": 32768,
+              "total_bytes": 122880
+            },
+            {
+              "schema": "vey_exec",
+              "name": "grants",
+              "table_bytes": 57344,
+              "index_bytes": 49152,
+              "total_bytes": 106496
+            },
+            {
+              "schema": "vey_exec",
+              "name": "log_cursors",
+              "table_bytes": 65536,
+              "index_bytes": 32768,
+              "total_bytes": 98304
+            },
+            {
+              "schema": "vey_exec",
+              "name": "sessions",
+              "table_bytes": 40960,
+              "index_bytes": 16384,
+              "total_bytes": 57344
+            },
+            {
+              "schema": "public",
+              "name": "alembic_version",
+              "table_bytes": 8192,
+              "index_bytes": 16384,
+              "total_bytes": 24576
+            }
+          ]
+        },
+        "vey_eval": {
+          "snapshot_started_at": "2026-10-07T02:57:55.424014+00:00",
+          "dump_bytes": 109217,
+          "dump_sha256": "467162c4307d7bc8f3f83d5c465b2626b7c270890b0e99aeb0acab1271a0b209",
+          "database_bytes": 8543255,
+          "tables": 2,
+          "views": 0,
+          "rows": {
+            "vey_eval.runs": 13,
+            "vey_eval.samples": 312
+          },
+          "relations": [
+            {
+              "schema": "vey_eval",
+              "name": "samples",
+              "table_bytes": 475136,
+              "index_bytes": 49152,
+              "total_bytes": 524288
+            },
+            {
+              "schema": "vey_eval",
+              "name": "runs",
+              "table_bytes": 188416,
+              "index_bytes": 16384,
+              "total_bytes": 204800
+            }
+          ]
+        }
+      },
+      "offsite": false,
+      "encrypted": false,
+      "scheduled": false,
+      "source_writers_stopped": false,
+      "stage": "restore_vey",
+      "filesystem_before": {
+        "total": 42156257280,
+        "used": 14736551936,
+        "free": 25577844736
+      },
+      "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+      "configuration": {
+        "files": 89,
+        "bytes": 139482,
+        "sha256": "7cd9ff746088c2ae6d7dd902f9d5dc79a7eead99837fc6aa5de33b1b05e2e0ef"
+      },
+      "error_type": "RuntimeError",
+      "cleanup": "removed",
+      "finished_at": "2026-10-07T02:58:00.215616+00:00",
+      "filesystem_after": {
+        "total": 42156257280,
+        "used": 14737002496,
+        "free": 25577394176
+      }
+    },
+    {
+      "status": "failed",
+      "run_id": "1e18c9db4c004d9094b43235a034bd2f",
+      "started_at": "2026-10-07T02:58:40.451458+00:00",
+      "databases": {
+        "vey": {
+          "snapshot_started_at": "2026-10-07T02:58:40.962014+00:00",
+          "dump_bytes": 74716,
+          "dump_sha256": "fb9d82f330b8f6e01cd8e130902218aba4a2a6f3fc1b9854013ea9316353934b",
+          "database_bytes": 9509911,
+          "tables": 8,
+          "views": 3,
+          "rows": {
+            "public.alembic_version": 1,
+            "vey_core.events": 422,
+            "vey_core.outbox": 44,
+            "vey_core.sessions": 2,
+            "vey_core.tasks": 229,
+            "vey_exec.grants": 24,
+            "vey_exec.log_cursors": 0,
+            "vey_exec.sessions": 2
+          },
+          "relations": [
+            {
+              "schema": "vey_core",
+              "name": "tasks",
+              "table_bytes": 425984,
+              "index_bytes": 114688,
+              "total_bytes": 540672
+            },
+            {
+              "schema": "vey_core",
+              "name": "events",
+              "table_bytes": 204800,
+              "index_bytes": 73728,
+              "total_bytes": 278528
+            },
+            {
+              "schema": "vey_core",
+              "name": "sessions",
+              "table_bytes": 196608,
+              "index_bytes": 16384,
+              "total_bytes": 212992
+            },
+            {
+              "schema": "vey_core",
+              "name": "outbox",
+              "table_bytes": 90112,
+              "index_bytes": 32768,
+              "total_bytes": 122880
+            },
+            {
+              "schema": "vey_exec",
+              "name": "grants",
+              "table_bytes": 57344,
+              "index_bytes": 49152,
+              "total_bytes": 106496
+            },
+            {
+              "schema": "vey_exec",
+              "name": "log_cursors",
+              "table_bytes": 65536,
+              "index_bytes": 32768,
+              "total_bytes": 98304
+            },
+            {
+              "schema": "vey_exec",
+              "name": "sessions",
+              "table_bytes": 40960,
+              "index_bytes": 16384,
+              "total_bytes": 57344
+            },
+            {
+              "schema": "public",
+              "name": "alembic_version",
+              "table_bytes": 8192,
+              "index_bytes": 16384,
+              "total_bytes": 24576
+            }
+          ]
+        },
+        "vey_eval": {
+          "snapshot_started_at": "2026-10-07T02:58:42.475183+00:00",
+          "dump_bytes": 109217,
+          "dump_sha256": "7e06c314d087db6e614ad6b6bd27a42c8a7708ba7473b1382394c18447aa7532",
+          "database_bytes": 8543255,
+          "tables": 2,
+          "views": 0,
+          "rows": {
+            "vey_eval.runs": 13,
+            "vey_eval.samples": 312
+          },
+          "relations": [
+            {
+              "schema": "vey_eval",
+              "name": "samples",
+              "table_bytes": 475136,
+              "index_bytes": 49152,
+              "total_bytes": 524288
+            },
+            {
+              "schema": "vey_eval",
+              "name": "runs",
+              "table_bytes": 188416,
+              "index_bytes": 16384,
+              "total_bytes": 204800
+            }
+          ]
+        }
+      },
+      "offsite": false,
+      "encrypted": false,
+      "scheduled": false,
+      "source_writers_stopped": false,
+      "stage": "restore_vey",
+      "filesystem_before": {
+        "total": 42156257280,
+        "used": 14737096704,
+        "free": 25577299968
+      },
+      "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+      "configuration": {
+        "files": 89,
+        "bytes": 139575,
+        "sha256": "56cf0a9d90efc6499256e869d70bbab4d49ec7719249aee843e5dd3ba75f0bc2"
+      },
+      "mismatched_components": [
+        "views"
+      ],
+      "error_type": "RuntimeError",
+      "cleanup": "removed",
+      "finished_at": "2026-10-07T02:58:47.174128+00:00",
+      "filesystem_after": {
+        "total": 42156257280,
+        "used": 14737313792,
+        "free": 25577082880
+      }
+    },
+    {
+      "status": "passed",
+      "run_id": "973f5c306e4c4ad2bdce482248fb4ad2",
+      "started_at": "2026-10-07T02:59:54.870003+00:00",
+      "databases": {
+        "vey": {
+          "snapshot_started_at": "2026-10-07T02:59:55.387409+00:00",
+          "dump_bytes": 74916,
+          "dump_sha256": "c7f65463093ec90ce41a0bff3fe611dd0e60fcdc666385a1fbbd82264227eab3",
+          "database_bytes": 9509911,
+          "tables": 8,
+          "views": 3,
+          "rows": {
+            "public.alembic_version": 1,
+            "vey_core.events": 422,
+            "vey_core.outbox": 44,
+            "vey_core.sessions": 2,
+            "vey_core.tasks": 229,
+            "vey_exec.grants": 24,
+            "vey_exec.log_cursors": 0,
+            "vey_exec.sessions": 2
+          },
+          "relations": [
+            {
+              "schema": "vey_core",
+              "name": "tasks",
+              "table_bytes": 425984,
+              "index_bytes": 114688,
+              "total_bytes": 540672
+            },
+            {
+              "schema": "vey_core",
+              "name": "events",
+              "table_bytes": 204800,
+              "index_bytes": 73728,
+              "total_bytes": 278528
+            },
+            {
+              "schema": "vey_core",
+              "name": "sessions",
+              "table_bytes": 196608,
+              "index_bytes": 16384,
+              "total_bytes": 212992
+            },
+            {
+              "schema": "vey_core",
+              "name": "outbox",
+              "table_bytes": 90112,
+              "index_bytes": 32768,
+              "total_bytes": 122880
+            },
+            {
+              "schema": "vey_exec",
+              "name": "grants",
+              "table_bytes": 57344,
+              "index_bytes": 49152,
+              "total_bytes": 106496
+            },
+            {
+              "schema": "vey_exec",
+              "name": "log_cursors",
+              "table_bytes": 65536,
+              "index_bytes": 32768,
+              "total_bytes": 98304
+            },
+            {
+              "schema": "vey_exec",
+              "name": "sessions",
+              "table_bytes": 40960,
+              "index_bytes": 16384,
+              "total_bytes": 57344
+            },
+            {
+              "schema": "public",
+              "name": "alembic_version",
+              "table_bytes": 8192,
+              "index_bytes": 16384,
+              "total_bytes": 24576
+            }
+          ],
+          "data_views_permissions_verified": true
+        },
+        "vey_eval": {
+          "snapshot_started_at": "2026-10-07T02:59:56.926665+00:00",
+          "dump_bytes": 109217,
+          "dump_sha256": "c02e310573c6ab267ff60a065657ea39281bbb2509e0d30760768f08ab2e1dc5",
+          "database_bytes": 8543255,
+          "tables": 2,
+          "views": 0,
+          "rows": {
+            "vey_eval.runs": 13,
+            "vey_eval.samples": 312
+          },
+          "relations": [
+            {
+              "schema": "vey_eval",
+              "name": "samples",
+              "table_bytes": 475136,
+              "index_bytes": 49152,
+              "total_bytes": 524288
+            },
+            {
+              "schema": "vey_eval",
+              "name": "runs",
+              "table_bytes": 188416,
+              "index_bytes": 16384,
+              "total_bytes": 204800
+            }
+          ],
+          "data_views_permissions_verified": true
+        }
+      },
+      "offsite": false,
+      "encrypted": false,
+      "scheduled": false,
+      "source_writers_stopped": false,
+      "stage": "complete",
+      "filesystem_before": {
+        "total": 42156257280,
+        "used": 14737596416,
+        "free": 25576800256
+      },
+      "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+      "configuration": {
+        "files": 90,
+        "bytes": 150901,
+        "sha256": "b78ab2d51f17a009df5ba1efb302c0172649cf42957c9533e577bf86dfd0cac0"
+      },
+      "quarantine": {
+        "replayable_records": 0,
+        "agent_started": false,
+        "source_modified": false
+      },
+      "role_passwords_restored": false,
+      "roles_tested_without_login": 7,
+      "cleanup": "removed",
+      "finished_at": "2026-10-07T03:00:03.876198+00:00",
+      "filesystem_after": {
+        "total": 42156257280,
+        "used": 14738014208,
+        "free": 25576382464
+      }
+    },
+    {
+      "status": "passed",
+      "run_id": "d95837ad6239423398230b9694540291",
+      "started_at": "2026-10-07T03:10:23.465477+00:00",
+      "databases": {
+        "vey": {
+          "snapshot_started_at": "2026-10-07T03:10:24.067313+00:00",
+          "dump_bytes": 75041,
+          "dump_sha256": "4842626b3343bf8355ebec747e67948482c81553ee299a28287346300c226af7",
+          "database_bytes": 9509911,
+          "tables": 8,
+          "views": 3,
+          "rows": {
+            "public.alembic_version": 1,
+            "vey_core.events": 422,
+            "vey_core.outbox": 44,
+            "vey_core.sessions": 2,
+            "vey_core.tasks": 229,
+            "vey_exec.grants": 24,
+            "vey_exec.log_cursors": 0,
+            "vey_exec.sessions": 2
+          },
+          "relations": [
+            {
+              "schema": "vey_core",
+              "name": "tasks",
+              "table_bytes": 425984,
+              "index_bytes": 114688,
+              "total_bytes": 540672
+            },
+            {
+              "schema": "vey_core",
+              "name": "events",
+              "table_bytes": 204800,
+              "index_bytes": 73728,
+              "total_bytes": 278528
+            },
+            {
+              "schema": "vey_core",
+              "name": "sessions",
+              "table_bytes": 196608,
+              "index_bytes": 16384,
+              "total_bytes": 212992
+            },
+            {
+              "schema": "vey_core",
+              "name": "outbox",
+              "table_bytes": 90112,
+              "index_bytes": 32768,
+              "total_bytes": 122880
+            },
+            {
+              "schema": "vey_exec",
+              "name": "grants",
+              "table_bytes": 57344,
+              "index_bytes": 49152,
+              "total_bytes": 106496
+            },
+            {
+              "schema": "vey_exec",
+              "name": "log_cursors",
+              "table_bytes": 65536,
+              "index_bytes": 32768,
+              "total_bytes": 98304
+            },
+            {
+              "schema": "vey_exec",
+              "name": "sessions",
+              "table_bytes": 40960,
+              "index_bytes": 16384,
+              "total_bytes": 57344
+            },
+            {
+              "schema": "public",
+              "name": "alembic_version",
+              "table_bytes": 8192,
+              "index_bytes": 16384,
+              "total_bytes": 24576
+            }
+          ],
+          "data_views_permissions_verified": true
+        },
+        "vey_eval": {
+          "snapshot_started_at": "2026-10-07T03:10:25.582209+00:00",
+          "dump_bytes": 109217,
+          "dump_sha256": "73da198dda7db0059f4b3557857d529b38ef111d7a06d8dc64dd433631e9533a",
+          "database_bytes": 8543255,
+          "tables": 2,
+          "views": 0,
+          "rows": {
+            "vey_eval.runs": 13,
+            "vey_eval.samples": 312
+          },
+          "relations": [
+            {
+              "schema": "vey_eval",
+              "name": "samples",
+              "table_bytes": 475136,
+              "index_bytes": 49152,
+              "total_bytes": 524288
+            },
+            {
+              "schema": "vey_eval",
+              "name": "runs",
+              "table_bytes": 188416,
+              "index_bytes": 16384,
+              "total_bytes": 204800
+            }
+          ],
+          "data_views_permissions_verified": true
+        }
+      },
+      "offsite": false,
+      "encrypted": false,
+      "scheduled": false,
+      "source_writers_stopped": false,
+      "stage": "complete",
+      "filesystem_before": {
+        "total": 42156257280,
+        "used": 15012290560,
+        "free": 25302106112
+      },
+      "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+      "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+      "configuration": {
+        "files": 91,
+        "bytes": 142827,
+        "sha256": "35a975c24bda50ae2e2f0a85a35e962e9d5e9b41d4f18533d6d59f095927978d"
+      },
+      "quarantine": {
+        "replayable_records": 0,
+        "agent_started": false,
+        "source_modified": false
+      },
+      "role_passwords_restored": false,
+      "roles_tested_without_login": 7,
+      "cleanup": "removed",
+      "finished_at": "2026-10-07T03:10:59.160970+00:00",
+      "filesystem_after": {
+        "total": 42156257280,
+        "used": 15012814848,
+        "free": 25301581824
+      }
+    }
+  ]
+}

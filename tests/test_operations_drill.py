@@ -60,6 +60,34 @@ def test_configuration_archive_is_complete_and_excludes_unrelated_files(tmp_path
 
 
 @pytest.mark.postgres
+def test_view_comparison_handles_pg_cast_expansion_without_accepting_changed_filter(
+    db_factory, monkeypatch
+):
+    import psycopg
+
+    url = db_factory.kw["bind"].url
+    assert url.database.startswith("vey_test")
+
+    def isolated_query(container, database, statement):
+        assert container == "isolated-fixture" and database == "vey"
+        with psycopg.connect(
+            url.set(drivername="postgresql").render_as_string(hide_password=False), autocommit=True
+        ) as connection:
+            cursor = connection.execute(statement)
+            while cursor.nextset():
+                pass
+            return cursor.fetchone()[0].strip()
+
+    monkeypatch.setattr(drill, "query", isolated_query)
+    original = "SELECT id FROM vey_core.events WHERE kind::text = ANY (ARRAY['tool'::character varying, 'error'::character varying]::text[]);"
+    normalized = drill.canonical_views("isolated-fixture", "vey", {"events": original})
+    assert normalized == drill.canonical_views("isolated-fixture", "vey", normalized)
+    assert normalized != drill.canonical_views(
+        "isolated-fixture", "vey", {"events": original.replace("'error'", "'model'")}
+    )
+
+
+@pytest.mark.postgres
 def test_quarantine_removes_old_work_and_preserves_unknown_locks(db_factory, monkeypatch):
     import psycopg
 
