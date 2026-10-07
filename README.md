@@ -6,7 +6,7 @@
 
 ## 能做什么
 
-2026-10-07 核心已发布 `133a2d6`，新增可选 [Jev 路由](docs/jev-integration.md)：规则优先、Choice 分类、DeepSeek 参数解析及失败回退。当前完整 **147 项测试与 CI 通过**。Jev 默认关闭，真实效果与性能对照待配置 Key 后完成；没有新增 SDK 依赖。
+2026-10-07 核心已发布 `133a2d6`，新增可选 [Jev 路由](docs/jev-integration.md)：规则优先、Choice 分类、DeepSeek 参数解析及失败回退。当前完整 **147 项测试与 CI 通过**。[三组真实对照](docs/jev-live-evaluation.md)均为 36/36 契约通过，但 Jev 链路 P95 为 3.74 秒，现有 hybrid 为 1.12 秒，因此保留 hybrid 默认。Key 已验证有效，没有新增 SDK 依赖；评测库累计 16 次／420 样本。
 
 第二期已发布，10 月 6 日核心更新至 `bff3e8a`，执行器保持 `1990d16`，Jev 暂保留：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。[M3 发布与限制](docs/phase2-release.md)和[诊断修复验收](docs/diagnosis-followthrough.md)保留原始评测与生产验证；当前完整测试 99 项，路由仍为规则优先＋DeepSeek。
 

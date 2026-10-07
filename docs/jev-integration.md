@@ -1,5 +1,7 @@
 # Jev 可选路由接入
 
+Key 已于 2026-10-07 验证有效，三组真实对照已完成，见 [评测结果与默认路由决策](jev-live-evaluation.md)。Jev 链路未带来整体延迟收益，线上继续使用 hybrid。
+
 2026-10-07。使用现有 HTTPX 调用 [TypeSafe 官方 API](https://docs.typesafe.ai/api) 的 `POST https://api.typesafe.ai/v1/systemone`，Bearer 认证，默认模型别名 `jev-latest`。没有新增 SDK 或数据库迁移。默认仍为 `hybrid`，配置密钥不会自动开启线上 Jev。
 
 ## 请求链路
@@ -50,7 +52,7 @@ sudo docker compose exec -T agent-core vey check-config
 
 ```bash
 python -m vey.evaluation run evals/datasets/m3-routing-v1.json \
-  --split dev --strategy jev --mode live --repeats 2 \
+  --split test --strategy jev --mode live --repeats 2 \
   --key-file /run/secrets/deepseek_key --jev-key-file /run/secrets/jev_key \
   --max-model-calls 72 --output .local/evals/jev-routing
 ```
@@ -63,7 +65,7 @@ python -m vey.evaluation run evals/datasets/m3-routing-v1.json \
 
 ## 验收边界
 
-自动测试覆盖直达、缺钥、低置信度、401／429／529、超时、重定向、无效响应、取消、分类冲突、操作确认、保护服务以及双提供方调用预算。真实 Jev 效果、端到端延迟和成本对照须待服务器 Key 配置后补做；测试中的模拟响应不构成真实模型成绩。默认不开启线上 Jev，也不宣称它一定更快或更准确。
+自动测试覆盖直达、缺钥、低置信度、401／429／529、超时、重定向、无效响应、取消、分类冲突、操作确认、保护服务以及双提供方调用预算。真实路由对照已完成；聊天端到端延迟与实际账单费用未评测。模拟测试不构成真实模型成绩，默认不开启线上 Jev，也不宣称它一定更快或更准确。
 
 ## 本轮部署记录
 

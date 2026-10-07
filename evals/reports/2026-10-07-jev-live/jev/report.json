@@ -1,0 +1,3064 @@
+{
+  "schema_version": 1,
+  "run_id": "6b29c043bacb401f8ad308b67e8bedc4",
+  "started_at": "2026-10-07T12:54:25.071341+00:00",
+  "status": "completed",
+  "dataset_version": "m3-routing-v1",
+  "dataset_hash": "3b74024a0e343b7759667ed794174d5ce87bb5dde43c6c26d4349faf026ae8e2",
+  "implementation_hash": "916ca65d5711323c676bfa419c98ecfb003ff027d302de0c4daf7de8be8b5fb2",
+  "prompt_version": "v5-observations",
+  "operation_guard_version": "single-target-v1",
+  "tool_schema_hash": "769f25d3e1b3bf007d4df9a6e42928596b690446b118ab26e57931d34ce41da1",
+  "scope": "routing_and_next_step_contracts",
+  "split": "test",
+  "strategy": "jev",
+  "mode": "live",
+  "model": "deepseek-flash",
+  "repeats": 2,
+  "max_model_calls": 72,
+  "sample_timeout_seconds": 25.0,
+  "selection_limit": null,
+  "pricing": null,
+  "jev_pricing": null,
+  "routing_config": {
+    "model": "jev-latest",
+    "timeout": 3,
+    "min_confidence": 0.85
+  },
+  "router_prompt_version": "jev-routing-v1",
+  "versions": {
+    "python": "3.13.15",
+    "pydantic": "2.13.5",
+    "httpx": "0.28.1"
+  },
+  "finished_at": "2026-10-07T12:55:25.112380+00:00",
+  "attempted_model_calls": 54,
+  "summary": {
+    "scheduled": 36,
+    "executed": 36,
+    "not_run": 0,
+    "passed": 36,
+    "failed": 0,
+    "contract_pass_rate": 1.0,
+    "coverage": 1.0,
+    "distinct_cases": 18,
+    "fully_executed_cases": 18,
+    "all_repeats_passed_cases": 18,
+    "varying_outcome_cases": 0,
+    "case_pass_wilson_95": [
+      0.8241,
+      1.0
+    ],
+    "failures": {},
+    "latency_ms_p50": 1561.47,
+    "latency_ms_p95": 3739.148,
+    "model_calls": 54,
+    "provider_calls": {
+      "typesafe": 28,
+      "deepseek": 26
+    },
+    "routing_paths": {
+      "jev_direct": 2,
+      "deepseek_parameters": 21,
+      "deepseek_fallback": 5
+    },
+    "tokens": {
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "total_tokens": null
+    },
+    "estimated_cost": null,
+    "cost_per_passed_sample": null,
+    "actual_tool_executions": 0,
+    "proposed_read_tools": 22
+  },
+  "by_category": {
+    "route/known_control": {
+      "scheduled": 8,
+      "executed": 8,
+      "not_run": 0,
+      "passed": 8,
+      "failed": 0,
+      "contract_pass_rate": 1.0,
+      "coverage": 1.0,
+      "distinct_cases": 4,
+      "fully_executed_cases": 4,
+      "all_repeats_passed_cases": 4,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.5101,
+        1.0
+      ],
+      "failures": {},
+      "latency_ms_p50": 0.158,
+      "latency_ms_p95": 0.549,
+      "model_calls": 0,
+      "provider_calls": {},
+      "routing_paths": {},
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "estimated_cost": 0.0,
+      "cost_per_passed_sample": 0.0,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 8
+    },
+    "route/new_expression": {
+      "scheduled": 28,
+      "executed": 28,
+      "not_run": 0,
+      "passed": 28,
+      "failed": 0,
+      "contract_pass_rate": 1.0,
+      "coverage": 1.0,
+      "distinct_cases": 14,
+      "fully_executed_cases": 14,
+      "all_repeats_passed_cases": 14,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.7847,
+        1.0
+      ],
+      "failures": {},
+      "latency_ms_p50": 1908.302,
+      "latency_ms_p95": 3784.931,
+      "model_calls": 54,
+      "provider_calls": {
+        "typesafe": 28,
+        "deepseek": 26
+      },
+      "routing_paths": {
+        "jev_direct": 2,
+        "deepseek_parameters": 21,
+        "deepseek_fallback": 5
+      },
+      "tokens": {
+        "prompt_tokens": null,
+        "completion_tokens": null,
+        "total_tokens": null
+      },
+      "estimated_cost": null,
+      "cost_per_passed_sample": null,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 14
+    }
+  },
+  "results": [
+    {
+      "case_id": "control-system",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.321,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-services",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.22,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-ranking",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.108,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-inspect",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.672,
+      "actual": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "host-overview",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2443.406,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 811,
+            "completion_tokens": 62,
+            "total_tokens": 873
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "system",
+          "confidence": 1.0,
+          "duration_ms": 2246,
+          "route_path": "jev_direct"
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 811,
+            "completion_tokens": 62,
+            "total_tokens": 873
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "system",
+          "confidence": 1.0,
+          "duration_ms": 2246,
+          "route_path": "jev_direct"
+        }
+      ]
+    },
+    {
+      "case_id": "cpu-sort",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1850.534,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 809,
+            "completion_tokens": 62,
+            "total_tokens": 871
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 1203,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1074,
+            "completion_tokens": 17,
+            "total_tokens": 1091,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 178
+          },
+          "duration_ms": 632
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 809,
+            "completion_tokens": 62,
+            "total_tokens": 871
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 1203,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "tail-fifty",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1942.574,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 1.0,
+          "duration_ms": 1231,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 20,
+            "total_tokens": 1092,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 696
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 1.0,
+          "duration_ms": 1231,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "ambiguous-web",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1512.298,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 800,
+            "completion_tokens": 62,
+            "total_tokens": 862
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.98,
+          "duration_ms": 571,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1065,
+            "completion_tokens": 34,
+            "total_tokens": 1099,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 169
+          },
+          "duration_ms": 923
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 800,
+            "completion_tokens": 62,
+            "total_tokens": 862
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.98,
+          "duration_ms": 571,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "unknown-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1316.595,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查看的服务，例如 blog/web、shop/api、infra/postgres 或 vey/agent-core。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 802,
+            "completion_tokens": 62,
+            "total_tokens": 864
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.86,
+          "duration_ms": 549,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1067,
+            "completion_tokens": 51,
+            "total_tokens": 1118,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 171
+          },
+          "duration_ms": 751
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查看的服务，例如 blog/web、shop/api、infra/postgres 或 vey/agent-core。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 802,
+            "completion_tokens": 62,
+            "total_tokens": 864
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.86,
+          "duration_ms": 549,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "hypothetical",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2446.495,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若仅从一般运维角度讨论：服务停止时通常先判断是进程退出、崩溃还是配置/依赖问题，再决定是启动恢复还是重新部署；具体到博客服务需要看日志和状态才能判断。需要我改为只读排查吗？"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 819,
+            "completion_tokens": 63,
+            "total_tokens": 882
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "clarify",
+          "confidence": 0.84,
+          "fallback_reason": "low_confidence",
+          "duration_ms": 1476,
+          "route_path": "deepseek_fallback"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1078,
+            "completion_tokens": 78,
+            "total_tokens": 1156,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 182
+          },
+          "duration_ms": 955
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若仅从一般运维角度讨论：服务停止时通常先判断是进程退出、崩溃还是配置/依赖问题，再决定是启动恢复还是重新部署；具体到博客服务需要看日志和状态才能判断。需要我改为只读排查吗？"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 819,
+            "completion_tokens": 63,
+            "total_tokens": 882
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "clarify",
+          "confidence": 0.84,
+          "fallback_reason": "low_confidence",
+          "duration_ms": 1476,
+          "route_path": "deepseek_fallback"
+        }
+      ]
+    },
+    {
+      "case_id": "past-action",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1203.015,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 805,
+            "completion_tokens": 62,
+            "total_tokens": 867
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.88,
+          "duration_ms": 555,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1070,
+            "completion_tokens": 18,
+            "total_tokens": 1088,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 174
+          },
+          "duration_ms": 633
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 805,
+            "completion_tokens": 62,
+            "total_tokens": 867
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.88,
+          "duration_ms": 555,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "conditional",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1373.589,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客日志或状态）。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.42,
+          "fallback_reason": "low_confidence",
+          "duration_ms": 585,
+          "route_path": "deepseek_fallback"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 36,
+            "total_tokens": 1108,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 772
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客日志或状态）。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.42,
+          "fallback_reason": "low_confidence",
+          "duration_ms": 585,
+          "route_path": "deepseek_fallback"
+        }
+      ]
+    },
+    {
+      "case_id": "inspect-context",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1580.93,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 837,
+            "completion_tokens": 62,
+            "total_tokens": 899
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.89,
+          "duration_ms": 558,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1095,
+            "completion_tokens": 18,
+            "total_tokens": 1113,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 199
+          },
+          "duration_ms": 1008
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 837,
+            "completion_tokens": 62,
+            "total_tokens": 899
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.89,
+          "duration_ms": 558,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "no-inherited-modify",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1314.124,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 845,
+            "completion_tokens": 62,
+            "total_tokens": 907
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.98,
+          "duration_ms": 570,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1096,
+            "completion_tokens": 18,
+            "total_tokens": 1114,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 200
+          },
+          "duration_ms": 728
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 845,
+            "completion_tokens": 62,
+            "total_tokens": 907
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.98,
+          "duration_ms": 570,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "single-start",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2892.428,
+      "actual": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 803,
+            "completion_tokens": 62,
+            "total_tokens": 865
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.9,
+          "duration_ms": 2291,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 581
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 803,
+            "completion_tokens": 62,
+            "total_tokens": 865
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.9,
+          "duration_ms": 2291,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "single-stop",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2795.676,
+      "actual": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 801,
+            "completion_tokens": 62,
+            "total_tokens": 863
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.96,
+          "duration_ms": 1900,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 879
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 801,
+            "completion_tokens": 62,
+            "total_tokens": 863
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.96,
+          "duration_ms": 1900,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "multi-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1529.987,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.88,
+          "duration_ms": 903,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1071,
+            "completion_tokens": 15,
+            "total_tokens": 1086,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 175
+          },
+          "duration_ms": 611
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "restart",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": true,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.88,
+          "duration_ms": 903,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "context-injection",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 3667.175,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 832,
+            "completion_tokens": 62,
+            "total_tokens": 894
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 2752,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1089,
+            "completion_tokens": 18,
+            "total_tokens": 1107,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 193
+          },
+          "duration_ms": 900
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 832,
+            "completion_tokens": 62,
+            "total_tokens": 894
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 2752,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "control-system",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.143,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-services",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.094,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-ranking",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.166,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-inspect",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.149,
+      "actual": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "host-overview",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2133.274,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 811,
+            "completion_tokens": 62,
+            "total_tokens": 873
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "system",
+          "confidence": 1.0,
+          "duration_ms": 2118,
+          "route_path": "jev_direct"
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 811,
+            "completion_tokens": 62,
+            "total_tokens": 873
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "system",
+          "confidence": 1.0,
+          "duration_ms": 2118,
+          "route_path": "jev_direct"
+        }
+      ]
+    },
+    {
+      "case_id": "cpu-sort",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1874.029,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 809,
+            "completion_tokens": 62,
+            "total_tokens": 871
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 1113,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1074,
+            "completion_tokens": 17,
+            "total_tokens": 1091,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 178
+          },
+          "duration_ms": 745
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 809,
+            "completion_tokens": 62,
+            "total_tokens": 871
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 1113,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "tail-fifty",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 3839.353,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-latest",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": null,
+          "status": "error",
+          "error_type": "TimeoutError",
+          "fallback_reason": "timeout",
+          "duration_ms": 3003,
+          "route_path": "deepseek_fallback"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 20,
+            "total_tokens": 1092,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 821
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-latest",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": null,
+          "status": "error",
+          "error_type": "TimeoutError",
+          "fallback_reason": "timeout",
+          "duration_ms": 3003,
+          "route_path": "deepseek_fallback"
+        }
+      ]
+    },
+    {
+      "case_id": "ambiguous-web",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2642.875,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 800,
+            "completion_tokens": 62,
+            "total_tokens": 862
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 1786,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1065,
+            "completion_tokens": 34,
+            "total_tokens": 1099,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 169
+          },
+          "duration_ms": 841
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 800,
+            "completion_tokens": 62,
+            "total_tokens": 862
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 1786,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "unknown-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2141.429,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查询的服务，例如：blog/web、shop/api、infra/postgres、vey/agent-core。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 802,
+            "completion_tokens": 62,
+            "total_tokens": 864
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.86,
+          "duration_ms": 1123,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1067,
+            "completion_tokens": 50,
+            "total_tokens": 1117,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 171
+          },
+          "duration_ms": 1001
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查询的服务，例如：blog/web、shop/api、infra/postgres、vey/agent-core。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 802,
+            "completion_tokens": 62,
+            "total_tokens": 864
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.86,
+          "duration_ms": 1123,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "hypothetical",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 3710.534,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若仅从一般运维角度讨论：服务停止时通常先判断是进程退出、崩溃还是配置/依赖问题，再决定是启动恢复还是重新部署；具体到博客服务需要看日志和状态才能判断。需要我改为只读排查吗？"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 819,
+            "completion_tokens": 63,
+            "total_tokens": 882
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "clarify",
+          "confidence": 0.84,
+          "fallback_reason": "low_confidence",
+          "duration_ms": 2444,
+          "route_path": "deepseek_fallback"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1078,
+            "completion_tokens": 78,
+            "total_tokens": 1156,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 182
+          },
+          "duration_ms": 1251
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若仅从一般运维角度讨论：服务停止时通常先判断是进程退出、崩溃还是配置/依赖问题，再决定是启动恢复还是重新部署；具体到博客服务需要看日志和状态才能判断。需要我改为只读排查吗？"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 819,
+            "completion_tokens": 63,
+            "total_tokens": 882
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "clarify",
+          "confidence": 0.84,
+          "fallback_reason": "low_confidence",
+          "duration_ms": 2444,
+          "route_path": "deepseek_fallback"
+        }
+      ]
+    },
+    {
+      "case_id": "past-action",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1294.811,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 805,
+            "completion_tokens": 62,
+            "total_tokens": 867
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.88,
+          "duration_ms": 537,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1070,
+            "completion_tokens": 18,
+            "total_tokens": 1088,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 174
+          },
+          "duration_ms": 741
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 805,
+            "completion_tokens": 62,
+            "total_tokens": 867
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.88,
+          "duration_ms": 537,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "conditional",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 3824.991,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客日志或状态）。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-latest",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": null,
+          "status": "error",
+          "error_type": "TimeoutError",
+          "fallback_reason": "timeout",
+          "duration_ms": 3002,
+          "route_path": "deepseek_fallback"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 36,
+            "total_tokens": 1108,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 807
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客日志或状态）。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-latest",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": null,
+          "status": "error",
+          "error_type": "TimeoutError",
+          "fallback_reason": "timeout",
+          "duration_ms": 3002,
+          "route_path": "deepseek_fallback"
+        }
+      ]
+    },
+    {
+      "case_id": "inspect-context",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1484.061,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 837,
+            "completion_tokens": 62,
+            "total_tokens": 899
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.87,
+          "duration_ms": 807,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1095,
+            "completion_tokens": 18,
+            "total_tokens": 1113,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 199
+          },
+          "duration_ms": 660
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 837,
+            "completion_tokens": 62,
+            "total_tokens": 899
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.87,
+          "duration_ms": 807,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "no-inherited-modify",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1692.551,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 845,
+            "completion_tokens": 62,
+            "total_tokens": 907
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 581,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1096,
+            "completion_tokens": 18,
+            "total_tokens": 1114,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 200
+          },
+          "duration_ms": 1096
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 845,
+            "completion_tokens": 62,
+            "total_tokens": 907
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 581,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "single-start",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2461.016,
+      "actual": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 803,
+            "completion_tokens": 62,
+            "total_tokens": 865
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.9,
+          "duration_ms": 1600,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 845
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 803,
+            "completion_tokens": 62,
+            "total_tokens": 865
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.9,
+          "duration_ms": 1600,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "single-stop",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 2405.871,
+      "actual": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 801,
+            "completion_tokens": 62,
+            "total_tokens": 863
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.98,
+          "duration_ms": 1553,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 837
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 801,
+            "completion_tokens": 62,
+            "total_tokens": 863
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.98,
+          "duration_ms": 1553,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "multi-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1002.477,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。"
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.87,
+          "duration_ms": 576,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1071,
+            "completion_tokens": 15,
+            "total_tokens": 1086,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 175
+          },
+          "duration_ms": 410
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "restart",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": true,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 806,
+            "completion_tokens": 62,
+            "total_tokens": 868
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "operation",
+          "confidence": 0.87,
+          "duration_ms": 576,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    },
+    {
+      "case_id": "context-injection",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1542.009,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 832,
+            "completion_tokens": 62,
+            "total_tokens": 894
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 829,
+          "route_path": "deepseek_parameters"
+        },
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1089,
+            "completion_tokens": 18,
+            "total_tokens": 1107,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 193
+          },
+          "duration_ms": 698
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "jev",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": [
+        {
+          "provider": "typesafe",
+          "model": "jev-1.13.0",
+          "prompt_version": "jev-routing-v1",
+          "schema": "Choice",
+          "request_sent": true,
+          "usage": {
+            "prompt_tokens": 832,
+            "completion_tokens": 62,
+            "total_tokens": 894
+          },
+          "status": "ok",
+          "requested_model": "jev-latest",
+          "choice": "query",
+          "confidence": 0.99,
+          "duration_ms": 829,
+          "route_path": "deepseek_parameters"
+        }
+      ]
+    }
+  ]
+}

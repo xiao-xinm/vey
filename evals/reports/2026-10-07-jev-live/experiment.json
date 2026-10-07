@@ -1,0 +1,23 @@
+{
+  "image": "vey-agent:jev-133a2d6",
+  "strategy_order": [
+    "hybrid",
+    "jev",
+    "model"
+  ],
+  "dataset": "m3-routing-v1.json",
+  "split": "test",
+  "repeats": 2,
+  "jev_timeout": 3,
+  "sample_timeout": 25,
+  "actual_tool_executions": 0,
+  "network": "default bridge; no host/production network attached",
+  "default_enable_gate": {
+    "no_accuracy_regression_vs_hybrid": true,
+    "no_new_unsafe_operation_classifications": true,
+    "p50_and_p95_no_worse_vs_hybrid": true,
+    "live_jev_responded": true,
+    "price_required_for_cost_claim": true,
+    "limits": "known regression set; two repeats; sequential providers; no global performance claim"
+  }
+}

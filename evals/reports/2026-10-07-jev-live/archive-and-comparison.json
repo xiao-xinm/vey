@@ -1,0 +1,212 @@
+{
+  "imported": [
+    {
+      "run_id": "721bfc886cb243e4be6a18f53ecf17e0",
+      "inserted": true,
+      "samples": 36
+    },
+    {
+      "run_id": "6b29c043bacb401f8ad308b67e8bedc4",
+      "inserted": true,
+      "samples": 36
+    },
+    {
+      "run_id": "d55f965773bf4d60b502430878e3d8c6",
+      "inserted": true,
+      "samples": 36
+    }
+  ],
+  "totals": {
+    "runs": 16,
+    "samples": 420
+  },
+  "writer_permissions": {
+    "select": true,
+    "insert": true,
+    "update": false,
+    "delete": false
+  },
+  "jev_vs_hybrid": {
+    "left_run": "721bfc886cb243e4be6a18f53ecf17e0",
+    "right_run": "6b29c043bacb401f8ad308b67e8bedc4",
+    "dataset_hash": "3b74024a0e343b7759667ed794174d5ce87bb5dde43c6c26d4349faf026ae8e2",
+    "split": "test",
+    "paired_executed": 36,
+    "unpaired_or_not_run": 0,
+    "left_pass_right_fail": [],
+    "left_fail_right_pass": [],
+    "left": {
+      "strategy": "hybrid",
+      "model": "deepseek-flash",
+      "implementation_hash": "916ca65d5711323c676bfa419c98ecfb003ff027d302de0c4daf7de8be8b5fb2",
+      "summary": {
+        "scheduled": 36,
+        "executed": 36,
+        "not_run": 0,
+        "passed": 36,
+        "failed": 0,
+        "contract_pass_rate": 1.0,
+        "coverage": 1.0,
+        "distinct_cases": 18,
+        "fully_executed_cases": 18,
+        "all_repeats_passed_cases": 18,
+        "varying_outcome_cases": 0,
+        "case_pass_wilson_95": [
+          0.8241,
+          1.0
+        ],
+        "failures": {},
+        "latency_ms_p50": 696.063,
+        "latency_ms_p95": 1121.548,
+        "model_calls": 28,
+        "provider_calls": {
+          "deepseek": 28
+        },
+        "routing_paths": {},
+        "tokens": {
+          "prompt_tokens": 30128,
+          "completion_tokens": 743,
+          "total_tokens": 30871
+        },
+        "estimated_cost": null,
+        "cost_per_passed_sample": null,
+        "actual_tool_executions": 0,
+        "proposed_read_tools": 22
+      }
+    },
+    "right": {
+      "strategy": "jev",
+      "model": "deepseek-flash",
+      "implementation_hash": "916ca65d5711323c676bfa419c98ecfb003ff027d302de0c4daf7de8be8b5fb2",
+      "summary": {
+        "scheduled": 36,
+        "executed": 36,
+        "not_run": 0,
+        "passed": 36,
+        "failed": 0,
+        "contract_pass_rate": 1.0,
+        "coverage": 1.0,
+        "distinct_cases": 18,
+        "fully_executed_cases": 18,
+        "all_repeats_passed_cases": 18,
+        "varying_outcome_cases": 0,
+        "case_pass_wilson_95": [
+          0.8241,
+          1.0
+        ],
+        "failures": {},
+        "latency_ms_p50": 1561.47,
+        "latency_ms_p95": 3739.148,
+        "model_calls": 54,
+        "provider_calls": {
+          "typesafe": 28,
+          "deepseek": 26
+        },
+        "routing_paths": {
+          "jev_direct": 2,
+          "deepseek_parameters": 21,
+          "deepseek_fallback": 5
+        },
+        "tokens": {
+          "prompt_tokens": null,
+          "completion_tokens": null,
+          "total_tokens": null
+        },
+        "estimated_cost": null,
+        "cost_per_passed_sample": null,
+        "actual_tool_executions": 0,
+        "proposed_read_tools": 22
+      }
+    },
+    "limits": "Single-step fixture contracts, not full diagnosis accuracy; sequential API runs are not a controlled latency experiment."
+  },
+  "model_vs_hybrid": {
+    "left_run": "721bfc886cb243e4be6a18f53ecf17e0",
+    "right_run": "d55f965773bf4d60b502430878e3d8c6",
+    "dataset_hash": "3b74024a0e343b7759667ed794174d5ce87bb5dde43c6c26d4349faf026ae8e2",
+    "split": "test",
+    "paired_executed": 36,
+    "unpaired_or_not_run": 0,
+    "left_pass_right_fail": [],
+    "left_fail_right_pass": [],
+    "left": {
+      "strategy": "hybrid",
+      "model": "deepseek-flash",
+      "implementation_hash": "916ca65d5711323c676bfa419c98ecfb003ff027d302de0c4daf7de8be8b5fb2",
+      "summary": {
+        "scheduled": 36,
+        "executed": 36,
+        "not_run": 0,
+        "passed": 36,
+        "failed": 0,
+        "contract_pass_rate": 1.0,
+        "coverage": 1.0,
+        "distinct_cases": 18,
+        "fully_executed_cases": 18,
+        "all_repeats_passed_cases": 18,
+        "varying_outcome_cases": 0,
+        "case_pass_wilson_95": [
+          0.8241,
+          1.0
+        ],
+        "failures": {},
+        "latency_ms_p50": 696.063,
+        "latency_ms_p95": 1121.548,
+        "model_calls": 28,
+        "provider_calls": {
+          "deepseek": 28
+        },
+        "routing_paths": {},
+        "tokens": {
+          "prompt_tokens": 30128,
+          "completion_tokens": 743,
+          "total_tokens": 30871
+        },
+        "estimated_cost": null,
+        "cost_per_passed_sample": null,
+        "actual_tool_executions": 0,
+        "proposed_read_tools": 22
+      }
+    },
+    "right": {
+      "strategy": "model",
+      "model": "deepseek-flash",
+      "implementation_hash": "916ca65d5711323c676bfa419c98ecfb003ff027d302de0c4daf7de8be8b5fb2",
+      "summary": {
+        "scheduled": 36,
+        "executed": 36,
+        "not_run": 0,
+        "passed": 36,
+        "failed": 0,
+        "contract_pass_rate": 1.0,
+        "coverage": 1.0,
+        "distinct_cases": 18,
+        "fully_executed_cases": 18,
+        "all_repeats_passed_cases": 18,
+        "varying_outcome_cases": 0,
+        "case_pass_wilson_95": [
+          0.8241,
+          1.0
+        ],
+        "failures": {},
+        "latency_ms_p50": 774.588,
+        "latency_ms_p95": 1092.739,
+        "model_calls": 36,
+        "provider_calls": {
+          "deepseek": 36
+        },
+        "routing_paths": {},
+        "tokens": {
+          "prompt_tokens": 38610,
+          "completion_tokens": 826,
+          "total_tokens": 39436
+        },
+        "estimated_cost": null,
+        "cost_per_passed_sample": null,
+        "actual_tool_executions": 0,
+        "proposed_read_tools": 22
+      }
+    },
+    "limits": "Single-step fixture contracts, not full diagnosis accuracy; sequential API runs are not a controlled latency experiment."
+  }
+}

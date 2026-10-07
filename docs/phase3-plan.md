@@ -1,6 +1,6 @@
 # 第三期：管理后台与可维护性
 
-2026-10-07 追加：用户已取得 Jev 使用条件，恢复可选适配开发；接入与验收边界见 [Jev 文档](jev-integration.md)，配置 Key 后再做真实对照，线上默认仍走现有 hybrid。
+2026-10-07 追加：Jev 可选适配已部署，Key 有效，三组真实对照完成并归档。接入见 [Jev 文档](jev-integration.md)，结果见[默认路由决策](jev-live-evaluation.md)；本组 Jev 链路未获延迟收益，线上默认仍走现有 hybrid。
 
 2026-10-06 开始，M1 已部署并验收，见[验收记录](dashboard-acceptance.md)。M2 功能已上线，接口、权限与离线契约已验证，真实浏览器验收待工具恢复后补做，见[M2 记录](dashboard-evidence-acceptance.md)。沿用现有核心、执行器和独立评测库，Jev 继续延期。
 

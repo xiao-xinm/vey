@@ -1,0 +1,2064 @@
+{
+  "schema_version": 1,
+  "run_id": "721bfc886cb243e4be6a18f53ecf17e0",
+  "started_at": "2026-10-07T12:53:59.870066+00:00",
+  "status": "completed",
+  "dataset_version": "m3-routing-v1",
+  "dataset_hash": "3b74024a0e343b7759667ed794174d5ce87bb5dde43c6c26d4349faf026ae8e2",
+  "implementation_hash": "916ca65d5711323c676bfa419c98ecfb003ff027d302de0c4daf7de8be8b5fb2",
+  "prompt_version": "v5-observations",
+  "operation_guard_version": "single-target-v1",
+  "tool_schema_hash": "769f25d3e1b3bf007d4df9a6e42928596b690446b118ab26e57931d34ce41da1",
+  "scope": "routing_and_next_step_contracts",
+  "split": "test",
+  "strategy": "hybrid",
+  "mode": "live",
+  "model": "deepseek-flash",
+  "repeats": 2,
+  "max_model_calls": 72,
+  "sample_timeout_seconds": 25.0,
+  "selection_limit": null,
+  "pricing": null,
+  "jev_pricing": null,
+  "routing_config": null,
+  "router_prompt_version": null,
+  "versions": {
+    "python": "3.13.15",
+    "pydantic": "2.13.5",
+    "httpx": "0.28.1"
+  },
+  "finished_at": "2026-10-07T12:54:22.442380+00:00",
+  "attempted_model_calls": 28,
+  "summary": {
+    "scheduled": 36,
+    "executed": 36,
+    "not_run": 0,
+    "passed": 36,
+    "failed": 0,
+    "contract_pass_rate": 1.0,
+    "coverage": 1.0,
+    "distinct_cases": 18,
+    "fully_executed_cases": 18,
+    "all_repeats_passed_cases": 18,
+    "varying_outcome_cases": 0,
+    "case_pass_wilson_95": [
+      0.8241,
+      1.0
+    ],
+    "failures": {},
+    "latency_ms_p50": 696.063,
+    "latency_ms_p95": 1121.548,
+    "model_calls": 28,
+    "provider_calls": {
+      "deepseek": 28
+    },
+    "routing_paths": {},
+    "tokens": {
+      "prompt_tokens": 30128,
+      "completion_tokens": 743,
+      "total_tokens": 30871
+    },
+    "estimated_cost": null,
+    "cost_per_passed_sample": null,
+    "actual_tool_executions": 0,
+    "proposed_read_tools": 22
+  },
+  "by_category": {
+    "route/known_control": {
+      "scheduled": 8,
+      "executed": 8,
+      "not_run": 0,
+      "passed": 8,
+      "failed": 0,
+      "contract_pass_rate": 1.0,
+      "coverage": 1.0,
+      "distinct_cases": 4,
+      "fully_executed_cases": 4,
+      "all_repeats_passed_cases": 4,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.5101,
+        1.0
+      ],
+      "failures": {},
+      "latency_ms_p50": 0.128,
+      "latency_ms_p95": 0.592,
+      "model_calls": 0,
+      "provider_calls": {},
+      "routing_paths": {},
+      "tokens": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0,
+        "total_tokens": 0
+      },
+      "estimated_cost": 0.0,
+      "cost_per_passed_sample": 0.0,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 8
+    },
+    "route/new_expression": {
+      "scheduled": 28,
+      "executed": 28,
+      "not_run": 0,
+      "passed": 28,
+      "failed": 0,
+      "contract_pass_rate": 1.0,
+      "coverage": 1.0,
+      "distinct_cases": 14,
+      "fully_executed_cases": 14,
+      "all_repeats_passed_cases": 14,
+      "varying_outcome_cases": 0,
+      "case_pass_wilson_95": [
+        0.7847,
+        1.0
+      ],
+      "failures": {},
+      "latency_ms_p50": 800.716,
+      "latency_ms_p95": 1143.081,
+      "model_calls": 28,
+      "provider_calls": {
+        "deepseek": 28
+      },
+      "routing_paths": {},
+      "tokens": {
+        "prompt_tokens": 30128,
+        "completion_tokens": 743,
+        "total_tokens": 30871
+      },
+      "estimated_cost": null,
+      "cost_per_passed_sample": null,
+      "actual_tool_executions": 0,
+      "proposed_read_tools": 14
+    }
+  },
+  "results": [
+    {
+      "case_id": "control-system",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.439,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-services",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.132,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-ranking",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.132,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-inspect",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.674,
+      "actual": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "host-overview",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1005.535,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1077,
+            "completion_tokens": 12,
+            "total_tokens": 1089,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 181
+          },
+          "duration_ms": 872
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "cpu-sort",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 544.761,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1074,
+            "completion_tokens": 17,
+            "total_tokens": 1091,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 178
+          },
+          "duration_ms": 537
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "tail-fifty",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 619.846,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 20,
+            "total_tokens": 1092,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 612
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "ambiguous-web",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 904.058,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1065,
+            "completion_tokens": 34,
+            "total_tokens": 1099,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 169
+          },
+          "duration_ms": 896
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "unknown-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1005.371,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查询的服务，可选：blog/web、shop/api、infra/postgres、vey/agent-core。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1067,
+            "completion_tokens": 50,
+            "total_tokens": 1117,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 171
+          },
+          "duration_ms": 998
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查询的服务，可选：blog/web、shop/api、infra/postgres、vey/agent-core。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "hypothetical",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 952.877,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若只是讨论建议：需要先明确“停了”的具体表现（容器退出、健康检查失败、还是资源耗尽）才能判断是启动还是重新部署；请告诉我你希望我针对哪个服务做只读排查，例如 blog/web 的容器状态、资源采样或日志。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1078,
+            "completion_tokens": 83,
+            "total_tokens": 1161,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 182
+          },
+          "duration_ms": 945
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若只是讨论建议：需要先明确“停了”的具体表现（容器退出、健康检查失败、还是资源耗尽）才能判断是启动还是重新部署；请告诉我你希望我针对哪个服务做只读排查，例如 blog/web 的容器状态、资源采样或日志。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "past-action",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 720.815,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1070,
+            "completion_tokens": 18,
+            "total_tokens": 1088,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 174
+          },
+          "duration_ms": 712
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "conditional",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 852.234,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客服务状态或日志）。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 37,
+            "total_tokens": 1109,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 844
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客服务状态或日志）。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "inspect-context",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 678.658,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1095,
+            "completion_tokens": 18,
+            "total_tokens": 1113,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 199
+          },
+          "duration_ms": 671
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "no-inherited-modify",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 610.664,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1096,
+            "completion_tokens": 18,
+            "total_tokens": 1114,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 200
+          },
+          "duration_ms": 602
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "single-start",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 396.447,
+      "actual": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 385
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "single-stop",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 973.808,
+      "actual": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 966
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "multi-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 863.278,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1071,
+            "completion_tokens": 27,
+            "total_tokens": 1098,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 175
+          },
+          "duration_ms": 855
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "restart",
+        "tool": null,
+        "message": "已请求重启博客服务（blog/web）。"
+      },
+      "guard_changed_intent": true,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "context-injection",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 1,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1095.41,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1089,
+            "completion_tokens": 18,
+            "total_tokens": 1107,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 193
+          },
+          "duration_ms": 1087
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "control-system",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.115,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-services",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.094,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "services",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-ranking",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.092,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "control-inspect",
+      "stage": "route",
+      "category": "known_control",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 0.124,
+      "actual": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [],
+      "estimated_cost": 0.0,
+      "route_source": "rule",
+      "proposed_intent": {
+        "kind": "query",
+        "target": "blog/web",
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false
+    },
+    {
+      "case_id": "host-overview",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 687.726,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1077,
+            "completion_tokens": 12,
+            "total_tokens": 1089,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 181
+          },
+          "duration_ms": 680
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "system",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "cpu-sort",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 593.324,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1074,
+            "completion_tokens": 17,
+            "total_tokens": 1091,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 178
+          },
+          "duration_ms": 585
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "ranking",
+          "target": null,
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "cpu"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "tail-fifty",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 782.536,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 20,
+            "total_tokens": 1092,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 774
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "logs",
+          "target": "blog/web",
+          "lines": 50,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "ambiguous-web",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 907.004,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1065,
+            "completion_tokens": 34,
+            "total_tokens": 1099,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 169
+          },
+          "duration_ms": 899
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "“网页”同时匹配 blog/web（博客）和 shop/api（商店），请明确要查看哪个服务的容器状态。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "unknown-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1108.09,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查询的服务，可选：blog/web、shop/api、infra/postgres、vey/agent-core。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1067,
+            "completion_tokens": 50,
+            "total_tokens": 1117,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 171
+          },
+          "duration_ms": 1098
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "catalog 中没有“支付网关”这一服务，无法查询其容器状态。请确认要查询的服务，可选：blog/web、shop/api、infra/postgres、vey/agent-core。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "hypothetical",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1372.657,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若仅从一般运维角度讨论：服务停止时通常先判断是进程退出、崩溃还是配置/依赖问题，再决定是启动恢复还是重新部署；具体到博客服务需要看日志和状态才能判断。需要我改为只读排查吗？"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1078,
+            "completion_tokens": 78,
+            "total_tokens": 1156,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 182
+          },
+          "duration_ms": 1364
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "这次只讨论、不执行，因此我不会给出启动或重启操作。若仅从一般运维角度讨论：服务停止时通常先判断是进程退出、崩溃还是配置/依赖问题，再决定是启动恢复还是重新部署；具体到博客服务需要看日志和状态才能判断。需要我改为只读排查吗？"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "past-action",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 451.306,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1070,
+            "completion_tokens": 18,
+            "total_tokens": 1088,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 174
+          },
+          "duration_ms": 443
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "conditional",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 1161.922,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客服务状态或日志）。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1072,
+            "completion_tokens": 37,
+            "total_tokens": 1109,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 176
+          },
+          "duration_ms": 1154
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前请求是“先别动”，不执行任何操作。请告诉我您希望我做什么（例如查看博客服务状态或日志）。"
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "inspect-context",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 811.056,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1095,
+            "completion_tokens": 18,
+            "total_tokens": 1113,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 199
+          },
+          "duration_ms": 803
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "no-inherited-modify",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 819.687,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1096,
+            "completion_tokens": 18,
+            "total_tokens": 1114,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 200
+          },
+          "duration_ms": 811
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "single-start",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 493.482,
+      "actual": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 485
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "shop/api",
+        "action": "start",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "single-stop",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 552.514,
+      "actual": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1069,
+            "completion_tokens": 14,
+            "total_tokens": 1083,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 173
+          },
+          "duration_ms": 544
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "stop",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "multi-target",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 790.375,
+      "actual": {
+        "kind": "clarify",
+        "target": null,
+        "action": null,
+        "tool": null,
+        "message": "当前消息涉及多个服务，未生成操作确认。请一次明确指定一个服务及启动、停止或重启动作。"
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1071,
+            "completion_tokens": 15,
+            "total_tokens": 1086,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 175
+          },
+          "duration_ms": 782
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "operation",
+        "target": "blog/web",
+        "action": "restart",
+        "tool": null,
+        "message": ""
+      },
+      "guard_changed_intent": true,
+      "routing_metrics": []
+    },
+    {
+      "case_id": "context-injection",
+      "stage": "route",
+      "category": "new_expression",
+      "repeat": 2,
+      "status": "passed",
+      "failures": [],
+      "duration_ms": 704.4,
+      "actual": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "model_metrics": [
+        {
+          "provider": "deepseek",
+          "model": "deepseek-flash",
+          "prompt_version": "v5-observations",
+          "schema": "Intent",
+          "status": "ok",
+          "usage": {
+            "prompt_tokens": 1089,
+            "completion_tokens": 18,
+            "total_tokens": 1107,
+            "prompt_tokens_details": {
+              "cached_tokens": 896
+            },
+            "prompt_cache_hit_tokens": 896,
+            "prompt_cache_miss_tokens": 193
+          },
+          "duration_ms": 696
+        }
+      ],
+      "estimated_cost": null,
+      "route_source": "model",
+      "proposed_intent": {
+        "kind": "query",
+        "target": null,
+        "action": null,
+        "tool": {
+          "name": "inspect",
+          "target": "blog/web",
+          "lines": 100,
+          "keyword": null,
+          "since": null,
+          "until": null,
+          "cursor": null,
+          "sort_by": "memory"
+        },
+        "message": ""
+      },
+      "guard_changed_intent": false,
+      "routing_metrics": []
+    }
+  ]
+}
