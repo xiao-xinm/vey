@@ -64,3 +64,12 @@ python -m vey.evaluation run evals/datasets/m3-routing-v1.json \
 ## 验收边界
 
 自动测试覆盖直达、缺钥、低置信度、401／429／529、超时、重定向、无效响应、取消、分类冲突、操作确认、保护服务以及双提供方调用预算。真实 Jev 效果、端到端延迟和成本对照须待服务器 Key 配置后补做；测试中的模拟响应不构成真实模型成绩。默认不开启线上 Jev，也不宣称它一定更快或更准确。
+
+## 本轮部署记录
+
+- 核心发布 `133a2d6`，镜像 `vey-agent:jev-133a2d6`，ID `sha256:cb54367a01f67fdf2111f0a767f8f3128fa1b67c895dccbf792e1677db380d60`；2026-10-07 20:30（北京时间）启动并健康。
+- 本地 **147 项测试全部通过**，包含真实 PostgreSQL；Ruff 检查与格式检查通过。[发布提交 CI](https://github.com/xiao-xinm/vey/actions/runs/37621156236)成功。
+- 生产配置检查：`router_mode=hybrid`、`jev_configured=false`、`debug_enabled=false`。空 Key 文件已创建，确认仅核心只读挂载。实际 API 凭据尚未配置，没有调用 Jev，也没有 Jev 真实成绩。
+- 通过运行中的 worker 提交内部只读「服务列表」，任务 `84ae80f499a24c6090f71fde29fee295` 成功；一次 services 工具调用，无模型调用、Docker 修改或企微消息。公开后台 HTTPS 返回 200。
+- 执行器、后台、HTTPS 网关、PostgreSQL、Redis、MinIO、nginx 的镜像及启动时间未改变。没有数据库结构变更。
+- `/opt/vey/.local/jev-133a2d6/` 留存旧 `.env`、旧镜像信息与源码，以及构建、部署和只读验收记录。需要回退核心时恢复其中 `previous.env`，重新创建 `agent-core`；无需恢复数据库。
