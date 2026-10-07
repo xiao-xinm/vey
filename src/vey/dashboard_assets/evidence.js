@@ -3,17 +3,18 @@ const evaluations = {items: [], next: null, selected: null, offset: 0, status: "
 const replay = {payload: null, step: 0, request: 0};
 
 function enableEvidenceNavigation() {
-  for (const id of ["nav-tasks", "nav-evals", "nav-replay", "nav-ops"]) $(id).disabled = false;
+  for (const id of ["nav-tasks", "nav-evals", "nav-replay", "nav-ops", "nav-config"]) $(id).disabled = false;
 }
 function switchEvidenceView(view) {
   if ($("workspace").hidden) return;
-  for (const [name, id] of [["tasks", "task-view"], ["evals", "eval-view"], ["replay", "replay-view"], ["ops", "ops-view"]]) {
+  for (const [name, id] of [["tasks", "task-view"], ["evals", "eval-view"], ["replay", "replay-view"], ["ops", "ops-view"], ["config", "config-view"]]) {
     $(id).hidden = name !== view;
     $("nav-" + name).classList.toggle("nav-active", name === view);
   }
   notify("");
   if (view === "evals" && !evaluations.items.length) loadEvaluations();
   if (view === "ops") loadOperations();
+  if (view === "config" && typeof loadConfiguration === "function") loadConfiguration();
 }
 function clearReplay() {
   replay.request++; replay.payload = null; replay.step = 0;
@@ -28,10 +29,11 @@ function clearEvidence() {
   $("eval-runs").replaceChildren();
   $("eval-detail").replaceChildren(node("p", "", "选择一次实验查看样本。"));
   clearReplay();
+  $("config-view").hidden = true; if (typeof clearConfiguration === "function") clearConfiguration();
   operationsRequest++; $("ops-view").hidden = true; $("ops-report").replaceChildren();
   $("task-view").hidden = false; $("eval-view").hidden = true; $("replay-view").hidden = true;
-  for (const name of ["tasks", "evals", "replay", "ops"]) $("nav-" + name).classList.toggle("nav-active", name === "tasks");
-  for (const id of ["nav-tasks", "nav-evals", "nav-replay", "nav-ops"]) $(id).disabled = true;
+  for (const name of ["tasks", "evals", "replay", "ops", "config"]) $("nav-" + name).classList.toggle("nav-active", name === "tasks");
+  for (const id of ["nav-tasks", "nav-evals", "nav-replay", "nav-ops", "nav-config"]) $(id).disabled = true;
 }
 async function downloadTask(id, button) {
   button.disabled = true; notify("");
@@ -137,6 +139,7 @@ function renderEvaluationDetail({run, samples, prompt_versions, next_offset}) {
 }
 async function loadLocalSnapshot(file) {
   clearReplay();
+  $("config-view").hidden = true; if (typeof clearConfiguration === "function") clearConfiguration();
   operationsRequest++; $("ops-view").hidden = true; $("ops-report").replaceChildren(); if (!file) return;
   const version = replay.request;
   try {

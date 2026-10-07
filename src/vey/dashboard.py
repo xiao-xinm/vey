@@ -1,5 +1,6 @@
 """Single-owner dashboard. No executor, model, core credentials or write endpoints."""
 
+import asyncio
 import json
 import re
 import secrets
@@ -18,6 +19,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy import text
 
 from vey.api_common import install_errors
+from vey.configuration_client import ConfigurationClient
 from vey.db import database
 from vey.domain import VeyError
 from vey.evaluation.reader import EvaluationReader
@@ -48,6 +50,8 @@ class DashboardSettings(BaseSettings):
     session_seconds: int = Field(default=900, ge=60, le=3600)
     eval_database_url: SecretStr | None = None
     operations_report_dir: Path | None = None
+    configuration_token_file: Path | None = None
+    configuration_socket: str = "/run/vey/executor.sock"
 
     @model_validator(mode="after")
     def validate_settings(self):
@@ -223,7 +227,7 @@ class DashboardStore:
         )
 
 
-def create_app(settings=None, store=None, sessions=None, evaluation=None):
+def create_app(settings=None, store=None, sessions=None, evaluation=None, configuration=None):
     settings = settings or DashboardSettings()
     sessions = sessions or Sessions(
         settings.password_file.read_text().strip(), settings.session_seconds
@@ -234,12 +238,18 @@ def create_app(settings=None, store=None, sessions=None, evaluation=None):
         store = DashboardStore(factory)
     if evaluation is None and settings.eval_database_url:
         evaluation = EvaluationReader(settings.eval_database_url.get_secret_value())
+    if configuration is None and settings.configuration_token_file:
+        configuration = ConfigurationClient(
+            settings.configuration_socket, settings.configuration_token_file.read_text().strip()
+        )
 
     @asynccontextmanager
     async def lifespan(app):
         yield
         if engine:
             engine.dispose()
+        if configuration:
+            configuration.close()
 
     app = FastAPI(
         title="Vey 控制台", docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan
@@ -279,7 +289,7 @@ def create_app(settings=None, store=None, sessions=None, evaluation=None):
 
     @app.get("/admin/assets/{name}")
     def asset(name: str):
-        if name not in {"app.js", "style.css", "evidence.js"}:
+        if name not in {"app.js", "style.css", "evidence.js", "configuration.js"}:
             raise VeyError("not_found", "文件不存在", 404)
         return FileResponse(ASSETS / name)
 
@@ -316,6 +326,37 @@ def create_app(settings=None, store=None, sessions=None, evaluation=None):
     @app.get("/admin/api/operations", dependencies=[Depends(auth)])
     def operations():
         return operations_status(settings.operations_report_dir)
+
+    def configuration_service():
+        if configuration is None:
+            raise VeyError("configuration_not_enabled", "配置管理尚未启用", 503)
+        return configuration
+
+    @app.get("/admin/api/configuration", dependencies=[Depends(auth)])
+    def configuration_view():
+        return configuration_service().call()
+
+    async def change_request(request, action):
+        body = bytearray()
+        async for chunk in request.stream():
+            body.extend(chunk)
+            if len(body) > 65536:
+                raise VeyError("oversized_configuration", "配置请求最多 64 KiB", 413)
+        try:
+            data = json.loads(body)
+            if not isinstance(data, dict):
+                raise ValueError
+        except (ValueError, TypeError):
+            raise VeyError("invalid_configuration", "配置请求格式不正确") from None
+        return await asyncio.to_thread(configuration_service().call, action, data)
+
+    @app.post("/admin/api/configuration/preview", dependencies=[Depends(auth), Depends(origin)])
+    async def configuration_preview(request: Request):
+        return await change_request(request, "/preview")
+
+    @app.post("/admin/api/configuration/publish", dependencies=[Depends(auth), Depends(origin)])
+    async def configuration_publish(request: Request):
+        return await change_request(request, "/publish")
 
     @app.get("/admin/api/tasks", dependencies=[Depends(auth)])
     def tasks(

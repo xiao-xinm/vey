@@ -83,7 +83,12 @@ def main():
             timeout=10,
         ) as client:
             response = client.post(
-                "/read", json={"actor": actor.model_dump(mode="json"), "call": {"name": "system"}}
+                "/read",
+                json={
+                    "policy_revision": client.get("/policy").json()["revision"],
+                    "actor": actor.model_dump(mode="json"),
+                    "call": {"name": "system"},
+                },
             )
             assert response.status_code == 403
         print(

@@ -34,6 +34,8 @@ jobs:
       - run: node --check src/vey/dashboard_assets/app.js
       - run: node --check src/vey/dashboard_assets/evidence.js
       - run: node scripts/test_dashboard_evidence.cjs
+      - run: node --check src/vey/dashboard_assets/configuration.js
+      - run: node scripts/test_configuration_ui.cjs
       - run: uv run python -m vey.evaluation validate evals/datasets/phase2-v1.json
       - run: uv run python -m vey.evaluation run evals/datasets/phase2-v1.json --split dev --mode rules --output .local/evals/ci-rules
       - run: uv run python -m vey.evaluation trajectory evals/datasets/trajectories-v1.json --output .local/evals/ci-trajectories

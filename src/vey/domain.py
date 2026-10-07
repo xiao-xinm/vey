@@ -128,6 +128,7 @@ class Actor(StrictModel):
 class ReadRequest(StrictModel):
     actor: Actor
     call: ToolCall
+    policy_revision: str | None = Field(default=None, max_length=64)
 
 
 class PrepareRequest(StrictModel):
@@ -135,6 +136,7 @@ class PrepareRequest(StrictModel):
     task_id: str
     target: str
     action: Action
+    policy_revision: str | None = Field(default=None, max_length=64)
 
 
 class ConfirmRequest(StrictModel):

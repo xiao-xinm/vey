@@ -1,0 +1,20 @@
+# Explicit opt-in. Baseline remains root-maintained and read-only.
+services:
+  agent-core:
+    image: ${VEY_CONFIGURATION_IMAGE:?Set reviewed configuration-capable image}
+  ops-executor:
+    image: ${VEY_CONFIGURATION_IMAGE:?Set reviewed configuration-capable image}
+    environment:
+      VEY_POLICY_MANAGEMENT_ENABLED: "true"
+      VEY_POLICY_MANAGEMENT_TOKEN_FILE: /run/secrets/configuration_token
+    secrets: [configuration_token]
+  dashboard:
+    image: ${VEY_CONFIGURATION_IMAGE:?Set reviewed configuration-capable image}
+    environment:
+      VEY_DASHBOARD_CONFIGURATION_TOKEN_FILE: /run/secrets/configuration_token
+      VEY_DASHBOARD_CONFIGURATION_SOCKET: /run/vey/executor.sock
+    volumes:
+      - ${VEY_RUNTIME_DIR}:/run/vey:ro
+    secrets: [configuration_token]
+secrets:
+  configuration_token: {file: ./secrets/configuration_token}

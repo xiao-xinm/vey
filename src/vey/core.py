@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import delete, select, update
 from sqlalchemy.dialects.postgresql import insert
 
+from vey.config import Policy
 from vey.db import ChatSession, Event, Outbox, Task, uid
 from vey.diagnosis import run_diagnosis
 from vey.domain import (
@@ -195,12 +196,23 @@ class Core:
                 await self._control(task_id, actor, message.strip())
                 return
             async with asyncio.timeout(CHECK_TIMEOUT_SECONDS):
+                policy, revision = self.policy, None
+                if hasattr(self.executor, "policy"):
+                    snapshot = await self.executor.policy()
+                    policy, revision = (
+                        Policy.model_validate(snapshot["policy"]),
+                        snapshot["revision"],
+                    )
                 if message.strip() in {"展开日志", "展开原文"}:
                     page = context.get("log_page")
                     if not page or datetime.fromisoformat(page["expires_at"]) <= utcnow():
                         raise VeyError("expired_log_page", "没有有效的本页日志快照，请先查询日志")
                     result = await self._read(
-                        task_id, actor, ToolCall(name="inspect", target=page["target"]), evidence
+                        task_id,
+                        actor,
+                        ToolCall(name="inspect", target=page["target"]),
+                        evidence,
+                        revision,
                     )
                     if sorted(i["id"] for i in result["instances"]) != sorted(
                         page["container_ids"]
@@ -213,14 +225,14 @@ class Core:
                         audit_message=render_logs(page),
                     )
                     return
-                intent = deterministic_intent(message, self.policy, context)
+                intent = deterministic_intent(message, policy, context)
                 if intent is None:
                     intent = await (self.router or self.model).route(
                         message,
                         {k: v for k, v in context.items() if k != "log_page"},
-                        self.policy.catalog(),
+                        policy.catalog(),
                     )
-                guarded = guard_operation_intent(message, intent, self.policy)
+                guarded = guard_operation_intent(message, intent, policy)
                 if guarded is not intent:
                     self.event(task_id, "intent_guard", {"reason": "multiple_explicit_targets"})
                 intent = guarded
@@ -231,11 +243,15 @@ class Core:
                     self._finish(task_id, "succeeded", intent.message or "请明确项目和服务名称")
                     return
                 if intent.target:
-                    context_update["target"] = self.policy.resolve(intent.target).key
+                    context_update["target"] = policy.resolve(intent.target).key
                 if intent.kind == "operation":
                     grant = await self.executor.prepare(
                         PrepareRequest(
-                            actor=actor, task_id=task_id, target=intent.target, action=intent.action
+                            actor=actor,
+                            task_id=task_id,
+                            target=policy.resolve(intent.target).key,
+                            action=intent.action,
+                            policy_revision=revision,
                         )
                     )
                     self.event(task_id, "operation_prepared", grant)
@@ -251,7 +267,7 @@ class Core:
                     return
                 if intent.kind == "query":
                     call = intent.tool or ToolCall(name="inspect", target=intent.target)
-                    result = await self._read(task_id, actor, call, evidence)
+                    result = await self._read(task_id, actor, call, evidence, revision)
                     if call.name == "logs":
                         context_update.update(
                             {
@@ -267,13 +283,13 @@ class Core:
                 target = context_update.get("target") or context.get("target")
 
                 async def read_diagnostic(call):
-                    return await self._read(task_id, actor, call, [])
+                    return await self._read(task_id, actor, call, [], revision)
 
                 diagnosis = await run_diagnosis(
                     self.model,
                     message,
                     target,
-                    self.policy.catalog(),
+                    policy.catalog(),
                     read_diagnostic,
                     evidence=evidence,
                     before_step=lambda: self._input(task_id),
@@ -329,10 +345,12 @@ class Core:
                 if hasattr(self.model, "metrics"):
                     self.model.metrics.clear()
 
-    async def _read(self, task_id, actor, call, evidence):
+    async def _read(self, task_id, actor, call, evidence, revision=None):
         self._input(task_id)
         started = time.monotonic()
-        result = safe_value(await self.executor.read(ReadRequest(actor=actor, call=call)))
+        result = safe_value(
+            await self.executor.read(ReadRequest(actor=actor, call=call, policy_revision=revision))
+        )
         evidence.append(
             {"id": f"E{len(evidence) + 1}", "tool": call.model_dump(mode="json"), "result": result}
         )

@@ -142,7 +142,14 @@ def main():
             return result.model_dump(mode="json")
 
         def read(call):
-            response = executor.post("/read", json={"actor": actor(), "call": call})
+            response = executor.post(
+                "/read",
+                json={
+                    "policy_revision": executor.get("/policy").json()["revision"],
+                    "actor": actor(),
+                    "call": call,
+                },
+            )
             response.raise_for_status()
             return response.json()
 
@@ -179,7 +186,12 @@ def main():
         large = read({"name": "logs", "target": target, "lines": 500})
         assert len(large["text"]) <= 10000 and large["truncated"] and large["cursor"]
         invalid = executor.post(
-            "/read", json={"actor": actor(), "call": {"name": "shell", "command": "id"}}
+            "/read",
+            json={
+                "policy_revision": executor.get("/policy").json()["revision"],
+                "actor": actor(),
+                "call": {"name": "shell", "command": "id"},
+            },
         )
         assert invalid.status_code == 422
         checks.extend(

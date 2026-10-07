@@ -57,6 +57,8 @@ def grant_runtime_access(db, passwords):
                 sql.Identifier(name), sql.Identifier(role)
             )
         )
+    db.execute("REVOKE UPDATE,DELETE,TRUNCATE ON vey_exec.policy_versions FROM vey_executor")
+    db.execute("REVOKE DELETE,TRUNCATE ON vey_exec.policy_state FROM vey_executor")
 
 
 def main():

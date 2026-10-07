@@ -40,6 +40,14 @@ class ExecutorClient:
     async def sync_actor(self, actor: Actor):
         return await self.post("/session", actor)
 
+    async def policy(self):
+        try:
+            response = await self.client.get("/policy", headers=self.headers)
+            response.raise_for_status()
+            return response.json()
+        except (httpx.HTTPError, ValueError):
+            raise VeyError("executor_unavailable", "当前服务配置不可用，停止执行", 503) from None
+
     async def read(self, request: ReadRequest):
         return await self.post("/read", request)
 

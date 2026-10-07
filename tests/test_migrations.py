@@ -40,6 +40,6 @@ def test_upgrade_preserves_existing_outbox_data(migrated_database, monkeypatch):
                 assert db.execute(
                     "SELECT body, status, attempts, sent_parts FROM vey_core.outbox"
                 ).fetchone() == ("retained body", "pending", 2, 0)
-                assert db.execute("SELECT version_num FROM alembic_version").fetchone() == ("0002",)
+                assert db.execute("SELECT version_num FROM alembic_version").fetchone() == ("0003",)
         finally:
             admin.execute(sql.SQL("DROP DATABASE {} WITH (FORCE)").format(sql.Identifier(name)))

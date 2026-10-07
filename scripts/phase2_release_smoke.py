@@ -84,6 +84,7 @@ def main():
                 json={
                     "actor": actor.model_dump(mode="json"),
                     "call": {"name": "inspect", "target": target},
+                    "policy_revision": executor.get("/policy").json()["revision"],
                 },
             )
             response.raise_for_status()

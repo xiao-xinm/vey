@@ -125,7 +125,14 @@ def main():
                 ).model_dump(mode="json")
 
         def read(call):
-            response = executor.post("/read", json={"actor": actor(), "call": call})
+            response = executor.post(
+                "/read",
+                json={
+                    "policy_revision": executor.get("/policy").json()["revision"],
+                    "actor": actor(),
+                    "call": call,
+                },
+            )
             response.raise_for_status()
             return response.json()
 
@@ -240,7 +247,12 @@ def main():
             assert submit("清空上下文")["status"] == "succeeded"
             assert submit("确认 " + code)["status"] == "failed"
             invalid = executor.post(
-                "/read", json={"actor": actor(), "call": {"name": "logs", "cursor": old_cursor}}
+                "/read",
+                json={
+                    "policy_revision": executor.get("/policy").json()["revision"],
+                    "actor": actor(),
+                    "call": {"name": "logs", "cursor": old_cursor},
+                },
             )
             assert invalid.status_code == 409
             unchanged(before)

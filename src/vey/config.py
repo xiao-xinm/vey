@@ -109,6 +109,8 @@ class Settings(BaseSettings):
     docker_timeout: int = Field(default=12, ge=1, le=20)
     log_scan_bytes: int = Field(default=1_000_000, ge=10000, le=2_000_000)
     log_scan_lines: int = Field(default=5000, ge=500, le=10000)
+    policy_management_enabled: bool = False
+    policy_management_token_file: Path | None = None
 
     @model_validator(mode="after")
     def validate_settings(self):

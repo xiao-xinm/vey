@@ -120,6 +120,25 @@ class LogCursor(Base):
     expires_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
+class PolicyVersion(Base):
+    __tablename__ = "policy_versions"
+    __table_args__ = {"schema": "vey_exec"}
+    id: Mapped[str] = mapped_column(String(32), primary_key=True, default=uid)
+    parent_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    services: Mapped[list] = mapped_column(JSONB)
+    reason: Mapped[str] = mapped_column(String(300))
+    rollback_of: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
+
+
+class PolicyState(Base):
+    __tablename__ = "policy_state"
+    __table_args__ = {"schema": "vey_exec"}
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    active_id: Mapped[str] = mapped_column(ForeignKey("vey_exec.policy_versions.id"))
+    baseline_hash: Mapped[str] = mapped_column(String(64))
+
+
 def database(url: str):
     engine = create_engine(
         url, pool_pre_ping=True, pool_size=4, max_overflow=0, connect_args={"connect_timeout": 5}
