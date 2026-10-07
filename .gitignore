@@ -11,6 +11,7 @@ htmlcov/
 config/vey.toml
 secrets/
 tls/
+operations-reports/
 .tools/
 .local/
 dist/

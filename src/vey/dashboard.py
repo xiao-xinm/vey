@@ -21,6 +21,7 @@ from vey.api_common import install_errors
 from vey.db import database
 from vey.domain import VeyError
 from vey.evaluation.reader import EvaluationReader
+from vey.operations_report import operations_status
 from vey.replay import export_snapshot
 from vey.security import safe_value
 
@@ -46,6 +47,7 @@ class DashboardSettings(BaseSettings):
     public_origin: str
     session_seconds: int = Field(default=900, ge=60, le=3600)
     eval_database_url: SecretStr | None = None
+    operations_report_dir: Path | None = None
 
     @model_validator(mode="after")
     def validate_settings(self):
@@ -310,6 +312,10 @@ def create_app(settings=None, store=None, sessions=None, evaluation=None):
     @app.get("/admin/api/overview", dependencies=[Depends(auth)])
     def overview():
         return store.overview()
+
+    @app.get("/admin/api/operations", dependencies=[Depends(auth)])
+    def operations():
+        return operations_status(settings.operations_report_dir)
 
     @app.get("/admin/api/tasks", dependencies=[Depends(auth)])
     def tasks(

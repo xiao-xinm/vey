@@ -1,0 +1,7 @@
+# Mount sanitized reports only. Never mount /opt/vey-backups or grant Docker access.
+services:
+  dashboard:
+    environment:
+      VEY_DASHBOARD_OPERATIONS_REPORT_DIR: /run/vey-operations
+    volumes:
+      - ./operations-reports:/run/vey-operations:ro

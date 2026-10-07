@@ -3,16 +3,17 @@ const evaluations = {items: [], next: null, selected: null, offset: 0, status: "
 const replay = {payload: null, step: 0, request: 0};
 
 function enableEvidenceNavigation() {
-  for (const id of ["nav-tasks", "nav-evals", "nav-replay"]) $(id).disabled = false;
+  for (const id of ["nav-tasks", "nav-evals", "nav-replay", "nav-ops"]) $(id).disabled = false;
 }
 function switchEvidenceView(view) {
   if ($("workspace").hidden) return;
-  for (const [name, id] of [["tasks", "task-view"], ["evals", "eval-view"], ["replay", "replay-view"]]) {
+  for (const [name, id] of [["tasks", "task-view"], ["evals", "eval-view"], ["replay", "replay-view"], ["ops", "ops-view"]]) {
     $(id).hidden = name !== view;
     $("nav-" + name).classList.toggle("nav-active", name === view);
   }
   notify("");
   if (view === "evals" && !evaluations.items.length) loadEvaluations();
+  if (view === "ops") loadOperations();
 }
 function clearReplay() {
   replay.request++; replay.payload = null; replay.step = 0;
@@ -27,9 +28,10 @@ function clearEvidence() {
   $("eval-runs").replaceChildren();
   $("eval-detail").replaceChildren(node("p", "", "选择一次实验查看样本。"));
   clearReplay();
+  operationsRequest++; $("ops-view").hidden = true; $("ops-report").replaceChildren();
   $("task-view").hidden = false; $("eval-view").hidden = true; $("replay-view").hidden = true;
-  for (const name of ["tasks", "evals", "replay"]) $("nav-" + name).classList.toggle("nav-active", name === "tasks");
-  for (const id of ["nav-tasks", "nav-evals", "nav-replay"]) $(id).disabled = true;
+  for (const name of ["tasks", "evals", "replay", "ops"]) $("nav-" + name).classList.toggle("nav-active", name === "tasks");
+  for (const id of ["nav-tasks", "nav-evals", "nav-replay", "nav-ops"]) $(id).disabled = true;
 }
 async function downloadTask(id, button) {
   button.disabled = true; notify("");
@@ -134,7 +136,8 @@ function renderEvaluationDetail({run, samples, prompt_versions, next_offset}) {
   pager.append(prev, node("span", "muted", `第 ${evaluations.offset + 1} 条起`), next); root.append(pager);
 }
 async function loadLocalSnapshot(file) {
-  clearReplay(); if (!file) return;
+  clearReplay();
+  operationsRequest++; $("ops-view").hidden = true; $("ops-report").replaceChildren(); if (!file) return;
   const version = replay.request;
   try {
     if (file.size > 1000000) throw new Error("文件超过 1 MB，未读取。");
@@ -180,3 +183,38 @@ $("snapshot-file").addEventListener("change", event => loadLocalSnapshot(event.t
 $("replay-next").addEventListener("click", () => { if (replay.payload && replay.step < replay.payload.events.length) replay.step++; renderReplayStep(); });
 $("replay-prev").addEventListener("click", () => { if (replay.step > 0) replay.step--; renderReplayStep(); });
 $("replay-clear").addEventListener("click", clearReplay);
+
+let operationsRequest = 0;
+function bytes(value) { return value == null ? "未知" : (value / 1024 / 1024).toFixed(2) + " MiB"; }
+async function loadOperations() {
+  const version = ++operationsRequest;
+  const root = $("ops-report");
+  root.replaceChildren(node("p", "", "正在读取维护报告…"));
+  try {
+    const data = await api("operations");
+    if (version !== operationsRequest) return;
+    root.replaceChildren();
+    if (!data.configured) { root.append(node("p", "", "尚未接入维护报告。")); return; }
+    for (const [label, entry] of [["最近一次尝试", data.latest], ["最近一次成功", data.last_success]]) {
+      root.append(node("h2", "", label));
+      if (entry.state !== "available") { root.append(node("p", "boundary-note", entry.state === "missing" ? "尚无记录" : "报告无法读取或校验失败，不能判定备份成功。")); continue; }
+      const r = entry.report;
+      const status = ({passed: "验证通过", failed: "失败", running: "运行中"})[r.status];
+      root.append(node("p", "", `${status} · ${date(r.finished_at || r.started_at)}${entry.stale ? " · 记录已超过 24 小时" : ""}${entry.running_overdue ? " · 超过 10 分钟未完成，请核查" : ""}`));
+      root.append(node("p", "muted", `阶段：${r.stage} · 临时容器：${r.cleanup === "removed" ? "已清理" : r.cleanup || "尚未完成"}`));
+    }
+    const capacity = data.latest.state === "available" ? data.latest.report : data.last_success.state === "available" ? data.last_success.report : null;
+    if (!capacity) return;
+    root.append(node("h2", "", "本次采样容量"));
+    if (capacity.filesystem_after) root.append(node("p", "", `备份所在文件系统：可用 ${bytes(capacity.filesystem_after.free)} / 总量 ${bytes(capacity.filesystem_after.total)}`));
+    for (const [name, database] of Object.entries(capacity.databases)) {
+      root.append(node("h3", "", name), node("p", "", `数据库 ${bytes(database.database_bytes)} · 逻辑备份 ${bytes(database.dump_bytes)} · ${database.tables} 张表 / ${database.views} 个视图`), node("p", "muted", `采样时间：${date(database.snapshot_started_at)} · 数据、视图和权限校验${database.data_views_permissions_verified ? "通过" : "未完成"}`));
+      const list = node("div", "result");
+      for (const relation of database.relations) list.append(node("p", "", `${relation.schema}.${relation.name}：表 ${bytes(relation.table_bytes)} / 索引 ${bytes(relation.index_bytes)} / 合计 ${bytes(relation.total_bytes)}`));
+      root.append(list);
+    }
+    root.append(node("p", "boundary-note", "容量是报告采样值，刷新仅重新读取报告；数据库大小不包含整个 PG 实例的 WAL、其他应用或所有挂载盘。"));
+  } catch (error) { if (version === operationsRequest) { root.replaceChildren(node("p", "", "维护报告暂不可用")); notify(error.message); } }
+}
+$("nav-ops").addEventListener("click", () => switchEvidenceView("ops"));
+$("ops-refresh").addEventListener("click", loadOperations);

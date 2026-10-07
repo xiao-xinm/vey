@@ -54,4 +54,17 @@ async function load(raw) {
   assert.equal(get("nav-replay").disabled, true);
   assert.equal(requests, 0);
   console.log("JavaScript contracts passed: offline stepping, checksum/order/size rejection, logout clearing, zero network calls");
+  let release;
+  context.api = () => new Promise(resolve => { release = resolve; });
+  const pending = vm.runInContext("loadOperations()", context);
+  vm.runInContext("clearEvidence()", context);
+  release({configured: false});
+  await pending;
+  assert.equal(get("ops-report").children.length, 0);
+  assert.equal(get("ops-view").hidden, true);
+  assert.equal(get("nav-ops").disabled, true);
+  context.api = async () => ({configured: true, latest: {state: "invalid"}, last_success: {state: "missing"}});
+  await vm.runInContext("loadOperations()", context);
+  assert.ok(get("ops-report").children.some(x => /不能判定备份成功/.test(x.textContent)));
+  console.log("Operations contracts passed: invalid report warning and logout discards in-flight response");
 })().catch(error => { console.error(error); process.exitCode = 1; });
