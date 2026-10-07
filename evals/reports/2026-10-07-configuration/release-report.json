@@ -1,0 +1,266 @@
+{
+  "release_commit": "e0f7da7b48e8d15e74231dd1f24b0aef4b867885",
+  "image": "vey-agent:configuration-e0f7da7",
+  "browser_interaction_verified": false,
+  "smoke": {
+    "run_id": "0c5b98f2462c4cbc9f9ae60b6f40bf89",
+    "protected_rejected": true,
+    "missing_service_rejected": true,
+    "baseline_revision": "89c10fabd6064a7383aa1307e3053e9a",
+    "published_revision": "9ce63bb6ecde45038c97c4601d5c68ec",
+    "core_query": {
+      "task_id": "5219b8775f4b471dbc7e4d6c29eaf994",
+      "status": "succeeded",
+      "tools": [
+        "inspect"
+      ],
+      "model_calls": 0
+    },
+    "rollback_revision": "faf51f56d1c34be49dd0c47df7061239",
+    "status": "passed"
+  },
+  "permissions": {
+    "schema_permissions": {
+      "version": "0003",
+      "history": 3,
+      "executor_select": true,
+      "executor_insert": true,
+      "executor_update": false,
+      "executor_delete": false,
+      "executor_truncate": false,
+      "dashboard_read_raw": false,
+      "core_write_config": false
+    },
+    "containers": [
+      {
+        "name": "vey-agent-core-1",
+        "image": "sha256:4eda4c94252a1ac4bec09b3483f98ea98e4c838fb4aca197cd8d05e1acfa0d72",
+        "started_at": "2026-10-07T07:46:26.952572892Z",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "vey-ops-executor-1",
+        "image": "sha256:4eda4c94252a1ac4bec09b3483f98ea98e4c838fb4aca197cd8d05e1acfa0d72",
+        "started_at": "2026-10-07T07:46:19.06594376Z",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "vey-dashboard-1",
+        "image": "sha256:4eda4c94252a1ac4bec09b3483f98ea98e4c838fb4aca197cd8d05e1acfa0d72",
+        "started_at": "2026-10-07T07:46:26.949746899Z",
+        "state": "running",
+        "health": "healthy",
+        "mounts": [
+          {
+            "destination": "/run/secrets/dashboard_password",
+            "writable": false
+          },
+          {
+            "destination": "/run/secrets/configuration_token",
+            "writable": false
+          },
+          {
+            "destination": "/run/vey-operations",
+            "writable": false
+          },
+          {
+            "destination": "/run/vey",
+            "writable": false
+          }
+        ],
+        "ports": {}
+      },
+      {
+        "name": "rag-postgres",
+        "image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+        "started_at": "2026-08-31T13:54:03.048091817Z",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "redis",
+        "image": "sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5",
+        "started_at": "2026-09-06T13:32:16.677911485Z",
+        "state": "running",
+        "health": null
+      },
+      {
+        "name": "rag-minio",
+        "image": "sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+        "started_at": "2026-10-02T03:12:49.14118371Z",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "nginx",
+        "image": "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
+        "started_at": "2026-08-27T06:14:43.519580822Z",
+        "state": "running",
+        "health": null
+      }
+    ],
+    "management_token_rejected_by_operations": true
+  },
+  "restore": {
+    "status": "passed",
+    "run_id": "99e06965ce42422492f04e48c6c1ac6f",
+    "started_at": "2026-10-07T07:50:51.625655+00:00",
+    "databases": {
+      "vey": {
+        "snapshot_started_at": "2026-10-07T07:50:52.179396+00:00",
+        "dump_bytes": 79351,
+        "dump_sha256": "de49a02cdd81cc387959c92b69c9276690e150df58a1095552c2ea22971b3a8b",
+        "database_bytes": 9583639,
+        "tables": 10,
+        "views": 3,
+        "rows": {
+          "public.alembic_version": 1,
+          "vey_core.events": 424,
+          "vey_core.outbox": 44,
+          "vey_core.sessions": 2,
+          "vey_core.tasks": 230,
+          "vey_exec.grants": 24,
+          "vey_exec.log_cursors": 0,
+          "vey_exec.policy_state": 1,
+          "vey_exec.policy_versions": 3,
+          "vey_exec.sessions": 2
+        },
+        "relations": [
+          {
+            "schema": "vey_core",
+            "name": "tasks",
+            "table_bytes": 425984,
+            "index_bytes": 114688,
+            "total_bytes": 540672
+          },
+          {
+            "schema": "vey_core",
+            "name": "events",
+            "table_bytes": 204800,
+            "index_bytes": 73728,
+            "total_bytes": 278528
+          },
+          {
+            "schema": "vey_core",
+            "name": "sessions",
+            "table_bytes": 196608,
+            "index_bytes": 16384,
+            "total_bytes": 212992
+          },
+          {
+            "schema": "vey_core",
+            "name": "outbox",
+            "table_bytes": 90112,
+            "index_bytes": 32768,
+            "total_bytes": 122880
+          },
+          {
+            "schema": "vey_exec",
+            "name": "grants",
+            "table_bytes": 57344,
+            "index_bytes": 49152,
+            "total_bytes": 106496
+          },
+          {
+            "schema": "vey_exec",
+            "name": "log_cursors",
+            "table_bytes": 65536,
+            "index_bytes": 32768,
+            "total_bytes": 98304
+          },
+          {
+            "schema": "vey_exec",
+            "name": "sessions",
+            "table_bytes": 40960,
+            "index_bytes": 16384,
+            "total_bytes": 57344
+          },
+          {
+            "schema": "vey_exec",
+            "name": "policy_versions",
+            "table_bytes": 16384,
+            "index_bytes": 16384,
+            "total_bytes": 32768
+          },
+          {
+            "schema": "vey_exec",
+            "name": "policy_state",
+            "table_bytes": 8192,
+            "index_bytes": 16384,
+            "total_bytes": 24576
+          },
+          {
+            "schema": "public",
+            "name": "alembic_version",
+            "table_bytes": 8192,
+            "index_bytes": 16384,
+            "total_bytes": 24576
+          }
+        ],
+        "data_views_permissions_verified": true
+      },
+      "vey_eval": {
+        "snapshot_started_at": "2026-10-07T07:50:53.882738+00:00",
+        "dump_bytes": 109217,
+        "dump_sha256": "64d53526ff0c2150ee1345eb4a7bd019fe18da337c30c4fa921136106747bfc0",
+        "database_bytes": 8543255,
+        "tables": 2,
+        "views": 0,
+        "rows": {
+          "vey_eval.runs": 13,
+          "vey_eval.samples": 312
+        },
+        "relations": [
+          {
+            "schema": "vey_eval",
+            "name": "samples",
+            "table_bytes": 475136,
+            "index_bytes": 49152,
+            "total_bytes": 524288
+          },
+          {
+            "schema": "vey_eval",
+            "name": "runs",
+            "table_bytes": 188416,
+            "index_bytes": 16384,
+            "total_bytes": 204800
+          }
+        ],
+        "data_views_permissions_verified": true
+      }
+    },
+    "offsite": false,
+    "encrypted": false,
+    "scheduled": false,
+    "source_writers_stopped": false,
+    "stage": "complete",
+    "filesystem_before": {
+      "total": 42156257280,
+      "used": 15234961408,
+      "free": 25079435264
+    },
+    "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+    "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+    "configuration": {
+      "files": 98,
+      "bytes": 152568,
+      "sha256": "18e57913e299c51aa160645346735258e5045ce3eca77f0963e96b5a35dd4668"
+    },
+    "quarantine": {
+      "replayable_records": 0,
+      "agent_started": false,
+      "source_modified": false
+    },
+    "role_passwords_restored": false,
+    "roles_tested_without_login": 7,
+    "cleanup": "removed",
+    "finished_at": "2026-10-07T07:51:02.420289+00:00",
+    "filesystem_after": {
+      "total": 42156257280,
+      "used": 15235436544,
+      "free": 25078960128
+    }
+  }
+}

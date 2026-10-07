@@ -8,7 +8,7 @@
 
 第二期已发布，10 月 6 日核心更新至 `bff3e8a`，执行器保持 `1990d16`，Jev 暂保留：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。[M3 发布与限制](docs/phase2-release.md)和[诊断修复验收](docs/diagnosis-followthrough.md)保留原始评测与生产验证；当前完整测试 99 项，路由仍为规则优先＋DeepSeek。
 
-第三期后台已更新至 `849c19a`：任务与评测只读查询、审计快照导出和离线复核，新增“备份与容量”。当前完整测试 **117 项**，另有 JavaScript 契约测试。本机双库备份已完成隔离恢复，核对数据、视图与权限并作废旧任务；容量展示明确标注采样时间。[后台手册](docs/dashboard.md)、[M1 验收](docs/dashboard-acceptance.md)、[M2 验收](docs/dashboard-evidence-acceptance.md)、[备份恢复手册](docs/operations-recovery.md)、[M3 运维验收](docs/operations-recovery-acceptance.md)、[后续计划](docs/phase3-plan.md)。配置编辑尚未实现；异地、加密、定时备份待后续，M2 和新增页面的真实浏览器验收仍因工具不可用待补。
+第三期核心、执行器及后台已更新至 `e0f7da7`：任务／评测查询、审计快照与离线复核、备份与容量，新增服务配置编辑、差异校验、确认发布和版本回滚。核心保护项不可解除，发布会原子作废旧确认。当前完整测试 **125 项**，另有 JavaScript 契约测试；实际配置发布、动态查询、回滚与双库恢复均已验证。[配置管理手册](docs/configuration-management.md)、[配置验收](docs/configuration-acceptance.md)、[后台手册](docs/dashboard.md)、[M2 验收](docs/dashboard-evidence-acceptance.md)、[备份恢复手册](docs/operations-recovery.md)、[后续计划](docs/phase3-plan.md)。异地、加密、定时备份与演示材料待后续；新增页面的真实浏览器验收仍因工具超时待补。
 
 - 服务器信息、配置范围内的 Compose 服务状态、资源和业务健康检查。
 - 服务器概况以中文摘要展示采样时间、CPU、内存、运行时长、已配置磁盘及前五项进程常驻内存；缺失指标明确提示，不据此断言业务正常。
@@ -19,7 +19,7 @@
 - 对已有容器启动、停止、重启；8 位确认码 2 分钟有效，仅消费一次，保护清单在执行器内强制生效。
 - 会话 15 分钟无用户消息失效；支持清空、任务查询；常规审计保留 30 天。
 
-没有任意 Shell、容器内 exec、部署、删除、拉取镜像或修改配置接口。Jev 预留 `IntentRouter` 接口，第一期没有 Jev 运行依赖。
+没有任意 Shell、容器内 exec、部署、删除、拉取镜像接口。服务登记配置仅开放给已登录的后台管理员，经独立管理令牌交执行器校验；聊天与模型不能修改配置。Jev 预留 `IntentRouter` 接口，第一期没有 Jev 运行依赖。
 
 ## 架构
 
