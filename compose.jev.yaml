@@ -1,0 +1,13 @@
+# Append LAST, after compose.configuration.yaml. Key belongs only to agent-core.
+services:
+  agent-core:
+    image: ${VEY_JEV_IMAGE:?Set tested Jev-capable image}
+    environment:
+      VEY_ROUTER_MODE: ${VEY_ROUTER_MODE:-hybrid}
+      VEY_JEV_KEY_FILE: /run/secrets/jev_key
+      VEY_JEV_MODEL: ${VEY_JEV_MODEL:-jev-latest}
+      VEY_JEV_TIMEOUT: ${VEY_JEV_TIMEOUT:-3}
+      VEY_JEV_MIN_CONFIDENCE: ${VEY_JEV_MIN_CONFIDENCE:-0.85}
+    secrets: [jev_key]
+secrets:
+  jev_key: {file: ./secrets/jev_key}

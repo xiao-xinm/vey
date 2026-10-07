@@ -81,6 +81,7 @@ class DeepSeekProvider:
             )
         started = time.monotonic()
         metric = {
+            "provider": "deepseek",
             "model": self.settings.model_name,
             "prompt_version": self.prompt_version,
             "schema": schema.__name__,

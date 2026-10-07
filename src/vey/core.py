@@ -187,6 +187,7 @@ class Core:
     async def process(self, task_id):
         evidence, context_update = [], {}
         model_metrics_start = len(getattr(self.model, "metrics", []))
+        router_metrics_start = len(getattr(self.router, "metrics", []))
         is_control = False
         try:
             actor, message, context = self._input(task_id)
@@ -340,6 +341,12 @@ class Core:
             )
         finally:
             if not is_control:
+                for metric in getattr(self.router, "metrics", [])[router_metrics_start:]:
+                    self.event(
+                        task_id, "model" if metric.get("request_sent") else "routing", metric
+                    )
+                if hasattr(self.router, "metrics"):
+                    self.router.metrics.clear()
                 for metric in getattr(self.model, "metrics", [])[model_metrics_start:]:
                     self.event(task_id, "model", metric)
                 if hasattr(self.model, "metrics"):

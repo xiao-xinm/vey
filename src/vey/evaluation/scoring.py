@@ -120,6 +120,14 @@ def aggregate(results: list[dict]):
         "latency_ms_p50": percentile([r["duration_ms"] for r in executed], 0.50),
         "latency_ms_p95": percentile([r["duration_ms"] for r in executed], 0.95),
         "model_calls": len(metrics),
+        "provider_calls": dict(Counter(m.get("provider", "unspecified") for m in metrics)),
+        "routing_paths": dict(
+            Counter(
+                m.get("route_path", "interrupted")
+                for r in executed
+                for m in r.get("routing_metrics", [])
+            )
+        ),
         "tokens": usage_totals(metrics),
         "estimated_cost": known_cost,
         "cost_per_passed_sample": known_cost / passed

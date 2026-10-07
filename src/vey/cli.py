@@ -43,6 +43,8 @@ def main():
                     "status": "valid",
                     "services": len(policy.services),
                     "model": settings.model_name,
+                    "router_mode": settings.router_mode,
+                    "jev_configured": bool(settings.jev_key.get_secret_value()),
                     "debug_enabled": settings.debug_enabled,
                 },
                 ensure_ascii=False,

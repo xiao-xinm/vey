@@ -12,6 +12,7 @@ from pydantic import SecretStr
 from vey.evaluation.runner import compare_reports, run_evaluation
 from vey.evaluation.schema import Pricing, load_dataset
 from vey.evaluation.trajectory import load_trajectories, run_trajectories
+from vey.jev import JevEvaluationProvider
 from vey.model import DeepSeekProvider
 
 
@@ -30,6 +31,17 @@ def live_provider(args):
         model_base_url=args.base_url,
         model_timeout=min(args.timeout, 30),
     )
+    if getattr(args, "strategy", None) == "jev":
+        if not args.jev_key_file:
+            raise ValueError("Explicit Jev key file required")
+        jev_key = args.jev_key_file.read_text(encoding="utf-8").strip()
+        if not jev_key or not 0 < args.jev_timeout <= 10 or not 0 <= args.jev_min_confidence <= 1:
+            raise ValueError("Invalid Jev credentials or bounds")
+        settings.jev_key = SecretStr(jev_key)
+        settings.jev_model = args.jev_model
+        settings.jev_timeout = args.jev_timeout
+        settings.jev_min_confidence = args.jev_min_confidence
+        return lambda: JevEvaluationProvider(settings, DeepSeekProvider(settings))
     return lambda: DeepSeekProvider(settings)
 
 
@@ -62,7 +74,7 @@ def main(argv=None):
     run = sub.add_parser("run")
     run.add_argument("dataset", type=Path)
     run.add_argument("--split", choices=["dev", "test"], required=True)
-    run.add_argument("--strategy", choices=["hybrid", "model"], default="hybrid")
+    run.add_argument("--strategy", choices=["hybrid", "model", "jev"], default="hybrid")
     run.add_argument("--mode", choices=["rules", "live"], default="rules")
     run.add_argument("--output", type=Path, required=True)
     run.add_argument("--repeats", type=int, choices=range(1, 6), default=1)
@@ -72,6 +84,11 @@ def main(argv=None):
     run.add_argument("--model", default="deepseek-flash")
     run.add_argument("--base-url", default="https://api.deepseek.com")
     run.add_argument("--key-file", type=Path)
+    run.add_argument("--jev-key-file", type=Path)
+    run.add_argument("--jev-model", default="jev-latest")
+    run.add_argument("--jev-timeout", type=float, default=3)
+    run.add_argument("--jev-min-confidence", type=float, default=0.85)
+    run.add_argument("--jev-pricing", type=Path)
     run.add_argument(
         "--pricing", type=Path, help="Optional versioned price basis, never a claimed bill"
     )
@@ -155,6 +172,18 @@ def main(argv=None):
                 timeout=args.timeout,
                 limit=args.limit,
                 pricing=pricing,
+                jev_pricing=Pricing.model_validate_json(
+                    args.jev_pricing.read_text(encoding="utf-8")
+                )
+                if args.jev_pricing
+                else None,
+                routing_config={
+                    "model": args.jev_model,
+                    "timeout": args.jev_timeout,
+                    "min_confidence": args.jev_min_confidence,
+                }
+                if args.strategy == "jev"
+                else None,
                 progress=lambda row: print(json.dumps(row, ensure_ascii=False), flush=True),
             )
         )

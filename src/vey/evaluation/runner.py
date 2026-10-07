@@ -12,6 +12,7 @@ from pathlib import Path
 from vey.domain import ToolCall, VeyError, digest, utcnow
 from vey.evaluation.schema import Dataset, Pricing
 from vey.evaluation.scoring import aggregate, estimated_cost, score
+from vey.jev import JevRouter
 from vey.model import (
     OPERATION_GUARD_VERSION,
     DeepSeekProvider,
@@ -95,9 +96,11 @@ async def run_evaluation(
     timeout: float = 25,
     limit: int | None = None,
     pricing: Pricing | None = None,
+    jev_pricing: Pricing | None = None,
+    routing_config: dict | None = None,
     progress=None,
 ):
-    if strategy not in {"hybrid", "model"} or mode not in {"rules", "live"}:
+    if strategy not in {"hybrid", "model", "jev"} or mode not in {"rules", "live"}:
         raise ValueError("Unknown evaluation strategy or mode")
     if split not in {"dev", "test"} or not 1 <= repeats <= 5 or not 1 <= timeout <= 60:
         raise ValueError("Invalid evaluation bounds")
@@ -133,6 +136,9 @@ async def run_evaluation(
         "sample_timeout_seconds": timeout,
         "selection_limit": limit,
         "pricing": pricing.model_dump(mode="json") if pricing else None,
+        "jev_pricing": jev_pricing.model_dump(mode="json") if jev_pricing else None,
+        "routing_config": routing_config,
+        "router_prompt_version": JevRouter.prompt_version if strategy == "jev" else None,
         "versions": {
             "python": platform.python_version(),
             **{p: importlib.metadata.version(p) for p in ("pydantic", "httpx")},
@@ -164,18 +170,22 @@ async def run_evaluation(
             row.pop("skip_reason", None)
             try:
                 actual = None
-                if strategy == "hybrid" and case.stage == "route":
+                if strategy in {"hybrid", "jev"} and case.stage == "route":
                     actual = deterministic_intent(case.message, dataset.policy, case.context)
                     row["route_source"] = "rule" if actual else "model"
                 if actual is None:
-                    if mode == "rules" or calls >= max_model_calls:
+                    # Reserve both Jev and possible DeepSeek extraction before starting.
+                    required = 2 if strategy == "jev" and case.stage == "route" else 1
+                    if mode == "rules" or calls + required > max_model_calls:
                         row["skip_reason"] = (
                             "requires_model" if mode == "rules" else "request_budget"
                         )
                         continue
                     provider = provider_factory()
                     calls += 1
-                    row["route_source"] = "model"
+                    row["route_source"] = (
+                        "jev" if strategy == "jev" and case.stage == "route" else "model"
+                    )
                     async with asyncio.timeout(timeout):
                         if case.stage == "route":
                             # Match production: log page cache never goes to intent classification.
@@ -221,12 +231,16 @@ async def run_evaluation(
                         row["model_metrics"] = [
                             {"model": model_name, "status": "unknown", "usage": None}
                         ]
+                    calls += len(row["model_metrics"]) - 1
+                    row["routing_metrics"] = safe_value(
+                        list(getattr(provider, "routing_metrics", []))
+                    )
                     try:
                         await provider.close()
                     except Exception:
                         row["close_failed"] = True
                 if row["status"] != "not_run":
-                    row["estimated_cost"] = estimated_cost(row["model_metrics"], pricing)
+                    row["estimated_cost"] = mixed_cost(row["model_metrics"], pricing, jev_pricing)
                 save_report(output, build_report(metadata, rows))
                 if progress:
                     progress({k: row[k] for k in ("case_id", "repeat", "status", "failures")})
@@ -241,6 +255,20 @@ async def run_evaluation(
         report = build_report(metadata, rows)
         save_report(output, report)
     return report
+
+
+def mixed_cost(metrics, pricing, jev_pricing):
+    if not metrics:
+        return 0.0
+    costs, currencies = [], set()
+    for metric in metrics:
+        basis = jev_pricing if metric.get("provider") == "typesafe" else pricing
+        cost = estimated_cost([metric], basis)
+        if cost is None:
+            return None
+        costs.append(cost)
+        currencies.add(basis.currency)
+    return round(sum(costs), 8) if len(currencies) == 1 else None
 
 
 def compare_reports(left: dict, right: dict):

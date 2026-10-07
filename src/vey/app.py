@@ -11,6 +11,7 @@ from vey.core import Core
 from vey.db import database
 from vey.domain import DebugMessage, VeyError
 from vey.executor_client import ExecutorClient
+from vey.jev import build_router
 from vey.model import DeepSeekProvider
 from vey.security import verify_token
 from vey.wecom import WeComCipher, WeComSender, parse_xml
@@ -21,8 +22,13 @@ def create_app(settings=None, core=None, sender=None):
     engine = None
     if core is None:
         engine, factory = database(settings.database_url.get_secret_value())
+        model = DeepSeekProvider(settings)
         core = Core(
-            factory, settings.policy(), ExecutorClient(settings), DeepSeekProvider(settings)
+            factory,
+            settings.policy(),
+            ExecutorClient(settings),
+            model,
+            build_router(settings, model),
         )
     sender = sender or WeComSender(settings)
     cipher = (
@@ -67,6 +73,8 @@ def create_app(settings=None, core=None, sender=None):
                 await task
         await sender.close()
         if engine:
+            if core.router is not None:
+                await core.router.close()
             await core.executor.close()
             await core.model.close()
             engine.dispose()

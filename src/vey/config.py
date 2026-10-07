@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import tomllib
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlsplit
 
 from pydantic import Field, SecretStr, model_validator
@@ -91,6 +92,12 @@ class Settings(BaseSettings):
     model_name: str = "deepseek-flash"
     model_key: SecretStr = SecretStr("")
     model_timeout: float = Field(default=20, gt=0, le=30)
+    router_mode: Literal["hybrid", "jev"] = "hybrid"
+    jev_key: SecretStr = SecretStr("")
+    jev_key_file: Path | None = None
+    jev_model: str = Field(default="jev-latest", min_length=1, max_length=100)
+    jev_timeout: float = Field(default=3, gt=0, le=10)
+    jev_min_confidence: float = Field(default=0.85, ge=0, le=1, allow_inf_nan=False)
     wecom_corp_id: str = ""
     wecom_agent_id: int = 0
     wecom_secret: SecretStr = SecretStr("")
@@ -121,6 +128,7 @@ class Settings(BaseSettings):
             "executor_token",
             "debug_token",
             "model_key",
+            "jev_key",
             "wecom_secret",
             "wecom_token",
             "wecom_aes_key",
