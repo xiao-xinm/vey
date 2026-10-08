@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1320" viewBox="0 0 1700 1320" role="img" aria-labelledby="title desc">
+<title id="title">Vey 项目结构总览</title>
+<desc id="desc">企微通过网关连接核心，核心使用模型并通过独立执行器操作 Docker。后台单独管理配置和读取审计，PostgreSQL 保存运行与评测数据。</desc>
+<rect width="100%" height="100%" fill="#f3f6fb"/>
+<text x="70" y="83" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="43" fill="#16243b">VEY / 项目结构总览</text>
+<text x="70" y="124" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="23" fill="#506078">先看权限，再看数据流  ·  V1 交付候选  ·  2026-10-08</text>
+<polyline points="370,230 470,230" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="470,230 458.2941876694152,235.654551943446 458.2941876694152,224.345448056554" fill="#2863cd"/>
+<polyline points="900,230 1040,230" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="1040,230 1028.2941876694151,235.654551943446 1028.2941876694151,224.345448056554" fill="#2863cd"/>
+<text x="927" y="220" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#16243b">/admin</text>
+<polyline points="650,325 650,450" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="650,450 644.345448056554,438.2941876694152 655.654551943446,438.2941876694152" fill="#2863cd"/>
+<text x="672" y="390" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#16243b">/wecom/callback</text>
+<polyline points="470,560 370,560" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="370,560 381.7058123305848,554.345448056554 381.7058123305848,565.654551943446" fill="#2863cd"/>
+<polyline points="470,690 410,690 410,280 370,280" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="370,280 381.7058123305848,274.345448056554 381.7058123305848,285.654551943446" fill="#2863cd"/>
+<text x="72" y="363" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">异步回传经企微 API</text>
+<polyline points="900,565 1040,565" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="1040,565 1028.2941876694151,570.654551943446 1028.2941876694151,559.345448056554" fill="#2863cd"/>
+<text x="925" y="522" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="17" fill="#16243b">Unix Socket</text>
+<text x="924" y="552" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#16243b">运维令牌</text>
+<polyline points="1235,325 1235,450" fill="none" stroke="#19785a" stroke-width="3"/>
+<polygon points="1235,450 1229.345448056554,438.2941876694152 1240.654551943446,438.2941876694152" fill="#19785a"/>
+<text x="1255" y="383" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#19785a">独立管理令牌</text>
+<text x="1255" y="412" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#19785a">仅配置接口</text>
+<polyline points="650,750 650,920" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="650,920 644.345448056554,908.2941876694152 655.654551943446,908.2941876694152" fill="#2863cd"/>
+<text x="671" y="880" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#16243b">任务 / 审计</text>
+<polyline points="1110,750 1110,845 860,845 860,920" fill="none" stroke="#2863cd" stroke-width="3"/>
+<polygon points="860,920 854.345448056554,908.2941876694152 865.654551943446,908.2941876694152" fill="#2863cd"/>
+<text x="929" y="830" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#16243b">确认 / 策略</text>
+<polyline points="1415,750 1415,920" fill="none" stroke="#19785a" stroke-width="3"/>
+<polygon points="1415,920 1409.345448056554,908.2941876694152 1420.654551943446,908.2941876694152" fill="#19785a"/>
+<text x="1435" y="839" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#19785a">Docker</text>
+<text x="1435" y="868" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#19785a">socket</text>
+<polyline points="1470,245 1590,245 1590,1190 875,1190 875,1165" fill="none" stroke="#506078" stroke-width="3" stroke-dasharray="8 8"/>
+<polygon points="875,1165 880.654551943446,1176.7058123305849 869.345448056554,1176.7058123305849" fill="#506078"/>
+<text x="1503" y="663" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#506078">只读</text>
+<text x="1503" y="693" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#506078">任务与</text>
+<text x="1503" y="723" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#506078">评测</text>
+<polyline points="370,1035 470,1035" fill="none" stroke="#7555ae" stroke-width="3"/>
+<polygon points="470,1035 458.2941876694152,1040.654551943446 458.2941876694152,1029.345448056554" fill="#7555ae"/>
+<text x="389" y="1020" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#7555ae">归档</text>
+<polyline points="215,920 215,750" fill="none" stroke="#7555ae" stroke-width="3" stroke-dasharray="8 8"/>
+<polygon points="215,750 220.654551943446,761.7058123305848 209.345448056554,761.7058123305848" fill="#7555ae"/>
+<text x="234" y="879" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#7555ae">离线案例调用模型</text>
+<rect x="70" y="170" width="300" height="155" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="70" y="170" width="7" height="155" rx="3" fill="#2863cd"/>
+<text x="94" y="220" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#2863cd">你 / 使用入口</text>
+<text x="94" y="252" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">企业微信 · 管理后台</text>
+<text x="94" y="294" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">聊天运维 / 浏览器管理</text>
+<rect x="470" y="170" width="430" height="155" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="470" y="170" width="7" height="155" rx="3" fill="#2863cd"/>
+<text x="494" y="220" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#2863cd">HTTPS 网关 / Caddy</text>
+<text x="494" y="252" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">唯一公网业务入口 · 路径分流</text>
+<text x="494" y="294" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">企微回调 → 核心；/admin → 后台</text>
+<rect x="1040" y="170" width="430" height="155" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="1040" y="170" width="7" height="155" rx="3" fill="#19785a"/>
+<text x="1064" y="220" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#19785a">管理后台 / dashboard</text>
+<text x="1064" y="252" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">独立登录 · 单管理员</text>
+<text x="1064" y="294" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">任务、评测、复核、配置与备份报告</text>
+<rect x="70" y="450" width="300" height="300" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="70" y="450" width="7" height="300" rx="3" fill="#7555ae"/>
+<text x="94" y="500" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#7555ae">外部模型服务</text>
+<text x="94" y="532" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">核心和评测器按需调用</text>
+<text x="94" y="574" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">DeepSeek：理解 / 规划</text>
+<text x="94" y="605" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">Jev：可选意图分类</text>
+<text x="94" y="636" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">当前默认：hybrid</text>
+<text x="94" y="667" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">Jev 已接入，默认关闭</text>
+<text x="94" y="698" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">模型没有直接执行权</text>
+<rect x="470" y="450" width="430" height="300" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="470" y="450" width="7" height="300" rx="3" fill="#2863cd"/>
+<text x="494" y="500" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#2863cd">Agent 核心 / agent-core</text>
+<text x="494" y="532" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">app.py → Core → bounded diagnosis</text>
+<text x="494" y="574" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">身份校验、去重与任务队列</text>
+<text x="494" y="605" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">规则优先，必要时调用模型</text>
+<text x="494" y="636" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">最多 5 次只读工具 / 60 秒</text>
+<text x="494" y="667" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">结构化证据、中文结果、Outbox</text>
+<text x="494" y="698" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">不挂载 Docker socket</text>
+<rect x="1040" y="450" width="430" height="300" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="1040" y="450" width="7" height="300" rx="3" fill="#19785a"/>
+<text x="1064" y="500" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#19785a">受控执行器 / ops-executor</text>
+<text x="1064" y="532" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">固定工具 + 独立权限检查</text>
+<text x="1064" y="574" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">只读查询与启停重启</text>
+<text x="1064" y="605" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">保护对象、会话、容器身份复核</text>
+<text x="1064" y="636" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">两分钟确认；未知结果不重放</text>
+<text x="1064" y="667" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">配置版本、预览、发布与回滚</text>
+<text x="1064" y="698" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">唯一持有 Docker socket 的组件</text>
+<rect x="70" y="920" width="300" height="245" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="70" y="920" width="7" height="245" rx="3" fill="#7555ae"/>
+<text x="94" y="970" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#7555ae">离线评测工具</text>
+<text x="94" y="1002" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">evaluation/ · 独立运行</text>
+<text x="94" y="1044" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">案例 → 模型 → 契约评分</text>
+<text x="94" y="1075" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">不执行真实运维工具</text>
+<text x="94" y="1106" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">结果追加归档</text>
+<text x="94" y="1137" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">保留失败和未知费用</text>
+<rect x="470" y="920" width="430" height="245" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="470" y="920" width="7" height="245" rx="3" fill="#2863cd"/>
+<text x="494" y="970" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#2863cd">PostgreSQL / 两个数据库</text>
+<text x="494" y="1002" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">同一现有 PG 实例 · 角色隔离</text>
+<text x="494" y="1044" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">vey_core：会话 / 任务 / 事件 / 投递</text>
+<text x="494" y="1075" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">vey_exec：确认 / 游标 / 配置版本</text>
+<text x="494" y="1106" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">vey_eval：实验与逐条样本</text>
+<text x="494" y="1137" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">后台读投影视图及评测只读账号</text>
+<rect x="1040" y="920" width="430" height="245" rx="16" fill="white" stroke="#d6dfea" stroke-width="2"/>
+<rect x="1040" y="920" width="7" height="245" rx="3" fill="#19785a"/>
+<text x="1064" y="970" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="26" fill="#19785a">Ubuntu / 受管理容器</text>
+<text x="1064" y="1002" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="18" fill="#506078">既有 Docker Compose 服务</text>
+<text x="1064" y="1044" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">仅操作登记对象，不提供任意 Shell</text>
+<text x="1064" y="1075" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">PG / Redis / Agent 等对象受保护</text>
+<text x="1064" y="1106" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">宿主机指标来自只读映射</text>
+<text x="1064" y="1137" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#16243b">MinIO 是既有服务，不是 Agent 依赖</text>
+<text x="70" y="1259" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="21" fill="#506078">维护边界：管理员脚本执行本机备份与隔离恢复；后台只读报告。定时、加密与异地备份仍延期。</text>
+<text x="70" y="1295" font-family="Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="19" fill="#506078">图中箭头表示调用或数据访问。执行器被攻破仍有高权限风险；权限分离不等于完整沙箱。</text>
+</svg>

@@ -2,6 +2,8 @@
 
 通过企业微信自建应用管理个人 Ubuntu 服务器的运维 Agent。面向 AI 应用／Agent 开发实践，按三期建设：可靠运维闭环 → 诊断评测 → 管理后台。
 
+**从这里理解项目：** [项目结构图与源码导读](docs/project-map.md) · [V1 交付候选清单](docs/v1-delivery.md) · [六分钟演示脚本](docs/demo.md) · [面试讲解](docs/interview-guide.md)。2026-10-08 已复核生产接口和最新双库恢复；浏览器实点验收与完整录屏仍待补，不标记全部验收完成。
+
 **第一期已交付：65 项完整测试、真实企微集成、15 分钟静默过期及桌面企微客户端查询／确认重启验收均通过。** 日志摘要／同页展开、资源排行和中文结果展示已部署；独立测试容器已清理。详见[服务器验收记录](docs/server-acceptance.md)、[模型验收记录](docs/model-acceptance.md)、[聊天链路验收](docs/phase1-chat-acceptance.md)与[开发进度](docs/development-plan.md)。
 
 ## 能做什么

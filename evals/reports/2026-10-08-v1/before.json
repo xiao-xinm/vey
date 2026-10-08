@@ -1,0 +1,58 @@
+[
+  {
+    "name": "vey-agent-core-1",
+    "image": "vey-agent:jev-133a2d6",
+    "image_id": "sha256:cb54367a01f67fdf2111f0a767f8f3128fa1b67c895dccbf792e1677db380d60",
+    "started": "2026-10-07T12:30:36.253273724Z",
+    "health": "healthy"
+  },
+  {
+    "name": "vey-ops-executor-1",
+    "image": "vey-agent:configuration-e0f7da7",
+    "image_id": "sha256:4eda4c94252a1ac4bec09b3483f98ea98e4c838fb4aca197cd8d05e1acfa0d72",
+    "started": "2026-10-07T07:46:19.06594376Z",
+    "health": "healthy"
+  },
+  {
+    "name": "vey-dashboard-1",
+    "image": "vey-agent:configuration-e0f7da7",
+    "image_id": "sha256:4eda4c94252a1ac4bec09b3483f98ea98e4c838fb4aca197cd8d05e1acfa0d72",
+    "started": "2026-10-07T07:46:26.949746899Z",
+    "health": "healthy"
+  },
+  {
+    "name": "vey-https-gateway-1",
+    "image": "vey-gateway:2.11.4",
+    "image_id": "sha256:f40664e5134a978879e9083231018d5c2c7b567af7a08c7d813e53d977bb5ec8",
+    "started": "2026-10-06T01:56:00.699432737Z",
+    "health": "healthy"
+  },
+  {
+    "name": "rag-postgres",
+    "image": "pgvector/pgvector:pg16",
+    "image_id": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+    "started": "2026-08-31T13:54:03.048091817Z",
+    "health": "healthy"
+  },
+  {
+    "name": "redis",
+    "image": "redis:latest",
+    "image_id": "sha256:298e5b3bc566bade82f46ad5511777a4a07a294097ce16ada2f6a42be5239df5",
+    "started": "2026-09-06T13:32:16.677911485Z",
+    "health": "running"
+  },
+  {
+    "name": "rag-minio",
+    "image": "quay.io/minio/minio@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+    "image_id": "sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e",
+    "started": "2026-10-02T03:12:49.14118371Z",
+    "health": "healthy"
+  },
+  {
+    "name": "nginx",
+    "image": "nginx:latest",
+    "image_id": "sha256:b34848eff6db786b6b1282d3a9c3fd0b5563dfb6d261df4923378b419e0d24f0",
+    "started": "2026-08-27T06:14:43.519580822Z",
+    "health": "running"
+  }
+]

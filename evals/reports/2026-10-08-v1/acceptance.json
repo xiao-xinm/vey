@@ -1,0 +1,35 @@
+{
+  "status": "passed",
+  "checks": [
+    "unauthenticated_denied",
+    "origin_enforced",
+    "secure_cookie",
+    "readonly_queries",
+    "pagination",
+    "no_write_endpoint",
+    "logout_revokes_session",
+    "private_paths_hidden",
+    "readonly_evaluation_archive",
+    "evaluation_pagination",
+    "audit_export_offline_validation"
+  ],
+  "wecom_messages_sent": 0,
+  "docker_mutations": 0,
+  "task_payloads_persisted": false,
+  "recovery_run_id": "15e6183009724414a63a8658aa49edcd",
+  "configuration_revision": "faf51f56d1c34be49dd0c47df7061239",
+  "protected_change_denied": true,
+  "configuration_not_published": true,
+  "unchanged_containers": [
+    "vey-agent-core-1",
+    "vey-ops-executor-1",
+    "vey-dashboard-1",
+    "vey-https-gateway-1",
+    "rag-postgres",
+    "redis",
+    "rag-minio",
+    "nginx"
+  ],
+  "browser_acceptance": "pending: CUA inventory fetch failed and tab creation timed out",
+  "client_recording": "not_recorded"
+}

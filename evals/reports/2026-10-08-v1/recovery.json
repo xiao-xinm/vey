@@ -1,0 +1,160 @@
+{
+  "status": "passed",
+  "run_id": "15e6183009724414a63a8658aa49edcd",
+  "started_at": "2026-10-08T01:49:52.186819+00:00",
+  "databases": {
+    "vey": {
+      "snapshot_started_at": "2026-10-08T01:49:52.758064+00:00",
+      "dump_bytes": 79465,
+      "dump_sha256": "e5be0d87c706a5b5aa7c1aac91b0cc65f3f1036ba647c15f3aa475ed654b4532",
+      "database_bytes": 9591831,
+      "tables": 10,
+      "views": 3,
+      "rows": {
+        "public.alembic_version": 1,
+        "vey_core.events": 426,
+        "vey_core.outbox": 44,
+        "vey_core.sessions": 2,
+        "vey_core.tasks": 231,
+        "vey_exec.grants": 24,
+        "vey_exec.log_cursors": 0,
+        "vey_exec.policy_state": 1,
+        "vey_exec.policy_versions": 3,
+        "vey_exec.sessions": 2
+      },
+      "relations": [
+        {
+          "schema": "vey_core",
+          "name": "tasks",
+          "table_bytes": 425984,
+          "index_bytes": 114688,
+          "total_bytes": 540672
+        },
+        {
+          "schema": "vey_core",
+          "name": "events",
+          "table_bytes": 204800,
+          "index_bytes": 73728,
+          "total_bytes": 278528
+        },
+        {
+          "schema": "vey_core",
+          "name": "sessions",
+          "table_bytes": 196608,
+          "index_bytes": 16384,
+          "total_bytes": 212992
+        },
+        {
+          "schema": "vey_core",
+          "name": "outbox",
+          "table_bytes": 90112,
+          "index_bytes": 32768,
+          "total_bytes": 122880
+        },
+        {
+          "schema": "vey_exec",
+          "name": "grants",
+          "table_bytes": 57344,
+          "index_bytes": 49152,
+          "total_bytes": 106496
+        },
+        {
+          "schema": "vey_exec",
+          "name": "log_cursors",
+          "table_bytes": 65536,
+          "index_bytes": 32768,
+          "total_bytes": 98304
+        },
+        {
+          "schema": "vey_exec",
+          "name": "sessions",
+          "table_bytes": 40960,
+          "index_bytes": 16384,
+          "total_bytes": 57344
+        },
+        {
+          "schema": "vey_exec",
+          "name": "policy_versions",
+          "table_bytes": 16384,
+          "index_bytes": 16384,
+          "total_bytes": 32768
+        },
+        {
+          "schema": "vey_exec",
+          "name": "policy_state",
+          "table_bytes": 8192,
+          "index_bytes": 16384,
+          "total_bytes": 24576
+        },
+        {
+          "schema": "public",
+          "name": "alembic_version",
+          "table_bytes": 8192,
+          "index_bytes": 16384,
+          "total_bytes": 24576
+        }
+      ],
+      "data_views_permissions_verified": true
+    },
+    "vey_eval": {
+      "snapshot_started_at": "2026-10-08T01:49:54.482758+00:00",
+      "dump_bytes": 124048,
+      "dump_sha256": "55259f2d10c6588adeec72fb8cecc55b6878656384d334169b2a626698508787",
+      "database_bytes": 8723479,
+      "tables": 2,
+      "views": 0,
+      "rows": {
+        "vey_eval.runs": 16,
+        "vey_eval.samples": 420
+      },
+      "relations": [
+        {
+          "schema": "vey_eval",
+          "name": "samples",
+          "table_bytes": 614400,
+          "index_bytes": 57344,
+          "total_bytes": 671744
+        },
+        {
+          "schema": "vey_eval",
+          "name": "runs",
+          "table_bytes": 212992,
+          "index_bytes": 16384,
+          "total_bytes": 229376
+        }
+      ],
+      "data_views_permissions_verified": true
+    }
+  },
+  "offsite": false,
+  "encrypted": false,
+  "scheduled": false,
+  "source_writers_stopped": false,
+  "stage": "complete",
+  "filesystem_before": {
+    "total": 42156257280,
+    "used": 15515164672,
+    "free": 24799232000
+  },
+  "postgres_image": "sha256:ccc6e83d6e35e931dc7c5def2022729d5a6c370318d099181995567ff1fb4d6b",
+  "postgres_version": "16.15 (Debian 16.15-1.pgdg12+2)",
+  "configuration": {
+    "files": 102,
+    "bytes": 157401,
+    "sha256": "eafe6a3a569490dcbfddcf3d0f2a69bc9f7f2d61cbb7f13cbcfd544910376334"
+  },
+  "quarantine": {
+    "replayable_records": 0,
+    "agent_started": false,
+    "source_modified": false
+  },
+  "role_passwords_restored": false,
+  "roles_tested_without_login": 7,
+  "cleanup": "removed",
+  "finished_at": "2026-10-08T01:50:02.996011+00:00",
+  "filesystem_after": {
+    "total": 42156257280,
+    "used": 15515656192,
+    "free": 24798740480
+  }
+}
