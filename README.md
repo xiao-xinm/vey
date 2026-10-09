@@ -2,17 +2,13 @@
 
 通过企业微信自建应用管理个人 Ubuntu 服务器的运维 Agent。面向 AI 应用／Agent 开发实践，按三期建设：可靠运维闭环 → 诊断评测 → 管理后台。
 
-**从这里理解项目：** [项目结构图与源码导读](docs/project-map.md) · [V1 交付候选清单](docs/v1-delivery.md) · [六分钟演示脚本](docs/demo.md) · [面试讲解](docs/interview-guide.md)。2026-10-08 已复核生产接口和最新双库恢复；浏览器实点验收与完整录屏仍待补，不标记全部验收完成。
+**阅读入口：[文档导航](docs/README.md)**。第一次看项目建议先读[结构图与源码导读](docs/project-map.md)，部署按[Ubuntu 手册](docs/deployment.md)，完成情况看[V1 清单](docs/v1-delivery.md)。
 
-**第一期已交付：65 项完整测试、真实企微集成、15 分钟静默过期及桌面企微客户端查询／确认重启验收均通过。** 日志摘要／同页展开、资源排行和中文结果展示已部署；独立测试容器已清理。详见[服务器验收记录](docs/server-acceptance.md)、[模型验收记录](docs/model-acceptance.md)、[聊天链路验收](docs/phase1-chat-acceptance.md)与[开发进度](docs/development-plan.md)。
+当前核心功能已部署，147 项自动测试及 CI 通过，真实企微查询和确认重启已验收。2026-10-08 完成生产 API 复核和包含 16 次／420 条样本的双库恢复演练；新增后台页面的真实浏览器点击验收和完整录屏仍待补，当前为 V1 交付候选。
 
 ## 能做什么
 
-2026-10-07 核心已发布 `133a2d6`，新增可选 [Jev 路由](docs/jev-integration.md)：规则优先、Choice 分类、DeepSeek 参数解析及失败回退。当前完整 **147 项测试与 CI 通过**。[三组真实对照](docs/jev-live-evaluation.md)均为 36/36 契约通过，但 Jev 链路 P95 为 3.74 秒，现有 hybrid 为 1.12 秒，因此保留 hybrid 默认。Key 已验证有效，没有新增 SDK 依赖；评测库累计 16 次／420 样本。
-
-第二期已发布，10 月 6 日核心更新至 `bff3e8a`，执行器保持 `1990d16`，Jev 暂保留：[开发计划](docs/phase2-plan.md)、[M1 模型基线](docs/phase2-baseline.md)、[M2 结构化诊断与 PG 归档验收](docs/phase2-diagnosis.md)、[评测运行说明](evals/README.md)。[M3 发布与限制](docs/phase2-release.md)和[诊断修复验收](docs/diagnosis-followthrough.md)保留原始评测与生产验证；当前完整测试 99 项，路由仍为规则优先＋DeepSeek。
-
-第三期核心、执行器及后台已更新至 `e0f7da7`：任务／评测查询、审计快照与离线复核、备份与容量，新增服务配置编辑、差异校验、确认发布和版本回滚。核心保护项不可解除，发布会原子作废旧确认。当前完整测试 **125 项**，另有 JavaScript 契约测试；实际配置发布、动态查询、回滚与双库恢复均已验证。[配置管理手册](docs/configuration-management.md)、[配置验收](docs/configuration-acceptance.md)、[后台手册](docs/dashboard.md)、[M2 验收](docs/dashboard-evidence-acceptance.md)、[备份恢复手册](docs/operations-recovery.md)、[后续计划](docs/phase3-plan.md)。异地、加密、定时备份与演示材料待后续；新增页面的真实浏览器验收仍因工具超时待补。
+提供任务审计、评测查询、快照离线复核、备份容量报告，以及受保护的服务配置预览、版本发布和回滚。默认规则优先加 DeepSeek；[Jev 已接入并实测](docs/evaluation.md)，本组路由对照未获得延迟收益，因此保持可选、默认关闭。
 
 - 服务器信息、配置范围内的 Compose 服务状态、资源和业务健康检查。
 - 服务器概况以中文摘要展示采样时间、CPU、内存、运行时长、已配置磁盘及前五项进程常驻内存；缺失指标明确提示，不据此断言业务正常。
@@ -97,4 +93,4 @@ Docker 修改与数据库提交不能组成原子事务。调用前持久化 `ex
 
 长回复按 UTF-8 分段并记录已确认投递的段数；发送失败从未确认段继续，每段最多尝试 10 次，投递总期限为创建后 1 小时。消息重试不会重跑 Docker。企微接收成功但本地进度尚未提交时仍有重复窗口，不能承诺端到端恰好一次投递。核心服务重启会为正在执行的企微任务保留一次中断通知，不自动重放任务。
 
-更多：[需求](docs/requirements.md) · [技术方案](docs/technical-design.md) · [三期路线和数据设计](docs/roadmap-and-data.md) · [开发进度与待验收项](docs/development-plan.md) · [聊天链路验收](docs/phase1-chat-acceptance.md) · [演示流程](docs/demo.md)
+完整文档见[导航](docs/README.md)；求职展示见[演示脚本](docs/demo.md)和[面试讲解](docs/interview-guide.md)。

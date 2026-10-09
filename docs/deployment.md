@@ -1,6 +1,6 @@
 # Ubuntu 部署、接入和恢复
 
-本手册是通用部署操作说明，实际 Docker／PostgreSQL 部署结果见[服务器验收记录](server-acceptance.md)。所有占位名称必须先替换；凭据在服务器本地输入，不要发到聊天或提交 Git。
+本手册是通用部署操作说明，实际 Docker／PostgreSQL 部署结果见[服务器验收记录](evidence/history.md#server-acceptance)。所有占位名称必须先替换；凭据在服务器本地输入，不要发到聊天或提交 Git。
 
 ## 1. 核对现有环境
 
@@ -157,7 +157,7 @@ docker compose --profile https up -d --wait --wait-timeout 60
 
 网关只发布 443，内部监听 8443，通过私有 ingress 网络代理核心，数据库和执行器不加入 ingress。容器镜像移除了上游 Caddy 二进制的文件 capability，避免与 `cap_drop=ALL` 冲突。内部健康检查通过只证明进程工作，**不证明正式证书已签发或公网可达**。
 
-如需在同一域名开放已有 MinIO 控制台，可显式叠加 `compose.minio.yaml`，见 [MinIO 控制台配置](minio-console.md)。默认 HTTPS 配置不会自动开放这个入口。
+如需在同一域名开放已有 MinIO 控制台，可显式叠加 `compose.minio.yaml`，见 [MinIO 控制台配置](deployment.md#minio-console)。默认 HTTPS 配置不会自动开放这个入口。
 
 使用 TLS-ALPN-01 验证，不占用已有 HTTP 80；其外部入口仍必须是 443。[Caddy 内部 HTTPS 端口说明](https://caddyserver.com/docs/caddyfile/options#https-port)、[ACME 校验配置](https://caddyserver.com/docs/caddyfile/directives/tls#issuers)
 
@@ -213,18 +213,104 @@ docker compose exec -T agent-core python - < scripts/model_smoke.py
 
 ## 8. 备份与恢复流程
 
-备份应覆盖专用数据库、管理员维护的配置与密钥，以及现有 PG 的原备份策略。采用 `pg_dump -Fc` 生成逻辑备份；使用与服务器版本兼容的 PostgreSQL 客户端。密码使用交互输入或权限为 `0600` 的 pgpass 文件，避免出现在命令行。备份存储到另一故障域并加密，留存周期和目的地在上线前确定。
+统一按[备份恢复手册](operations-recovery.md)执行，覆盖 `vey`、`vey_eval`、匹配的配置和角色权限，并在恢复副本中作废可重放任务与确认。不得把旧的单库数据导入检查等同于当前完整恢复演练。
 
-```bash
-# 命令参数使用实际主机、备份角色；不在命令中填写密码。
-pg_dump -h PG_HOST -U BACKUP_USER -d vey -Fc -f vey.dump
-# 仅恢复到新建隔离库进行演练，绝不覆盖现有业务数据库。
-pg_restore -h PG_HOST -U RESTORE_ADMIN -d vey_restore_check \
-  --no-owner --no-privileges --exit-on-error vey.dump
+当前为按需本机备份；加密、定时、保留清理和异地位置尚未实施，见 [V1 清单](v1-delivery.md)。
+
+## 9. 按需启用其他组件
+
+- [后台、评测展示与服务配置](dashboard.md)：包含初始化账号、Compose 叠加顺序及配置回滚。
+- [Jev 可选路由](evaluation.md#jev-integration)：保留 hybrid 默认，不因填写 Key 自动启用。
+- [系统采集与日志](#system-queries)：核对磁盘映射、阈值和日志范围。
+- [MinIO 控制台代理](#minio-console)：仅适用于服务器已有的独立 MinIO，不是 Agent 依赖。
+
+<a id="system-queries"></a>
+## 系统采集与日志展示配置
+
+
+### 系统阈值
+
+在管理员只读策略文件 `config/vey.toml` 中增加顶层 `[thresholds]` 表（不要放入 `[[services]]` 的子表）：
+
+```toml
+[thresholds]
+cpu_percent = 90
+memory_percent = 85
+disk_percent = 90
+load_per_cpu = 2
 ```
 
-核对表数量、关键记录、迁移版本、权限及运行角色；`--no-owner --no-privileges` 的隔离恢复不会复制运行授权，上线恢复需由管理员重建授权。演练环境不得启动连接生产 Docker socket 的执行器。
+省略时使用上述默认值；百分比必须大于 0 且不超过 100。首次初始化前配置。已启用版本化服务配置时，不可只改基线文件并重启：基线哈希变化会被执行器拒绝，应由管理员按[配置管理边界](dashboard.md#configuration)评审与迁移后再重建 core／executor，并重新确认未执行的操作。查询显示“本次采样达到阈值”，不是长期故障判断，不会触发自动修复或后台推送。
 
-从旧备份正式恢复前，停止核心和执行器并核对当前容器状态。备份可能缺少最新确认消费记录，须由管理员清空恢复库的会话和游标、作废 pending 确认、将 queued/control_queued/running 任务标为 unknown 后再启动，避免旧任务或确认再次执行。此恢复步骤不能靠常规进程重启逻辑代替；应先在恢复演练中验证。
+### 挂载点
 
-审计保留 30 天，unknown 锁保留到人工核对；日志页缓存、消息投递正文有更短期限。备份保留期独立于在线清理，不能声称数据库删除会同步抹去历史备份。第一版尚无容量告警服务，上线前须纳入现有磁盘容量监控。
+默认 Compose 把运行目录只读映射到 `/host/disk`，使用 statvfs 取得所在文件系统容量，并标为 `/`；部署前确认运行目录确实位于根文件系统。宿主机 `/proc/1/mountinfo` 可读取时，还会列出未映射的持久文件系统；无法读取时明确提示范围未核实。
+
+如果 `/data` 是单独文件系统，可以在该文件系统上准备专用空目录 `/data/vey-metrics`，通过本地 Compose overlay 给 **ops-executor** 增加只读挂载及环境配置：
+
+```yaml
+services:
+  ops-executor:
+    environment:
+      VEY_HOST_DISK_PATHS: '["/host/disk", "/host/data-disk"]'
+      VEY_HOST_DISK_LABELS: '{"/host/disk":"/", "/host/data-disk":"/data"}'
+    volumes:
+      - /data/vey-metrics:/host/data-disk:ro
+```
+
+其他目标挂载点同理。只采集显式映射的文件系统，不挂载整个宿主机根目录读取文件，不将容器文件系统冒充宿主机。2026-10-03 实际服务器的持久本地文件系统清单只有 `/`。
+
+### 资源排行
+
+`资源排行`／`内存排行` 按 Docker memory usage 降序；`CPU排行` 按 CPU 百分比降序。只读取策略中的 Compose 服务及明确登记的受保护容器，容器 ID 去重。CPU 100% 表示一核，内存含 Docker 统计中的缓存。
+
+最多采集 50 个容器，采集循环在 12 秒后不发起新采样；单次 Docker 请求另受超时约束。展示前 10 项、采集失败和预算跳过数量；缺失指标不转换为 0。现有部署规模小于这一上限。
+
+### 日志摘要和展开
+
+默认读取最近 100 行，先显示本页字符／行数、错误和警告关键词匹配数量、最多 5 行关键摘录。统计是文本匹配，不能证明服务健康或根因；更深入分析使用只读排查。
+
+`展开日志` 显示同一页快照，`下一页` 读取快照中后续分页内容并生成新摘要。展开前复核会话期限和容器 ID，不读取新日志、不推进游标。超长行按既有规则续读，每页仍受 500 行／10000 字符限制，摘要中的摘录省略会明确标注。
+
+最近一页原文只保留在有期限的会话快照和投递队列；展开任务的长期结果审计保存摘要，意图分类不附带原文快照。模型排查使用其工具调用得到的限量脱敏证据。
+
+<a id="minio-console"></a>
+## 复用 HTTPS 域名访问 MinIO 控制台
+
+
+启用 `compose.minio.yaml` 后，`https://YOUR_DOMAIN/minio/` 转发至已有 MinIO 的控制台端口。`/minio` 自动补上结尾斜线。沿用 HTTPS 网关证书，企微回调继续使用 `/wecom/callback`。
+
+该地址用于浏览器控制台，不是 S3 客户端 endpoint。9000 端口的 S3 API 不通过此配置公开。已有端口映射和登录凭证不变。
+
+### 配置
+
+1. 在 MinIO 原部署配置中设置 `MINIO_BROWSER_REDIRECT_URL=https://YOUR_DOMAIN/minio/`，重启使配置生效。只配置代理但不设置这个值，控制台会从错误路径加载资源。[MinIO 子路径说明](https://github.com/minio/minio/discussions/15551)。
+2. Vey 的 `.env` 设置 `COMPOSE_FILE=compose.yaml:compose.https.yaml:compose.minio.yaml`。默认通过 Linux Docker host-gateway 访问宿主机已发布的 9001；如果端口不同，设置 `VEY_MINIO_CONSOLE_UPSTREAM`。
+3. 校验并仅重新创建网关：
+
+```bash
+docker compose run --rm --no-deps https-gateway \
+  caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+docker compose up -d --no-deps --force-recreate --wait https-gateway
+```
+
+`compose.https.yaml` 单独使用时仍然只有企微回调路由；新增路由由可选 overlay 显式挂载。MinIO 仍在 Agent 保护清单中。
+
+### 当前服务器的配置持久性
+
+现有 MinIO 是独立容器，数据使用原有命名卷。为保留容器 ID、网络和保护清单，本次使用其已有的 `MINIO_CONFIG_ENV_FILE=config.env`，在容器 `/config.env` 中写入外部控制台地址，并重启原容器。
+
+对应配置副本保存在宿主机 `/opt/vey/.local/minio-console/config.env`。容器普通重启及服务器重启不会丢失这个文件；**删除并重建 MinIO 容器时必须把该配置改为环境变量或只读挂载**，容器可写层不会随数据卷迁移。重建时也要更新 Agent 的受保护容器 ID。
+
+### 回退
+
+从 `COMPOSE_FILE` 移除 `compose.minio.yaml`，仅重新创建 HTTPS 网关即可关闭公开控制台入口，企微回调继续工作。若还需恢复原来的 IP 控制台路径，恢复 MinIO 原配置并重启。不要删除 MinIO 数据卷。
+
+### 2026-10-02 验证记录
+
+- Caddy 配置校验通过，网关健康；正式 HTTPS 下 `/minio` 返回 308 到 `/minio/`。
+- 登录页、页面 base 路径、JavaScript／CSS 资源均正常；未登录会话接口返回 403。
+- 使用已有账号经 HTTPS 调用登录接口返回 204，认证后的会话接口返回 200。未修改账号、桶或对象。
+- MinIO S3 存活检查返回 200，原容器 ID 和数据卷保持不变；仅 MinIO 和 HTTPS 网关为此次配置更新重启。
+- 企微签名挑战返回正确明文；公网 `/debug`、`/health`、`/openapi.json` 仍返回 404。
+- 本轮验证了 HTTP 与认证接口；浏览器自动化工具无法启动，未将接口测试表述为浏览器交互测试。

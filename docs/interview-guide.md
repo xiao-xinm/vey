@@ -33,8 +33,8 @@ Python / FastAPI / Pydantic / PostgreSQL / Docker Compose / DeepSeek
 | PG 和 Docker 如何保证一致性？ | 无跨系统事务；先持久化 executing，发生不确定性时标 unknown、拒绝自动重放和后续冲突变更，再人工核对 | `executor.py`、`scripts/reconcile_operation.py` |
 | 如何防重复消息？ | 平台消息编号唯一约束、确认状态和投递分段记录；外部平台与 PG 仍有重复投递窗口 | `Core.accept / send_pending` |
 | 为什么配置回滚会作废旧确认？ | 确认绑定的是当时策略和容器；回滚也生成新版本，不能把旧授权复活 | `policy_registry.py` |
-| 评测的 36/36 能证明什么？ | 18 个已知路由案例各两次的契约通过，不等于独立样本 36 个，也不是诊断正确率 | `docs/jev-live-evaluation.md` |
-| 有失败样本吗？ | 诊断回归有 5/6 的保留结果；能力缺失与配置故障分类存在歧义，未改标签把它算成通过 | `docs/diagnosis-followthrough.md` |
+| 评测的 36/36 能证明什么？ | 18 个已知路由案例各两次的契约通过，不等于独立样本 36 个，也不是诊断正确率 | [Jev 对照](evaluation.md#jev-results) |
+| 有失败样本吗？ | 诊断回归有 5/6 的保留结果；能力缺失与配置故障分类存在歧义，未改标签把它算成通过 | [诊断失败复核](evidence/history.md#diagnosis-followthrough) |
 | Jev 为什么默认关闭？ | 多数请求分类后仍需 DeepSeek 参数解析，增加串行请求；以原始报告说明取舍 | Jev 54 次 vs hybrid 28 次请求 |
 | 备份过就能恢复吗？ | 还要验证数据、视图、角色权限，并隔离旧任务／确认，防止恢复后重放副作用 | `scripts/operations_drill.py` |
 

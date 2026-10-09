@@ -114,6 +114,7 @@ flowchart LR
 
 后台的数据库账号仍只读，配置写入交由执行器完成。管理令牌和运维令牌不同，不能互换；数据库版本记录仅追加。回滚会产生新版本，不能复活旧确认。配置发布与执行通过共享／排他咨询锁协调；有 executing 或 unknown 操作时拒绝发布。
 
+<a id="storage"></a>
 ## 四、数据具体放在哪里
 
 | 位置 | 内容 | 用途 |
@@ -176,7 +177,26 @@ Vey/
 
 - 使用普通 Python 控制流与 Pydantic 契约构造 Agent，未引入 LangChain、LangGraph 或多 Agent 协作框架。
 - 单实例核心使用 PG 队列与独立控制循环，暂不引入 Redis/Celery；未验证水平扩容与高并发。
-- Jev 已真实接入，但本组对照没有获得速度收益，因此默认 hybrid；[完整原始结果](jev-live-evaluation.md)可复核。
+- Jev 已真实接入，但本组对照没有获得速度收益，因此默认 hybrid；[完整原始结果](evaluation.md#jev-results)可复核。
 - 后台保留原生前端，避免为有限页面引入额外构建与部署链。
 - 现阶段没有自动修复、任意 Shell、镜像更新／删除、无人确认的变更或主动告警。
 - [V1 交付清单](v1-delivery.md)区分可用能力、实际验收与延期项；浏览器验收未通过工具完成之前不标记全量验收完成。
+
+<a id="technology"></a>
+## 七、技术选型与理由
+
+| 选择 | 在本项目中的用途与理由 |
+| --- | --- |
+| Python 3.13、FastAPI、Uvicorn | 统一实现消息 API、工具适配和模型编排，适合以 I/O 等待为主的个人运维服务 |
+| Pydantic 2、HTTPX | 严格校验结构化参数；统一 HTTP 连接池、超时、取消和提供方适配 |
+| PostgreSQL、SQLAlchemy、psycopg、Alembic | 复用既有实例；通过独立角色、事务、唯一约束和锁管理任务、确认、配置版本与审计 |
+| 显式控制流、asyncio、PG 任务表与 Outbox | 有限工具循环与可追溯状态足以满足当前单实例规模；消息接收、处理和回复解耦 |
+| Docker SDK、Unix socket | 调用固定结构化 API，不拼接 Shell；将持有 Docker 权限的执行器单独运行 |
+| `/proc`、statvfs 的只读适配 | 获取宿主机采样；缺失的挂载或指标明确报告，不把容器指标冒充宿主机 |
+| Docker Compose、Caddy | 独立管理各服务身份、挂载和网络，提供 HTTPS 入口 |
+| 原生 HTML/CSS/JavaScript | 后台页面有限，无额外前端构建链；通过独立账号和管理令牌限制权限 |
+| uv、Ruff、pytest、GitHub Actions | 锁定依赖，验证参数、状态、真实 PG 权限与失败边界 |
+
+SQLite 并非因为使用文件而不可靠；这里选择 PG，是已有实例、多进程访问、权限隔离和后续评测共同决定的。单机 PG 仍不等于高可用。
+
+Docker SDK 同步调用使用有界工作线程和网络超时；协程取消不代表 Docker 已停止，结果不确定时进入 unknown 并由管理员核对。具体操作见[部署手册](deployment.md)，数据备份见[恢复手册](operations-recovery.md)。
