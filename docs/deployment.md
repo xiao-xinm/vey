@@ -223,6 +223,7 @@ docker compose exec -T agent-core python - < scripts/model_smoke.py
 - [Jev 可选路由](evaluation.md#jev-integration)：保留 hybrid 默认，不因填写 Key 自动启用。
 - [系统采集与日志](#system-queries)：核对磁盘映射、阈值和日志范围。
 - [MinIO 控制台代理](#minio-console)：仅适用于服务器已有的独立 MinIO，不是 Agent 依赖。
+- [Nacos 控制台代理](#nacos-console)：复用 HTTPS 域名访问已有 Nacos 3.x 控制台。
 
 <a id="system-queries"></a>
 ## 系统采集与日志展示配置
@@ -314,3 +315,30 @@ docker compose up -d --no-deps --force-recreate --wait https-gateway
 - MinIO S3 存活检查返回 200，原容器 ID 和数据卷保持不变；仅 MinIO 和 HTTPS 网关为此次配置更新重启。
 - 企微签名挑战返回正确明文；公网 `/debug`、`/health`、`/openapi.json` 仍返回 404。
 - 本轮验证了 HTTP 与认证接口；浏览器自动化工具无法启动，未将接口测试表述为浏览器交互测试。
+
+<a id="nacos-console"></a>
+## Nacos 控制台代理
+
+适用于已存在的 Nacos 3.x Next 控制台，控制台上下文路径为空、内部端口为 8080，且已初始化管理员并开启控制台鉴权。[Nacos 控制台说明](https://nacos.io/docs/latest/manual/admin/console/)区分控制台端口与服务端接口；本配置仅代理控制台，不公开 SDK 的 8848／9848 端口。
+
+在 `COMPOSE_FILE` 中追加 `compose.nacos.yaml`，保留已有叠加文件和 Jev 最后覆盖核心的顺序。网关加入 Nacos 已有网络，通过容器名连接 8080；不依赖宿主机仅监听 loopback 的 18080，也不需要修改 Nacos 的端口映射。可选环境项：
+
+```dotenv
+VEY_NACOS_NETWORK=nacos-net
+VEY_NACOS_CONSOLE_UPSTREAM=nacos:8080
+```
+
+部署前确认这些名称与实际容器、网络一致，控制台未登录访问配置和用户接口返回拒绝；不要将尚未初始化的控制台开放到公网。
+
+```bash
+docker compose config --quiet
+docker compose run --rm --no-deps https-gateway \
+  caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+docker compose up -d --no-deps --force-recreate --wait https-gateway
+```
+
+网关重建期间 HTTPS 入口短暂中断，Nacos、核心、执行器和后台无需重启。访问 `https://YOUR_DOMAIN/nacos/` 会跳转到 `/nacos/next/`；前端资源和 API 都通过 `/nacos/` 前缀转发，仍使用 Nacos 原有账号登录。Nacos 不是 Vey 的运行依赖。
+
+回退时从 `COMPOSE_FILE` 移除 `compose.nacos.yaml`，只重建 `https-gateway`；网关会退出 Nacos 网络并移除该公开路由。不要停止 Nacos 或删除其数据。升级 Nacos 控制台后需重新核对路径、静态资源和未登录访问边界。
+
+2026-10-13 部署验证：Nacos 3.2.4 的页面及 13 个静态资源通过 HTTPS 访问成功，未登录的用户、配置及命名空间列表返回 403；既有后台与 MinIO 入口返回 200，企微回调缺少签名时仍返回 422，私有路径仍为 404。从本地电脑直连公网也返回 200。只重建 HTTPS 网关，Nacos 及原有其他容器的镜像与启动时间不变；临时验证代理已清理。浏览器工具导航超时，因此未声称已完成实际登录交互。服务器受限验收记录及原配置保存在 `/opt/vey/.local/nacos-proxy-20261013T113655Z/`。

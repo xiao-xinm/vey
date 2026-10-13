@@ -1,0 +1,13 @@
+# Optional proxy to an existing Nacos 3.x console; does not create Nacos.
+services:
+  https-gateway:
+    environment:
+      VEY_NACOS_CONSOLE_UPSTREAM: ${VEY_NACOS_CONSOLE_UPSTREAM:-nacos:8080}
+    volumes:
+      - ./deploy/nacos-console.caddy:/etc/caddy/optional/nacos.caddy:ro
+    networks: [ingress, nacos-console]
+
+networks:
+  nacos-console:
+    external: true
+    name: ${VEY_NACOS_NETWORK:-nacos-net}

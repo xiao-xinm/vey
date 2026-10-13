@@ -14,7 +14,7 @@
 
 | 文档 | 包含内容 |
 | --- | --- |
-| [部署与接入](deployment.md) | Ubuntu、PG、企微、HTTPS、模型密钥、系统采集、日志和可选 MinIO 代理 |
+| [部署与接入](deployment.md) | Ubuntu、PG、企微、HTTPS、模型密钥、系统采集、日志和可选 MinIO／Nacos 代理 |
 | [管理后台](dashboard.md) | 登录、任务、评测展示、导出／离线复核、服务配置、发布与回滚 |
 | [备份恢复](operations-recovery.md) | 本机备份、隔离恢复、容量报告和正式恢复要求 |
 

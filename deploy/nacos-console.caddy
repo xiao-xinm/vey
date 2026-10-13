@@ -1,0 +1,9 @@
+# Nacos 3.x Next UI derives its API prefix from the browser's /next/ path.
+# Keep the upstream console context empty and remove only the public prefix.
+redir /nacos /nacos/next/ 308
+redir /nacos/ /nacos/next/ 308
+handle_path /nacos/* {
+    reverse_proxy {$VEY_NACOS_CONSOLE_UPSTREAM:nacos:8080} {
+        header_down Location ^/(.*)$ /nacos/$1
+    }
+}
