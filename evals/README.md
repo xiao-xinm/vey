@@ -4,7 +4,7 @@
 
 此目录从第二期 M1 建立基线：60 条虚构案例（开发集 40，保留测试集 20），覆盖明确查询、启停意图、否定、条件请求、上下文、歧义、恶意日志、缺失指标和异常工具结果。
 
-首轮真实 DeepSeek 实验已完成，见 [基线及失败复核](../docs/evidence/history.md#phase2-baseline)。原始结果固定在 `reports/2026-10-04-baseline`；此后代码新增了多目标修改意图防护，重新运行时实现哈希会不同，不能覆盖原始实验。
+首轮真实 DeepSeek 实验已完成，见 [基线失败复核](reports/2026-10-04-baseline/review.json)。原始结果固定在 `reports/2026-10-04-baseline`；此后代码新增了多目标修改意图防护，重新运行时实现哈希会不同，不能覆盖原始实验。
 
 这里衡量的是**路由与单步规划契约通过率**，不是完整诊断准确率。规划器只接收预先构造的证据，不会执行返回的工具。评测进程不读取生产 `.env`，不连接数据库、Docker socket 或执行器，不发企微消息，不接受确认码。
 
@@ -65,7 +65,7 @@ API 未返回用量时报告 null，不当作 0；有调用但缺少指标时同
 
 ## M2 完整诊断与独立归档
 
-M2 运行生产同一诊断循环，详见 [验收和局限](../docs/evidence/history.md#phase2-diagnosis)。预设控制回放验证流程，不代表模型效果；模型回放不执行 Docker 命令。
+M2 运行生产同一诊断循环，详见 [诊断局限](../docs/evaluation.md#diagnosis-limits)。预设控制回放验证流程，不代表模型效果；模型回放不执行 Docker 命令。
 
 ```powershell
 python -m vey.evaluation trajectory evals/datasets/trajectories-v1.json --output .local/evals/m2-scripted
@@ -96,8 +96,8 @@ python -m vey.evaluation.archive list --url-file /run/secrets/archive_writer_url
 
 新增数据为 `m3-routing-v1.json`（18 路由案例，含 4 控制）和 `m3-trajectories-v1.json`（6 诊断场景）。首次运行前冻结，路由每方案重复两次、完整诊断分别运行两次。Jev 不可用，未运行也未评分；保留现有 IntentRouter 接口。
 
-结果和未消除的诊断限制见 [M3 发布报告](../docs/evidence/history.md#phase2-release)。已分析的所有数据都属于已知回归集，后续调参不能拿它们充当新的独立测试集。
+结果和未消除的诊断限制见 [M3 实验复核](reports/2026-10-05-release/review.json)。已分析的所有数据都属于已知回归集，后续调参不能拿它们充当新的独立测试集。
 
 ## 诊断观察语义修复
 
-10 月 6 日核心 `bff3e8a` 使用 `v5-observations` 提示和 `diagnosis-v3` 循环，结构化假设新增时态与观察立场，明确清单漏项可在原预算内补查。[已知回归及生产验收](../docs/evidence/history.md#diagnosis-followthrough)保留本轮 5/6 的原始结果。评分版本 `trajectory-v2-temporal-polarity` 不再把历史／明确否定观察直接计为当前故障，不能与旧评分直接比较。历史报告不改写，新增报告追加至独立 PG，当前 13 次运行／312 条样本。
+10 月 6 日核心 `bff3e8a` 使用 `v5-observations` 提示和 `diagnosis-v3` 循环，结构化假设新增时态与观察立场，明确清单漏项可在原预算内补查。[已知回归报告](reports/2026-10-06-diagnosis-fix/known-regression/report.json)保留本轮 5/6 的原始结果。评分版本 `trajectory-v2-temporal-polarity` 不再把历史／明确否定观察直接计为当前故障，不能与旧评分直接比较。历史报告不改写，新增报告追加至独立 PG，当前 13 次运行／312 条样本。

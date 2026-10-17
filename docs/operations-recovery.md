@@ -1,6 +1,6 @@
 # 本机备份、恢复演练与容量观察
 
-2026-10-07，按用户选择先完成本机备份和隔离恢复；异地位置稍后确定。此功能属于第三期 M3 的运维部分；配置编辑与版本回滚已另行交付，见[配置管理](dashboard.md#configuration)。2026-10-08 的最新恢复覆盖 16 次实验／420 条样本，见 [V1 复核](v1-delivery.md)。
+提供管理员按需运行的本机备份、隔离恢复演练和容量报告。当前不包含异地副本、定时调度或自动保留清理；服务配置的版本回滚见[配置管理](dashboard.md#configuration)。
 
 ## 运行方式
 
@@ -9,7 +9,7 @@
 ```bash
 sudo install -d -o root -g 10000 -m 0750 /opt/vey/operations-reports
 sudo python3 /opt/vey/scripts/operations_drill.py \
-  --container rag-postgres --project /opt/vey \
+  --container YOUR_PG_CONTAINER --project /opt/vey \
   --output-dir /opt/vey-backups --report-dir /opt/vey/operations-reports
 ```
 
@@ -43,6 +43,6 @@ sudo python3 /opt/vey/scripts/operations_drill.py \
 2. 管理员按清单重建角色与库所有者，使用 `pg_restore --exit-on-error` 保留对象所有者与 ACL，再恢复数据库级 CONNECT 等授权。恢复只读及超时设置；检查表、视图、默认授权与后台读取。角色密码需重新配置，不沿用演练的免密码隔离实例作为生产入口。
 3. 旧会话／任务／确认的处置以脚本 `quarantine` 和 [部署恢复流程](deployment.md#8-备份与恢复流程) 为准。核对实际 Docker 状态后再让核心／执行器连接恢复库；unknown 操作只能人工核对解除，不能自动重放。
 4. 配置和秘密文件应按各服务 UID/GID 恢复权限；仅恢复到明确的新目录，重新核对域名、证书、企微配置和依赖地址。先完成只读验收，再恢复修改能力。
-5. 回退本次后台发布只需恢复旧 `.env`、旧后台镜像并仅重建 dashboard；本次无 schema 迁移，不应为界面回退而倒灌旧库丢失新审计。
+5. 仅回退后台界面且无 schema 变更时，应恢复对应配置与镜像后重新创建 dashboard，不应倒灌旧库而丢失新审计；涉及迁移的回退需另行验证兼容性。
 
-实际演练记录见 [本轮验收](evidence/history.md#operations-recovery-acceptance)。异地副本、加密方式、保留周期与定时频率待用户后续确定。
+同机备份不能覆盖整机损坏；异地副本、加密方式、保留周期与定时频率需要部署者另行制定。

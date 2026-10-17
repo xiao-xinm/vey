@@ -1,6 +1,6 @@
 # Ubuntu 部署、接入和恢复
 
-本手册是通用部署操作说明，实际 Docker／PostgreSQL 部署结果见[服务器验收记录](evidence/history.md#server-acceptance)。所有占位名称必须先替换；凭据在服务器本地输入，不要发到聊天或提交 Git。
+本手册说明 Ubuntu、Docker 与 PostgreSQL 的部署和接入流程。所有占位名称必须先替换；凭据在服务器本地输入，不要发到聊天或提交 Git。
 
 ## 1. 核对现有环境
 
@@ -215,7 +215,7 @@ docker compose exec -T agent-core python - < scripts/model_smoke.py
 
 统一按[备份恢复手册](operations-recovery.md)执行，覆盖 `vey`、`vey_eval`、匹配的配置和角色权限，并在恢复副本中作废可重放任务与确认。不得把旧的单库数据导入检查等同于当前完整恢复演练。
 
-当前为按需本机备份；加密、定时、保留清理和异地位置尚未实施，见 [V1 清单](v1-delivery.md)。
+当前为按需本机备份；加密、定时、保留清理和异地位置尚未实施，见[备份恢复说明](operations-recovery.md)。
 
 ## 9. 按需启用其他组件
 
@@ -297,24 +297,13 @@ docker compose up -d --no-deps --force-recreate --wait https-gateway
 
 `compose.https.yaml` 单独使用时仍然只有企微回调路由；新增路由由可选 overlay 显式挂载。MinIO 仍在 Agent 保护清单中。
 
-### 当前服务器的配置持久性
+### 配置持久性
 
-现有 MinIO 是独立容器，数据使用原有命名卷。为保留容器 ID、网络和保护清单，本次使用其已有的 `MINIO_CONFIG_ENV_FILE=config.env`，在容器 `/config.env` 中写入外部控制台地址，并重启原容器。
-
-对应配置副本保存在宿主机 `/opt/vey/.local/minio-console/config.env`。容器普通重启及服务器重启不会丢失这个文件；**删除并重建 MinIO 容器时必须把该配置改为环境变量或只读挂载**，容器可写层不会随数据卷迁移。重建时也要更新 Agent 的受保护容器 ID。
+将 MinIO 的外部控制台地址写入其部署环境变量或只读配置挂载，不要只保存在容器可写层。重建已有容器后，重新核对网络、数据卷及 Agent 受保护容器 ID。
 
 ### 回退
 
 从 `COMPOSE_FILE` 移除 `compose.minio.yaml`，仅重新创建 HTTPS 网关即可关闭公开控制台入口，企微回调继续工作。若还需恢复原来的 IP 控制台路径，恢复 MinIO 原配置并重启。不要删除 MinIO 数据卷。
-
-### 2026-10-02 验证记录
-
-- Caddy 配置校验通过，网关健康；正式 HTTPS 下 `/minio` 返回 308 到 `/minio/`。
-- 登录页、页面 base 路径、JavaScript／CSS 资源均正常；未登录会话接口返回 403。
-- 使用已有账号经 HTTPS 调用登录接口返回 204，认证后的会话接口返回 200。未修改账号、桶或对象。
-- MinIO S3 存活检查返回 200，原容器 ID 和数据卷保持不变；仅 MinIO 和 HTTPS 网关为此次配置更新重启。
-- 企微签名挑战返回正确明文；公网 `/debug`、`/health`、`/openapi.json` 仍返回 404。
-- 本轮验证了 HTTP 与认证接口；浏览器自动化工具无法启动，未将接口测试表述为浏览器交互测试。
 
 <a id="nacos-console"></a>
 ## Nacos 控制台代理
@@ -340,5 +329,3 @@ docker compose up -d --no-deps --force-recreate --wait https-gateway
 网关重建期间 HTTPS 入口短暂中断，Nacos、核心、执行器和后台无需重启。访问 `https://YOUR_DOMAIN/nacos/` 会跳转到 `/nacos/next/`；前端资源和 API 都通过 `/nacos/` 前缀转发，仍使用 Nacos 原有账号登录。Nacos 不是 Vey 的运行依赖。
 
 回退时从 `COMPOSE_FILE` 移除 `compose.nacos.yaml`，只重建 `https-gateway`；网关会退出 Nacos 网络并移除该公开路由。不要停止 Nacos 或删除其数据。升级 Nacos 控制台后需重新核对路径、静态资源和未登录访问边界。
-
-2026-10-13 部署验证：Nacos 3.2.4 的页面及 13 个静态资源通过 HTTPS 访问成功，未登录的用户、配置及命名空间列表返回 403；既有后台与 MinIO 入口返回 200，企微回调缺少签名时仍返回 422，私有路径仍为 404。从本地电脑直连公网也返回 200。只重建 HTTPS 网关，Nacos 及原有其他容器的镜像与启动时间不变；临时验证代理已清理。浏览器工具导航超时，因此未声称已完成实际登录交互。服务器受限验收记录及原配置保存在 `/opt/vey/.local/nacos-proxy-20261013T113655Z/`。

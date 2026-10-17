@@ -17,3 +17,10 @@ operations-reports/
 dist/
 *.egg-info/
 *.log
+
+# Personal planning, delivery notes and interview material stay local.
+/docs/demo.md
+/docs/interview-guide.md
+/docs/requirements.md
+/docs/v1-delivery.md
+/docs/evidence/
